@@ -74,16 +74,18 @@
   /* главная */
   .hello { position:absolute; left:24px; top:62px; }
   .helloN { position:absolute; left:24px; top:80px; }
-  .hero { position:absolute; left:16px; right:16px; top:322px; padding:22px 22px 20px; border-radius:28px; background:var(--card); backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px); box-shadow:inset 0 0 0 1px rgba(255,255,255,.7), 0 10px 30px rgba(21,20,26,.05); }
+  .hero { position:absolute; left:16px; right:16px; top:298px; padding:20px 22px 18px; border-radius:28px; background:var(--card); backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px); box-shadow:inset 0 0 0 1px rgba(255,255,255,.7), 0 10px 30px rgba(21,20,26,.05); }
   .hero .t { margin-top:6px; }
-  .tiles { position:absolute; left:16px; right:16px; top:470px; display:grid; grid-template-columns:1fr 1fr; gap:12px; }
-  .tile { display:block; height:150px; border-radius:24px; padding:16px 18px; background:var(--card); backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px); box-shadow:inset 0 0 0 1px rgba(255,255,255,.7), 0 10px 30px rgba(21,20,26,.05); text-align:left; position:relative; transition:transform .14s; }
+  .tiles { position:absolute; left:16px; right:16px; top:436px; display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+  .tile { display:block; height:138px; border-radius:24px; padding:16px 18px; background:var(--card); backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px); box-shadow:inset 0 0 0 1px rgba(255,255,255,.7), 0 10px 30px rgba(21,20,26,.05); text-align:left; position:relative; transition:transform .14s; }
   .tile:active { transform:scale(.97); }
   .tile .num { position:absolute; left:16px; top:12px; font-size:64px; }
   .tile .tl { position:absolute; left:18px; bottom:36px; font-size:15px; font-weight:500; display:flex; align-items:center; gap:7px; }
   .tile .tl i { width:8px; height:8px; border-radius:50%; }
   .tile .cap { position:absolute; left:18px; right:12px; bottom:16px; }
-  .rowP { position:absolute; left:16px; right:16px; top:634px; height:72px; border-radius:22px; padding:0 18px; display:flex; align-items:center; background:var(--card); backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px); box-shadow:inset 0 0 0 1px rgba(255,255,255,.7), 0 10px 30px rgba(21,20,26,.05); text-align:left; }
+  .rowP { position:absolute; left:16px; right:16px; top:586px; height:66px; gap:14px; border-radius:22px; padding:0 18px; display:flex; align-items:center; background:var(--card); backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px); box-shadow:inset 0 0 0 1px rgba(255,255,255,.7), 0 10px 30px rgba(21,20,26,.05); text-align:left; }
+  .rowP + .rowP { top:662px; }
+  .rowP .ic { width:40px; height:40px; border-radius:20px; background:var(--chip); display:grid; place-items:center; flex:none; }
   .rowP b { display:block; font-size:17px; line-height:22px; font-weight:500; }
   .chev { margin-left:auto; font-size:24px; color:#A6A4B0; }
   .tabbar { position:absolute; left:16px; right:16px; bottom:26px; height:64px; border-radius:24px; display:flex; align-items:center; justify-content:space-around; background:rgba(255,255,255,.8); backdrop-filter:blur(24px); -webkit-backdrop-filter:blur(24px); box-shadow:inset 0 0 0 1px rgba(255,255,255,.8), 0 10px 30px rgba(21,20,26,.08); }
@@ -224,6 +226,45 @@
   .paper td:first-child { color:#6E6C78; width:44%; padding-right:8px; }
   .paper .pf { margin-top:12px; font-size:9.5px; line-height:13px; color:#8C8A96; }
   .paper .sec { margin-top:12px; font-size:10px; font-weight:700; text-transform:none; color:#1B1B20; }
+  /* разбор анализа */
+  .shot { position:relative; height:300px; border-radius:28px; background:#fff; box-shadow:inset 0 0 0 1px var(--line); overflow:hidden; display:grid; place-items:center; }
+  .shot .frame { position:absolute; inset:22px; }
+  .shot .frame i { position:absolute; width:30px; height:30px; border-color:var(--ink); border-style:solid; border-width:0; opacity:.8; }
+  .shot .frame i:nth-child(1) { left:0; top:0; border-left-width:2.5px; border-top-width:2.5px; border-top-left-radius:12px; }
+  .shot .frame i:nth-child(2) { right:0; top:0; border-right-width:2.5px; border-top-width:2.5px; border-top-right-radius:12px; }
+  .shot .frame i:nth-child(3) { left:0; bottom:0; border-left-width:2.5px; border-bottom-width:2.5px; border-bottom-left-radius:12px; }
+  .shot .frame i:nth-child(4) { right:0; bottom:0; border-right-width:2.5px; border-bottom-width:2.5px; border-bottom-right-radius:12px; }
+  .blank { width:210px; padding:14px 14px 10px; background:#FBFBFD; border-radius:4px; box-shadow:0 1px 2px rgba(21,20,26,.08), 0 10px 26px rgba(21,20,26,.10); font-family:-apple-system, Arial, sans-serif; color:#2A2A30; transform:rotate(-2deg); transition:transform .6s cubic-bezier(.2,.8,.2,1), opacity .4s; }
+  .blank .bt { font-size:10px; font-weight:700; border-bottom:1px solid #2A2A30; padding-bottom:4px; margin-bottom:4px; display:flex; justify-content:space-between; }
+  .blank .br { display:grid; grid-template-columns:1fr 34px 50px; text-align:right; font-size:8.5px; line-height:15px; border-bottom:1px solid #ECEBF0; }
+  .blank .br span:first-child { text-align:left; }
+  .blank .br span:nth-child(2) { font-weight:600; }
+  .scan { position:absolute; left:14px; right:14px; height:3px; border-radius:2px; background:var(--mood); box-shadow:0 0 18px 6px color-mix(in srgb, var(--mood) 55%, transparent); top:20px; opacity:0; }
+  .labx.scanning .scan { opacity:1; animation:scan 1.4s cubic-bezier(.45,0,.55,1) infinite alternate; }
+  @keyframes scan { to { top:276px; } }
+  .labx.scanning .blank { transform:rotate(0) scale(1.03); }
+  .labIntro .h { font-size:24px; line-height:30px; margin-top:20px; }
+  .labIntro .t { margin-top:8px; }
+  .btn2 { width:100%; height:52px; border-radius:26px; margin-top:10px; background:#fff; box-shadow:inset 0 0 0 1px var(--line); font-size:16px; font-weight:600; }
+  .labRes { display:none; }
+  .labx.done .labRes { display:block; }
+  .labx.done .labIntro, .labx.done .shot { display:none; }
+  .sum { padding:18px 18px 16px; }
+  .sum .h { font-size:24px; line-height:30px; }
+  .sum .t { margin-top:6px; }
+  .mk { padding:12px 0; border-bottom:1px solid #F0EFF4; }
+  .mk:last-child { border:0; }
+  .mk .top { display:flex; align-items:baseline; gap:8px; position:static; height:auto; }
+  .mk b { font-size:16px; font-weight:500; }
+  .mk .val { margin-left:auto; font-size:17px; font-weight:600; font-variant-numeric:tabular-nums; }
+  .mk .val small { font-size:13px; font-weight:400; color:var(--mute); margin-left:3px; }
+  .rng { position:relative; height:6px; border-radius:3px; background:#ECEBF1; margin:10px 0 6px; }
+  .rng .ok { position:absolute; top:0; bottom:0; border-radius:3px; background:#CDEBD9; }
+  .rng .dot { position:absolute; top:50%; width:14px; height:14px; margin:-7px 0 0 -7px; border-radius:50%; background:#2DB37A; box-shadow:0 0 0 3px #fff; }
+  .rng .dot.out { background:#F08A3C; }
+  .mk .cap b { font-size:13px; font-weight:600; }
+  .mk .cap .lo, .mk .cap .hi { color:#B4530F; }
+  .mk .cap .in { color:#1D7345; }
   #toast { position:absolute; left:50%; bottom:108px; transform:translate(-50%, 12px); background:rgba(21,20,26,.9); color:#fff; font-size:14px; font-weight:500; padding:12px 16px; border-radius:16px; opacity:0; transition:all .3s; z-index:10; white-space:nowrap; pointer-events:none; }
   #toast.on { opacity:1; transform:translate(-50%, 0); }
 
@@ -307,7 +348,8 @@
         <button class="tile f" data-d="120" data-sec="prev"><div class="num">2</div><div class="tl"><i style="background:#F08A3C"></i>Превенция</div><div class="cap">осмотра пора пройти</div></button>
         <button class="tile f" data-d="150" data-sec="docs"><div class="num">3</div><div class="tl"><i style="background:#2DB37A"></i>Врачи</div><div class="cap">берут новых рядом</div></button>
       </div>
-      <button class="rowP f" data-d="180" id="profile"><div><b>Мой профиль</b><span class="cap">Анамнез для врача</span></div><span class="chev">›</span></button>
+      <button class="rowP f" data-d="170" id="toLab"><span class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#15141A" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3h6M10 3v6l-5 9a2 2 0 0 0 1.8 3h10.4a2 2 0 0 0 1.8-3l-5-9V3"/><path d="M7.5 15h9"/></svg></span><div><b>Разбор анализа</b><span class="cap">Фото бланка: цифры и к кому идти</span></div><span class="chev">›</span></button>
+      <button class="rowP f" data-d="190" id="profile"><span class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#15141A" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8.5" r="3.5"/><path d="M5 20c1.2-3.6 4-5.2 7-5.2s5.8 1.6 7 5.2"/></svg></span><div><b>Мой профиль</b><span class="cap">Анамнез для врача</span></div><span class="chev">›</span></button>
       <nav class="tabbar f" data-d="210" id="tabbar">
         <button class="tab on" data-tab="home"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11.5 12 5l8 6.5V19a1 1 0 0 1-1 1h-4v-5h-6v5H5a1 1 0 0 1-1-1z"/></svg>Главная</button>
         <button class="tab" data-tab="cal"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="5" width="16" height="15" rx="3"/><path d="M8 3v4M16 3v4M4 10h16"/></svg>Календарь</button>
@@ -386,12 +428,36 @@
       </div>
     </section>
 
+    <section class="page" id="p-lab">
+      <div class="bar f" data-d="0"><button class="back" data-back aria-label="Назад">‹</button><div class="ttl">Разбор анализа</div></div>
+      <div class="scr labx" id="labScr">
+        <div class="shot f" data-d="40" id="shot">
+          <div class="frame"><i></i><i></i><i></i><i></i></div>
+          <div class="blank" id="blank"><div class="bt"><span>Krevní obraz, biochemie</span><span>пример</span></div></div>
+          <div class="scan"></div>
+        </div>
+        <div class="labIntro f" data-d="90">
+          <h2 class="h">Сфотографируйте бланк анализа</h2>
+          <p class="t">Покажу, какие цифры вне нормы и к какому врачу с ними идти. Диагнозов не ставлю и лечение не советую.</p>
+          <button class="btn btnIn" id="labShoot" style="margin-top:20px">Сфотографировать</button>
+          <button class="btn2" id="labDemo">Посмотреть на примере</button>
+        </div>
+        <div class="labRes">
+          <div class="card sum f" data-d="0"><div class="cap">Пример разбора</div><div class="h" id="labSum"></div><p class="t" id="labSub"></p></div>
+          <div class="sh f" data-d="40">Показатели</div>
+          <div class="card f" data-d="70" id="labList"></div>
+          <button class="btn btnIn f" data-d="110" id="labGo">Подготовиться к терапевту</button>
+          <p class="note f" data-d="140">Это не диагноз. Нормы зависят от лаборатории, пола и возраста, итог всегда за врачом.</p>
+        </div>
+      </div>
+    </section>
+
     <svg id="orb" viewBox="0 0 300 300"></svg>
   </div></div>
 
   <aside class="panel">
     <h2>Сцены</h2>
-    <div class="rb"><button data-go="welcome">Приветствие</button><button data-go="sex">Анкета</button><button data-go="cele">Готово</button><button data-go="home">Главная</button><button data-go="prev">Превенция</button><button data-go="docs">Врачи</button><button data-go="visit">Иду к врачу</button><button data-go="cal">Календарь</button><button data-go="prof">Профиль</button><button data-go="pdf">PDF</button></div>
+    <div class="rb"><button data-go="welcome">Приветствие</button><button data-go="sex">Анкета</button><button data-go="cele">Готово</button><button data-go="home">Главная</button><button data-go="prev">Превенция</button><button data-go="docs">Врачи</button><button data-go="visit">Иду к врачу</button><button data-go="cal">Календарь</button><button data-go="prof">Профиль</button><button data-go="pdf">PDF</button><button data-go="lab">Анализ</button></div>
     <h2>Настроение</h2>
     <div class="rb" id="moods"></div>
     <p>Основа светлая, цвет даёт только свечение маскота, и оно меняется вместе с его настроением.</p>
@@ -584,6 +650,7 @@ const SCENE = {
   visit() { show('visit'); setMood('happy'); place(338, 78, 74); drawVisit(); },
   cal() { show('cal'); setMood('calm'); place(338, 78, 74); drawCal(); },
   prof() { show('prof'); setMood('calm'); place(338, 78, 74); drawProf(); },
+  lab() { show('lab'); setMood('calm'); place(338, 78, 74); labReset(); },
   pdf() { show('pdf'); setMood('proud'); place(338, 78, 74); drawPdf(); },
 };
 const TABS = ['home', 'cal', 'prof'];
@@ -790,6 +857,41 @@ function drawPdf() {
   <div class="pf">Vyplněno pacientem v aplikaci KamaHealth, ${date}. Nejde o lékařskou zprávu.</div>`;
 }
 $('#toPdf').addEventListener('click', () => push('pdf'));
+$('#toLab').addEventListener('click', () => push('lab'));
+
+// ─── разбор анализа: пример, без камеры ───
+const LAB = [
+  { n: 'Гемоглобин', cz: 'Hemoglobin', v: 131, u: 'г/л', lo: 120, hi: 160, min: 90, max: 190 },
+  { n: 'Ферритин', cz: 'Feritin', v: 9, u: 'мкг/л', lo: 15, hi: 150, min: 0, max: 200, doc: 'терапевт' },
+  { n: 'Глюкоза', cz: 'Glukóza', v: 5.1, u: 'ммоль/л', lo: 3.9, hi: 5.6, min: 2.5, max: 8 },
+  { n: 'Холестерин', cz: 'Cholesterol', v: 6.1, u: 'ммоль/л', lo: 0, hi: 5.0, min: 0, max: 8, doc: 'терапевт' },
+  { n: 'ТТГ', cz: 'TSH', v: 2.1, u: 'мЕд/л', lo: 0.4, hi: 4.0, min: 0, max: 6 },
+];
+const num = (x) => String(x).replace('.', ',');
+$('#blank').insertAdjacentHTML('beforeend', LAB.map((r) => `<div class="br"><span>${r.cz}</span><span>${num(r.v)}</span><span>${r.lo ? num(r.lo) + '–' : '< '}${num(r.hi)}</span></div>`).join('') + '<div class="br" style="border:0;color:#8C8A96"><span>Odběr 12. 11. 2026</span><span></span><span></span></div>');
+function labReset() { $('#labScr').classList.remove('scanning', 'done'); }
+function labRun() {
+  const box = $('#labScr'); box.classList.add('scanning'); const [x, y] = centerOf($('#shot')); lookAt(x, y); setMood('calm');
+  clearTimeout(labRun.t); labRun.t = setTimeout(() => {
+    if (cur !== 'lab') return;
+    box.classList.remove('scanning'); box.classList.add('done'); box.scrollTop = 0;
+    const out = LAB.filter((r) => r.v < r.lo || r.v > r.hi);
+    $('#labSum').textContent = out.length ? `${out.length} показателя вне нормы` : 'Всё в пределах нормы';
+    $('#labSub').textContent = out.length ? 'С этими цифрами стоит сходить к терапевту.' : 'Можно сохранить бланк и показать врачу на ближайшем осмотре.';
+    $('#labList').innerHTML = LAB.map((r) => {
+      const pos = (q) => Math.max(0, Math.min(100, (q - r.min) / (r.max - r.min) * 100)), bad = r.v < r.lo || r.v > r.hi;
+      const word = r.v < r.lo ? '<b class="lo">ниже нормы</b>' : r.v > r.hi ? '<b class="hi">выше нормы</b>' : '<b class="in">в норме</b>';
+      return `<div class="mk"><div class="top"><b>${r.n}</b><span class="val">${num(r.v)}<small>${r.u}</small></span></div>
+        <div class="rng"><span class="ok" style="left:${pos(r.lo)}%;right:${100 - pos(r.hi)}%"></span><span class="dot${bad ? ' out' : ''}" style="left:${pos(r.v)}%"></span></div>
+        <div class="cap">${word} · норма ${r.lo ? num(r.lo) + '–' : 'до '}${num(r.hi)}${bad && r.doc ? ' · к врачу: ' + r.doc : ''}</div></div>`;
+    }).join('');
+    $$('#labScr .labRes .f').forEach((e, i) => { e.classList.remove('in'); setTimeout(() => e.classList.add('in'), 60 + i * 50); });
+    orb.poke();
+  }, 2600);
+}
+$('#labShoot').addEventListener('click', () => { toast('В приложении здесь откроется камера. Пока покажу на примере'); labRun(); });
+$('#labDemo').addEventListener('click', labRun);
+$('#labGo').addEventListener('click', () => { visitFor = 'heart'; push('visit'); });
 document.addEventListener('click', (ev) => { const b = ev.target.closest('[data-soon2]'); if (!b) return; ev.stopPropagation(); toast(b.dataset.soon2); }, true);
 
 // ─── искры праздника ───
