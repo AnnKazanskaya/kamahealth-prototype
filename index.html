@@ -265,6 +265,18 @@
   .mk .cap b { font-size:13px; font-weight:600; }
   .mk .cap .lo, .mk .cap .hi { color:#B4530F; }
   .mk .cap .in { color:#1D7345; }
+  .exList { max-height:208px; overflow-y:auto; margin:4px -12px 0; padding:0 12px; scrollbar-width:none; touch-action:pan-y; }
+  .exList::-webkit-scrollbar { display:none; }
+  .exList { -webkit-mask-image:linear-gradient(#000 calc(100% - 36px), transparent); mask-image:linear-gradient(#000 calc(100% - 36px), transparent); padding-bottom:30px; }
+  .vSt { margin-top:12px; display:none; }
+  .vSt.on { display:inline-flex; align-items:center; gap:8px; height:30px; padding:0 12px; border-radius:15px; font-size:13px; font-weight:600; background:#E5F5EC; color:#1D7345; }
+  .vSt.due.on { background:#FFF0E5; color:#B4530F; }
+  .hero { cursor:pointer; }
+  .hero:active, .row:active, .doc:active, .chk:active, .item:active, .stat:active, .rowP:active { opacity:.72; }
+  .row, .doc, .chk, .item, .stat, .rowP, .hero { transition:opacity .15s; }
+  .badge.ok { background:#E5F5EC; color:#1D7345; }
+  .badge.soon { background:var(--chip); color:#5E5C68; }
+  .pt.ok i { width:8px; height:8px; opacity:.75; }
   #toast { position:absolute; left:50%; bottom:108px; transform:translate(-50%, 12px); background:rgba(21,20,26,.9); color:#fff; font-size:14px; font-weight:500; padding:12px 16px; border-radius:16px; opacity:0; transition:all .3s; z-index:10; white-space:nowrap; pointer-events:none; }
   #toast.on { opacity:1; transform:translate(-50%, 0); }
 
@@ -335,18 +347,18 @@
     </section>
 
     <section class="page" id="p-cele">
-      <h2 class="cTitle h f" data-d="0">Карта заведена</h2>
-      <p class="cSub t f" data-d="70">Подобрала 4 осмотра под вас</p>
+      <h2 class="cTitle h f" data-d="0" id="celeT">Карта заведена</h2>
+      <p class="cSub t f" data-d="70" id="celeS"></p>
       <button class="btn f" data-d="160" id="toHome">На главную</button>
     </section>
 
     <section class="page" id="p-home">
-      <div class="hello cap f" data-d="0" id="greet">Добрый день</div>
-      <div class="helloN h f" data-d="30">Анна</div>
-      <div class="hero f" data-d="80"><div class="h">Сегодня всё спокойно</div><p class="t">2 осмотра ждут записи · ещё 2&nbsp;позже в&nbsp;этом&nbsp;году</p></div>
+      <div class="hello cap f" data-d="0" id="today"></div>
+      <div class="helloN h f" data-d="30" id="greet">Добрый день</div>
+      <button class="hero f" data-d="80" id="hero" style="text-align:left;width:auto"><div class="h" id="heroT"></div><p class="t" id="heroS"></p></button>
       <div class="tiles">
-        <button class="tile f" data-d="120" data-sec="prev"><div class="num">2</div><div class="tl"><i style="background:#F08A3C"></i>Превенция</div><div class="cap">осмотра пора пройти</div></button>
-        <button class="tile f" data-d="150" data-sec="docs"><div class="num">3</div><div class="tl"><i style="background:#2DB37A"></i>Врачи</div><div class="cap">берут новых рядом</div></button>
+        <button class="tile f" data-d="120" data-sec="prev"><div class="num" id="tPrevN">0</div><div class="tl"><i id="tPrevDot" style="background:#F08A3C"></i>Превенция</div><div class="cap" id="tPrevC"></div></button>
+        <button class="tile f" data-d="150" data-sec="docs"><div class="num">3</div><div class="tl"><i style="background:#2DB37A"></i>Врачи</div><div class="cap">пример карты рядом</div></button>
       </div>
       <button class="rowP f" data-d="170" id="toLab"><span class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#15141A" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3h6M10 3v6l-5 9a2 2 0 0 0 1.8 3h10.4a2 2 0 0 0 1.8-3l-5-9V3"/><path d="M7.5 15h9"/></svg></span><div><b>Разбор анализа</b><span class="cap">Фото бланка: цифры и к кому идти</span></div><span class="chev">›</span></button>
       <button class="rowP f" data-d="190" id="profile"><span class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#15141A" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8.5" r="3.5"/><path d="M5 20c1.2-3.6 4-5.2 7-5.2s5.8 1.6 7 5.2"/></svg></span><div><b>Мой профиль</b><span class="cap">Анамнез для врача</span></div><span class="chev">›</span></button>
@@ -361,13 +373,11 @@
       <div class="bar f" data-d="0"><button class="back" data-back aria-label="Назад">‹</button><div class="ttl">Превенция</div></div>
       <div class="bodyW f" data-d="40" id="bodyW"><div class="body" id="body"></div></div>
       <div class="pts" id="pts"></div>
-      <div class="score f" data-d="90"><div class="num">2<small>из</small>4</div><p class="t">осмотра в этом<br>году пройдено</p></div>
+      <div class="score f" data-d="90"><div class="num" id="scoreN"></div><p class="t" id="scoreT"></p></div>
       <div class="sheet f" data-d="130">
         <div class="handle"></div>
-        <h3 class="h">Что пора пройти</h3>
-        <div class="item" data-pt="heart"><span class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#15141A" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"/></svg></span><div><b>Терапевт<span class="badge due">пора</span></b><span class="cap">раз в 2 года</span></div><button class="act" data-find="heart">Найти врача</button></div>
-        <button class="item" data-pt="gyn" id="row2"><span class="ic" id="r2i"></span><div><b><span id="r2t">Гинеколог</span><span class="badge due">пора</span></b><span class="cap" id="r2c">каждый год</span></div><span class="chev">›</span></button>
-        <button class="item" data-pt="teeth"><span class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#15141A" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M7 4c-2 0-3 1.6-3 4 0 3 1.4 4 2 8 .4 2.6 1 4 2 4s1.4-2 2-5c.3-1.4 1.7-1.4 2 0 .6 3 1 5 2 5s1.6-1.4 2-4c.6-4 2-5 2-8 0-2.4-1-4-3-4-1.6 0-2.4 1-5 1S8.6 4 7 4z"/></svg></span><div><b>Стоматолог</b><span class="cap">каждые 6 мес · через 3 мес</span></div><span class="chev">›</span></button>
+        <h3 class="h">Ваши осмотры</h3>
+        <div id="exList" class="exList"></div>
       </div>
     </section>
 
@@ -387,7 +397,7 @@
     <section class="page" id="p-visit">
       <div class="bar f" data-d="0"><button class="back" data-back aria-label="Назад">‹</button><div class="ttl">Подготовка</div></div>
       <div class="scr" id="visitScr">
-        <div class="vHead f" data-d="40"><h2 class="h" id="vT">Иду к терапевту</h2><p class="t" id="vS"></p></div>
+        <div class="vHead f" data-d="40"><h2 class="h" id="vT">Иду к терапевту</h2><p class="t" id="vS"></p><div class="vSt" id="vSt"></div></div>
         <div class="sh f" data-d="80">Что взять с собой</div>
         <div class="card f" data-d="100" id="vTake"></div>
         <div class="sh f" data-d="130">Что будет на приёме</div>
@@ -395,6 +405,7 @@
         <div class="sh f" data-d="170">Что сказать в регистратуре</div>
         <div class="card phrase f" data-d="190"><div class="cz" id="vCz"></div><div class="ru" id="vRu"></div><button class="copy" id="vCopy">Скопировать</button></div>
         <button class="btn btnIn f" data-d="220" id="vFind">Найти врача</button>
+        <button class="btn2 f" data-d="240" id="vMark">Я уже прошёл этот осмотр</button>
       </div>
     </section>
 
@@ -414,7 +425,9 @@
         <div class="sh f" data-d="160">Ещё</div>
         <div class="card f" data-d="180">
           <button class="row" data-soon2="Разбор анализа по фото появится в следующей версии"><span class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#15141A" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="5" width="16" height="14" rx="3"/><circle cx="12" cy="12" r="3"/><path d="M8 5l1.5-2h5L16 5"/></svg></span><span><b>Разбор анализа по фото</b><span class="cap">Цифры и к кому идти</span></span><span class="end"><span class="chev">›</span></span></button>
+          <button class="row" id="editAns"><span class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#15141A" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h4L19 9l-4-4L4 16z"/><path d="M13.5 6.5l4 4"/></svg></span><span><b>Изменить ответы</b><span class="cap">Пол, возраст, вес, курение</span></span><span class="end"><span class="chev">›</span></span></button>
           <button class="row" data-soon2="Настройки появятся в следующей версии"><span class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#15141A" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h10M18 7h2M4 17h4M12 17h8"/><circle cx="16" cy="7" r="2"/><circle cx="10" cy="17" r="2"/></svg></span><span><b>Напоминания и язык</b><span class="cap">Русский</span></span><span class="end"><span class="chev">›</span></span></button>
+          <button class="row" id="resetAll"><span><b style="color:#B4530F">Начать заново</b><span class="cap">Сотрёт ответы и отметки на этом телефоне</span></span></button>
         </div>
       </div>
     </section>
@@ -639,19 +652,19 @@ function show(id) {
 }
 const SCENE = {
   welcome() { show('welcome'); setMood('calm'); place(195, 318, 340); },
-  sex() { show('sex'); setMood('calm'); place(195, 168, 132); },
+  sex() { show('sex'); setMood('calm'); place(195, 168, 132); syncOpts(); attend('#p-sex .opts'); },
   age() { show('age'); setMood('calm'); place(195, 168, 132); },
   weight() { show('weight'); setMood('happy'); place(195, 168, 132); },
   smoke() { show('smoke'); setMood(ans.smoke === 'no' ? 'happy' : 'calm'); place(195, 168, 132); },
-  cele() { show('cele'); setMood('joy'); place(195, 312, 380); orb.poke(); burst(); },
-  home() { show('home'); setMood('calm'); place(195, 214, 196); },
-  prev() { setBody(); show('prev'); setMood('calm'); place(338, 78, 74); drawPts(); },
-  docs() { show('docs'); setMood('happy'); place(338, 78, 74); drawDocs(); },
-  visit() { show('visit'); setMood('happy'); place(338, 78, 74); drawVisit(); },
-  cal() { show('cal'); setMood('calm'); place(338, 78, 74); drawCal(); },
-  prof() { show('prof'); setMood('calm'); place(338, 78, 74); drawProf(); },
-  lab() { show('lab'); setMood('calm'); place(338, 78, 74); labReset(); },
-  pdf() { show('pdf'); setMood('proud'); place(338, 78, 74); drawPdf(); },
+  cele() { drawHome(); show('cele'); setMood('joy'); place(195, 312, 380); orb.poke(); burst(); },
+  home() { drawHome(); show('home'); setMood(stateMood()); place(195, 214, 196); attend('#hero'); },
+  prev() { setBody(); show('prev'); setMood(stateMood()); place(338, 78, 74); drawPts(); attend('.pt.due'); },
+  docs() { show('docs'); setMood(stateMood()); place(338, 78, 74); drawDocs(); attend('#map'); },
+  visit() { show('visit'); setMood(stateMood()); place(338, 78, 74); drawVisit(); attend('#vT'); },
+  cal() { show('cal'); setMood(stateMood()); place(338, 78, 74); drawCal(); attend('#calList .row'); },
+  prof() { show('prof'); setMood(stateMood()); place(338, 78, 74); drawProf(); attend('#profStats'); },
+  lab() { show('lab'); setMood(stateMood()); place(338, 78, 74); labReset(); attend('#shot'); },
+  pdf() { show('pdf'); setMood('proud'); place(338, 78, 74); drawPdf(); attend('#paper'); },
 };
 const TABS = ['home', 'cal', 'prof'];
 let stack = [];
@@ -674,7 +687,7 @@ $$('.opts').forEach((box) => box.addEventListener('click', (e) => {
   if (page === 'p-smoke') { ans.smoke = b.dataset.v; setMood(b.dataset.v === 'no' ? 'happy' : 'calm'); $('#finish').disabled = false; } // «не осуждаю»: без тревожного цвета
 }));
 $$('[data-next]').forEach((b) => b.addEventListener('click', () => go(b.dataset.next)));
-$$('[data-prev]').forEach((b) => b.addEventListener('click', () => go(b.dataset.prev)));
+$$('[data-prev]').forEach((b) => b.addEventListener('click', () => { if (b.dataset.prev === 'welcome' && store.onboarded) { editMode = false; go('prof'); } else go(b.dataset.prev); }));
 const setAge = (v) => { ans.age = Math.max(15, Math.min(99, v)); $('#ageN').textContent = ans.age; $('#ageP').textContent = ans.age - 1; $('#ageX').textContent = ans.age + 1; };
 $$('[data-step]').forEach((b) => b.addEventListener('click', (e) => { e.stopPropagation(); setAge(ans.age + +b.dataset.step); const [x, y] = centerOf(b); lookAt(x, y); }));
 let drag = null;
@@ -686,9 +699,10 @@ setW(62);
 let wd = false;
 const wFrom = (e) => { const r = $('#track').getBoundingClientRect(); setW(40 + ((e.clientX - r.left) / r.width) * 110); const [x, y] = local(e); lookAt(x, y); };
 ['#track', '#trackHit'].forEach((sel) => { const el = $(sel); el.addEventListener('pointerdown', (e) => { wd = true; el.setPointerCapture(e.pointerId); wFrom(e); }); el.addEventListener('pointermove', (e) => { if (wd) wFrom(e); }); el.addEventListener('pointerup', () => { wd = false; orb.poke(); }); });
-{ const h = new Date().getHours(); $('#greet').textContent = h < 5 ? 'Доброй ночи' : h < 12 ? 'Доброе утро' : h < 18 ? 'Добрый день' : 'Добрый вечер'; }
+{ const d = new Date(), h = d.getHours(); $('#greet').textContent = h < 5 ? 'Доброй ночи' : h < 12 ? 'Доброе утро' : h < 18 ? 'Добрый день' : 'Добрый вечер'; $('#today').textContent = ['воскресенье', 'понедельник', 'вторник', 'среда', 'четверг', 'пятница', 'суббота'][d.getDay()] + ', ' + d.getDate() + ' ' + ['января', 'февраля', 'марта', 'апреля', 'мая', 'июня', 'июля', 'августа', 'сентября', 'октября', 'ноября', 'декабря'][d.getMonth()]; }
 $('#start').addEventListener('click', () => go('sex'));
-$('#finish').addEventListener('click', () => go('cele'));
+$('#finish').addEventListener('click', () => { const first = !store.onboarded; store.onboarded = true; save(); if (editMode && !first) { editMode = false; go('prof'); toast('Ответы обновлены, список осмотров пересчитан'); } else { editMode = false; go('cele'); } });
+function syncOpts() { $$('#p-sex .opt').forEach((o) => o.classList.toggle('on', o.dataset.v === ans.sex)); $$('#p-smoke .opt').forEach((o) => o.classList.toggle('on', o.dataset.v === ans.smoke)); $('[data-next=age]').disabled = !ans.sex; $('#finish').disabled = !ans.smoke; }
 $('#toHome').addEventListener('click', () => go('home'));
 $$('[data-sec]').forEach((b) => b.addEventListener('click', () => push(b.dataset.sec)));
 $$('[data-back]').forEach((b) => b.addEventListener('click', back));
@@ -697,98 +711,159 @@ const toast = (t) => { let el = $('#toast'); if (!el) { el = document.createElem
 $$('[data-soon]').forEach((b) => b.addEventListener('click', (e) => { e.stopPropagation(); toast('Этот раздел появится в следующей версии'); }));
 $('#profile').addEventListener('click', () => go('prof'));
 
-// ─── кольцо: одна дуга цвета состояния, без точек ───
-function drawRing() {
-  const R = 112, C = 2 * Math.PI * R, done = 2 / 4;
-  $('#ring').innerHTML = `<circle cx="125" cy="125" r="${R}" fill="none" stroke="rgba(21,20,26,.06)" stroke-width="10"/>
-  <circle cx="125" cy="125" r="${R}" fill="none" stroke="var(--mood)" stroke-width="10" stroke-linecap="round" stroke-dasharray="${C}" stroke-dashoffset="${C}" transform="rotate(-90 125 125)" id="arc" style="transition:stroke-dashoffset 1.3s cubic-bezier(.2,.8,.2,1), stroke 1s"/>`;
-  requestAnimationFrame(() => requestAnimationFrame(() => { const a = $('#arc'); if (a) a.style.strokeDashoffset = C * (1 - done); }));
-}
+// ─── сохранение на телефоне ───
+const KEY = 'kamahealth2';
+const store = (() => { try { return JSON.parse(localStorage.getItem(KEY)) || {}; } catch (err) { return {}; } })();
+store.done = store.done || {};
+const save = () => { try { localStorage.setItem(KEY, JSON.stringify({ ans, done: store.done, onboarded: store.onboarded })); } catch (err) { /* приватный режим: работаем без сохранения */ } };
+if (store.ans) Object.assign(ans, store.ans);
+setAge(ans.age); setW(ans.w);
 
-// ─── точки на теле: координаты экрана, подпись справа или слева ───
-// координаты экрана для каждого тела; подпись справа или слева
-const ICON = (d) => `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#15141A" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">${d}</svg>`;
-const BODY = {
-  f: {
-    pts: [
-      { id: 'eyes', x: 207, y: 194, name: 'Глаза', side: 1, lx: 300, done: true },
-      { id: 'teeth', x: 195, y: 219, name: 'Зубы', side: 1, lx: 300, done: true },
-      { id: 'heart', x: 216, y: 318, name: 'Сердце', side: 1, lx: 300 },
-      { id: 'gyn', x: 195, y: 486, name: 'Гинекология', side: -1, lx: 128 },
-    ],
-    row: { pt: 'gyn', t: 'Гинеколог', c: 'каждый год', i: '<circle cx="12" cy="9" r="5"/><path d="M12 14v7M9 18h6"/>' },
-  },
-  m: {
-    pts: [
-      { id: 'eyes', x: 208, y: 183, name: 'Глаза', side: 1, lx: 300, done: true },
-      { id: 'teeth', x: 195, y: 211, name: 'Зубы', side: 1, lx: 300, done: true },
-      { id: 'heart', x: 217, y: 336, name: 'Сердце', side: 1, lx: 300 },
-      { id: 'skin', x: 120, y: 298, name: 'Кожа', side: -1, lx: 74 },
-    ],
-    row: { pt: 'skin', t: 'Дерматолог', c: 'родинки · раз в год', i: '<circle cx="12" cy="12" r="8"/><circle cx="9.5" cy="10" r="1.2" fill="#15141A"/><circle cx="14.5" cy="14" r="1.2" fill="#15141A"/>' },
-  },
+// ─── правила профилактики, Чехия (vyhláška 70/2012 Sb. в редакции 2026) ───
+const I20 = (d) => `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#15141A" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">${d}</svg>`;
+const ICO = {
+  gp: '<path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"/>',
+  dent: '<path d="M7 4c-2 0-3 1.6-3 4 0 3 1.4 4 2 8 .4 2.6 1 4 2 4s1.4-2 2-5c.3-1.4 1.7-1.4 2 0 .6 3 1 5 2 5s1.6-1.4 2-4c.6-4 2-5 2-8 0-2.4-1-4-3-4-1.6 0-2.4 1-5 1S8.6 4 7 4z"/>',
+  gyn: '<circle cx="12" cy="9" r="5"/><path d="M12 14v7M9 18h6"/>',
+  mammo: '<circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="2.5"/>',
+  colon: '<path d="M7 5h10a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2H7a2 2 0 0 0-2 2v3a2 2 0 0 0 2 2h10"/>',
+  psa: '<circle cx="10" cy="14" r="5"/><path d="M14 10l5-5M15 5h4v4"/>',
+  lung: '<path d="M12 4v8M12 12c-1.5 0-3-1-4-3-2 1-4 4-4 8 0 2 1 3 3 3 3 0 5-2 5-5zM12 12c1.5 0 3-1 4-3 2 1 4 4 4 8 0 2-1 3-3 3-3 0-5-2-5-5z"/>',
 };
-let PTS = BODY.f.pts;
+const TAKE = [['Карточка страховой', 'kartička pojištěnce'], ['Паспорт или ID']];
+const PDFT = ['PDF анамнеза', 'из «Моего профиля»'];
+const EXAMS = [
+  { id: 'gp', doc: 'Терапевт', gen: 'терапевта', title: 'Иду к терапевту', months: 24, every: 'раз в 2 года', kind: 'Терапевт', cz: 'Praktický lékař', when: (a) => a.age >= 18,
+    sub: 'Профилактический осмотр раз в 2 года, по страховке бесплатно', take: [...TAKE, ['Список лекарств, если пьёте'], PDFT],
+    act: (a) => ['Давление, пульс, вес, талия', a.age >= 40 ? 'Анализ крови, холестерин и сахар' : 'Анализ крови и мочи', 'Вопросы о самочувствии и болезнях в семье', 'Направления на скрининги по возрасту'],
+    phrase: (w) => `Dobrý den, ${w ? 'chtěla' : 'chtěl'} bych se objednat na preventivní prohlídku.`, ru: 'Здравствуйте, хочу записаться на профилактический осмотр.' },
+  { id: 'dent', doc: 'Стоматолог', gen: 'стоматолога', title: 'Иду к стоматологу', months: 12, every: 'раз в год', kind: 'Стоматолог', cz: 'Zubní lékař', when: () => true,
+    sub: 'Профилактика раз в год, по страховке бесплатно', take: [...TAKE],
+    act: () => ['Осмотр зубов и дёсен', 'Чистка, если нужна', 'План лечения, если что-то найдут'],
+    phrase: (w) => `Dobrý den, ${w ? 'chtěla' : 'chtěl'} bych se objednat na preventivní prohlídku zubů.`, ru: 'Здравствуйте, хочу записаться на профилактический осмотр зубов.' },
+  { id: 'gyn', doc: 'Гинеколог', gen: 'гинеколога', title: 'Иду к гинекологу', months: 12, every: 'раз в год', kind: 'Гинеколог', cz: 'Gynekolog', when: (a) => a.sex === 'f' && a.age >= 15,
+    sub: 'Профилактика раз в год с цитологией, по страховке бесплатно', take: [...TAKE, ['Дата начала последних месячных'], PDFT],
+    act: (a) => ['Осмотр и разговор о самочувствии', 'Мазок на цитологию', ...([35, 45, 55].includes(a.age) ? ['Тест на ВПЧ: в этом возрасте его оплачивает страховая'] : []), 'Осмотр груди'],
+    phrase: () => 'Dobrý den, chtěla bych se objednat na preventivní gynekologickou prohlídku.', ru: 'Здравствуйте, хочу записаться на профилактический осмотр у гинеколога.' },
+  { id: 'mammo', doc: 'Маммография', gen: 'маммографии', title: 'Иду на маммографию', months: 24, every: 'раз в 2 года', kind: 'Маммоцентр', cz: 'Mamografie', when: (a) => a.sex === 'f' && a.age >= 45,
+    sub: 'Скрининг груди с 45 лет раз в 2 года, по страховке бесплатно', take: [...TAKE, ['Направление, если дал врач'], ['Прошлые снимки, если есть']],
+    act: () => ['Снимок груди с двух сторон', 'Результат придёт вам и вашему врачу'],
+    phrase: () => 'Dobrý den, chtěla bych se objednat na screeningovou mamografii.', ru: 'Здравствуйте, хочу записаться на скрининговую маммографию.' },
+  { id: 'colon', doc: 'Тест на скрытую кровь', gen: 'теста на скрытую кровь', title: 'Сдаю тест на скрытую кровь', months: 24, every: 'раз в 2 года', kind: 'Терапевт', cz: 'TOKS', when: (a) => a.age >= 45 && a.age <= 74,
+    sub: 'Скрининг кишечника с 45 лет: тест раз в 2 года или колоноскопия раз в 10 лет', take: [...TAKE],
+    act: () => ['Набор для теста даст терапевт или гинеколог', 'Сдаёте дома и приносите обратно', 'Если тест положительный, направят на колоноскопию'],
+    phrase: (w) => `Dobrý den, ${w ? 'chtěla' : 'chtěl'} bych test na skryté krvácení do stolice.`, ru: 'Здравствуйте, хочу сдать тест на скрытую кровь в кале.' },
+  { id: 'psa', doc: 'Анализ PSA', gen: 'анализа PSA', title: 'Сдаю анализ PSA', months: 24, every: 'пилотная программа', kind: 'Уролог', cz: 'PSA', when: (a) => a.sex !== 'f' && a.age >= 50 && a.age <= 69,
+    sub: 'Скрининг простаты для мужчин 50–69 лет, пилотная программа', take: [...TAKE],
+    act: () => ['Анализ крови на PSA', 'При отклонении направят к урологу'],
+    phrase: () => 'Dobrý den, chtěl bych se objednat na vyšetření PSA.', ru: 'Здравствуйте, хочу сдать анализ PSA.' },
+  { id: 'lung', doc: 'КТ лёгких', gen: 'КТ лёгких', title: 'Иду на КТ лёгких', months: 12, every: 'раз в год', kind: 'Терапевт', cz: 'CT plic', when: (a) => (a.smoke === 'yes' || a.smoke === 'quit') && a.age >= 55 && a.age <= 74,
+    sub: 'Для тех, кто курил 20 и больше пачко-лет. Направляет терапевт, пилотная программа', take: [...TAKE, PDFT],
+    act: () => ['Терапевт посчитает стаж курения', 'КТ низкой дозы, без уколов', 'Результат обсудите с врачом'],
+    phrase: (w) => `Dobrý den, ${w ? 'chtěla' : 'chtěl'} bych se informovat o screeningu plic.`, ru: 'Здравствуйте, хочу узнать о скрининге лёгких.' },
+];
+const female = () => ans.sex === 'f';
+const MON = ['январь', 'февраль', 'март', 'апрель', 'май', 'июнь', 'июль', 'август', 'сентябрь', 'октябрь', 'ноябрь', 'декабрь'];
+const MONG = ['января', 'февраля', 'марта', 'апреля', 'мая', 'июня', 'июля', 'августа', 'сентября', 'октября', 'ноября', 'декабря'];
+const plural = (n, a, b, c) => { const m = n % 10, h = n % 100; return m === 1 && h !== 11 ? a : m >= 2 && m <= 4 && (h < 12 || h > 14) ? b : c; };
+const addMonths = (d, m) => { const x = new Date(d); x.setMonth(x.getMonth() + m); return x; };
+const monthYear = (d) => `${MON[d.getMonth()]} ${d.getFullYear()}`;
+const dayMonth = (d) => `${d.getDate()} ${MONG[d.getMonth()]} ${d.getFullYear()}`;
+function exams() {
+  const now = new Date();
+  return EXAMS.filter((e) => e.when(ans)).map((e) => {
+    const last = store.done[e.id] ? new Date(store.done[e.id]) : null, next = last ? addMonths(last, e.months) : null;
+    const st = !next || next <= now ? 'due' : next - now < 62 * 864e5 ? 'soon' : 'ok';
+    return { ...e, last, next, st };
+  });
+}
+const dueOf = (L) => L.filter((e) => e.st === 'due');
+const stateMood = () => (dueOf(exams()).length ? 'calm' : 'happy');
+const statusText = (e) => (e.st === 'due' ? (e.last ? 'пора · ' + e.every : 'пора · ' + e.every) : e.st === 'soon' ? 'скоро · ' + monthYear(e.next) : 'до ' + monthYear(e.next));
+
+// ─── главная ───
+function drawHome() {
+  const L = exams(), due = dueOf(L), nextOk = L.filter((e) => e.next).sort((a, b) => a.next - b.next)[0];
+  $('#heroT').textContent = due.length ? `${due.length} ${plural(due.length, 'осмотр', 'осмотра', 'осмотров')} пора пройти` : 'Все осмотры в порядке';
+  $('#heroS').textContent = due.length ? `Начните с ${due[0].gen}. Подскажу, что взять и что сказать` : nextOk ? `Следующий: ${nextOk.doc.toLowerCase()}, ${monthYear(nextOk.next)}` : 'Загляните через месяц';
+  $('#tPrevN').textContent = due.length; $('#tPrevDot').style.background = due.length ? '#F08A3C' : '#2DB37A';
+  $('#tPrevC').textContent = due.length ? `${plural(due.length, 'осмотр', 'осмотра', 'осмотров')} пора пройти` : 'всё в порядке';
+  const n = L.length; $('#celeS').textContent = `Подобрала ${n} ${plural(n, 'осмотр', 'осмотра', 'осмотров')} под вас`;
+}
+$('#hero').addEventListener('click', () => push('prev'));
+
+// ─── тело и точки ───
+const SPOT = {
+  f: { dent: [195, 219, 1], gp: [216, 318, 1], lung: [228, 290, 1], mammo: [166, 334, -1], colon: [195, 418, -1], gyn: [195, 486, -1] },
+  m: { dent: [195, 211, 1], gp: [217, 336, 1], lung: [168, 322, -1], colon: [195, 425, -1], psa: [195, 500, -1] },
+};
+const LABEL = { gp: 'Сердце', dent: 'Зубы', gyn: 'Гинекология', mammo: 'Грудь', colon: 'Кишечник', psa: 'Простата', lung: 'Лёгкие' };
+let PTS = [];
 function setBody() {
-  const sex = ans.sex === 'f' ? 'f' : 'm', B = BODY[sex]; PTS = B.pts;
+  const sex = female() ? 'f' : 'm', L = exams();
   $('#bodyW').classList.toggle('m', sex === 'm'); $('#body').classList.toggle('m', sex === 'm');
-  $('#row2').dataset.pt = B.row.pt; $('#r2t').textContent = B.row.t; $('#r2c').textContent = B.row.c; $('#r2i').innerHTML = ICON(B.row.i);
+  PTS = L.filter((e) => SPOT[sex][e.id]).map((e) => { const [x, y, side] = SPOT[sex][e.id]; return { id: e.id, x, y, side, lx: side > 0 ? 300 : x < 180 ? 92 : 128, name: LABEL[e.id], st: e.st }; });
+  const okN = L.filter((e) => e.st !== 'due').length;
+  $('#scoreN').innerHTML = `${okN}<small>из</small>${L.length}`;
+  $('#scoreT').innerHTML = `${plural(L.length, 'осмотра', 'осмотров', 'осмотров')}<br>в порядке`;
+  $('#exList').innerHTML = L.sort((a, b) => ({ due: 0, soon: 1, ok: 2 }[a.st] - { due: 0, soon: 1, ok: 2 }[b.st])).map((e) => `<button class="item" data-pt="${e.id}"><span class="ic">${I20(ICO[e.id])}</span><div><b>${e.doc}<span class="badge ${e.st}">${e.st === 'due' ? 'пора' : e.st === 'soon' ? 'скоро' : 'в порядке'}</span></b><span class="cap">${e.st === 'due' ? e.every : (e.st === 'soon' ? 'до ' : 'следующий: ') + monthYear(e.next)}</span></div><span class="chev">›</span></button>`).join('');
 }
 function drawPts() {
   $('#pts').innerHTML = PTS.map((p, i) => {
     const d = 260 + i * 90, x1 = p.side > 0 ? p.x + 8 : p.lx, w = p.side > 0 ? p.lx - p.x - 8 : p.x - 8 - p.lx;
     const lb = p.side > 0 ? `left:${p.lx + 8}px` : `right:${390 - p.lx + 8}px`;
     return `<span class="ln f${p.side < 0 ? ' left' : ''}" data-d="${d}" style="left:${x1}px;top:${p.y}px;width:${w}px"></span>`
-      + `<span class="lb f${p.done ? ' done' : ''}" data-d="${d + 160}" style="${lb};top:${p.y}px">${p.name}</span>`
-      + `<button class="pt f${p.done ? '' : ' due'}" data-d="${d - 60}" data-id="${p.id}" style="left:${p.x}px;top:${p.y}px" aria-label="${p.name}"><i></i></button>`;
+      + `<span class="lb f${p.st === 'due' ? '' : ' done'}" data-d="${d + 160}" style="${lb};top:${p.y}px">${p.name}</span>`
+      + `<button class="pt f ${p.st}" data-d="${d - 60}" data-id="${p.id}" style="left:${p.x}px;top:${p.y}px" aria-label="${p.name}"><i></i></button>`;
   }).join('');
   $$('.f', $('#pts')).forEach((e) => setTimeout(() => e.classList.add('in'), 110 + +e.dataset.d));
 }
 function pick(id) {
-  const p = PTS.find((q) => q.id === id); if (!p) return;
+  const p = PTS.find((q) => q.id === id);
   $$('.pt').forEach((b) => b.classList.toggle('sel', b.dataset.id === id));
-  $$('#p-prev .item').forEach((r) => r.classList.toggle('sel', r.dataset.pt === id));
-  lookAt(p.x, p.y); orb.poke();
-  if (p.done) toast(id === 'eyes' ? 'Окулист пройден в марте' : 'Стоматолог пройден, следующий через 3 месяца');
+  $$('#exList .item').forEach((r) => r.classList.toggle('sel', r.dataset.pt === id));
+  const row = $(`#exList .item[data-pt="${id}"]`); if (row) row.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+  if (p) lookAt(p.x, p.y); orb.poke();
 }
-$('#pts').addEventListener('click', (e) => { const b = e.target.closest('.pt'); if (b) { e.stopPropagation(); pick(b.dataset.id); } });
-$$('#p-prev .item').forEach((r) => r.addEventListener('click', (e) => { if (e.target.closest('.act')) return; e.stopPropagation(); pick(r.dataset.pt); visitFor = r.dataset.pt; setTimeout(() => push('visit'), 380); }));
+let visitFor = 'gp';
+$('#pts').addEventListener('click', (e) => { const b = e.target.closest('.pt'); if (b) { e.stopPropagation(); pick(b.dataset.id); visitFor = b.dataset.id; setTimeout(() => push('visit'), 420); } });
+$('#exList').addEventListener('click', (e) => { const r = e.target.closest('.item'); if (!r) return; e.stopPropagation(); pick(r.dataset.pt); visitFor = r.dataset.pt; setTimeout(() => push('visit'), 380); });
 
-// ─── осмотры: одно описание на все разделы ───
-const EX = {
-  heart: { doc: 'Терапевт', to: 'терапевту', every: 'раз в 2 года', st: 'due', sub: 'Профилактический осмотр раз в 2 года, по страховке бесплатно',
-    take: [['Карточка страховой', 'kartička pojištěnce'], ['Паспорт или ID'], ['Список лекарств, если пьёте'], ['PDF анамнеза', 'из «Моего профиля»']],
-    act: ['Давление, пульс, вес и рост', 'Анализ крови и мочи', 'Вопросы о самочувствии и болезнях в семье', 'Направления к другим врачам, если нужно'],
-    cz: (w) => `Dobrý den, ${w ? 'chtěla' : 'chtěl'} bych se objednat na preventivní prohlídku.`, ru: 'Здравствуйте, я бы хотел(а) записаться на профилактический осмотр.' },
-  gyn: { doc: 'Гинеколог', to: 'гинекологу', every: 'каждый год', st: 'due', sub: 'Профилактический осмотр раз в год, по страховке бесплатно',
-    take: [['Карточка страховой', 'kartička pojištěnce'], ['Паспорт или ID'], ['Дата начала последних месячных'], ['PDF анамнеза', 'из «Моего профиля»']],
-    act: ['Осмотр и разговор о самочувствии', 'Мазок на цитологию', 'УЗИ, если врач сочтёт нужным', 'Осмотр груди'],
-    cz: () => 'Dobrý den, chtěla bych se objednat na preventivní gynekologickou prohlídku.', ru: 'Здравствуйте, я бы хотела записаться на профилактический осмотр у гинеколога.' },
-  skin: { doc: 'Дерматолог', to: 'дерматологу', every: 'раз в год', st: 'due', sub: 'Осмотр родинок, особенно если их много или они меняются',
-    take: [['Карточка страховой', 'kartička pojištěnce'], ['Паспорт или ID'], ['Фото родинок, которые изменились'], ['PDF анамнеза', 'из «Моего профиля»']],
-    act: ['Осмотр кожи и родинок', 'Проверка дерматоскопом', 'Совет, за какими родинками следить'],
-    cz: (w) => `Dobrý den, ${w ? 'chtěla' : 'chtěl'} bych se objednat na kontrolu znamének.`, ru: 'Здравствуйте, я бы хотел(а) записаться на осмотр родинок.' },
-  teeth: { doc: 'Стоматолог', to: 'стоматологу', every: 'каждые 6 мес', st: 'soon', when: 'через 3 мес', sub: 'Профилактический осмотр два раза в год, по страховке бесплатно',
-    take: [['Карточка страховой', 'kartička pojištěnce'], ['Паспорт или ID']],
-    act: ['Осмотр зубов и дёсен', 'Чистка, если нужна', 'План лечения, если что-то найдут'],
-    cz: (w) => `Dobrý den, ${w ? 'chtěla' : 'chtěl'} bych se objednat na preventivní prohlídku zubů.`, ru: 'Здравствуйте, я бы хотел(а) записаться на профилактический осмотр зубов.' },
-  eyes: { doc: 'Окулист', to: 'окулисту', every: 'раз в 1–2 года', st: 'done', done: 'март 2026' },
-};
-const female = () => ans.sex === 'f';
-const thirdId = () => (female() ? 'gyn' : 'skin');
-let visitFor = 'heart';
-
+// ─── подготовка к осмотру ───
 function drawVisit() {
-  const e = EX[visitFor] || EX.heart;
-  $('#vT').textContent = 'Иду к ' + e.to; $('#vS').textContent = e.sub;
+  const e = exams().find((x) => x.id === visitFor) || exams()[0]; if (!e) return;
+  $('#vT').textContent = e.title; $('#vS').textContent = e.sub;
+  const st = $('#vSt'); st.className = 'vSt on' + (e.st === 'due' ? ' due' : '');
+  st.textContent = e.last ? `Пройден ${dayMonth(e.last)} · следующий ${monthYear(e.next)}` : 'Отметки о прохождении пока нет';
   $('#vTake').innerHTML = e.take.map(([a, b]) => `<button class="chk"><i></i><span>${a}${b ? `<small>${b}</small>` : ''}</span></button>`).join('');
-  $('#vDo').innerHTML = e.act.map((a) => `<li>${a}</li>`).join('');
-  $('#vCz').textContent = e.cz(female()); $('#vRu').textContent = e.ru;
+  $('#vDo').innerHTML = e.act(ans).map((a) => `<li>${a}</li>`).join('');
+  $('#vCz').textContent = e.phrase(female()); $('#vRu').textContent = e.ru;
+  $('#vMark').textContent = e.last && e.st !== 'due' ? 'Убрать отметку' : female() ? 'Я уже прошла этот осмотр' : 'Я уже прошёл этот осмотр';
 }
-$('#vTake').addEventListener('click', (ev) => { const c = ev.target.closest('.chk'); if (!c) return; c.classList.toggle('on'); const [x, y] = centerOf(c); lookAt(x, y); if ($$('#vTake .chk').every((k) => k.classList.contains('on'))) { orb.poke(); setMood('joy'); setTimeout(() => { if (cur === 'visit') setMood('happy'); }, 1200); } });
+$('#vTake').addEventListener('click', (ev) => { const c = ev.target.closest('.chk'); if (!c) return; c.classList.toggle('on'); const [x, y] = centerOf(c); lookAt(x, y); if ($$('#vTake .chk').every((k) => k.classList.contains('on'))) react('joy', 1200); });
 $('#vCopy').addEventListener('click', () => { try { navigator.clipboard && navigator.clipboard.writeText($('#vCz').textContent); } catch (err) { /* без доступа к буферу просто показываем подсказку */ } toast('Фраза скопирована'); orb.poke(); });
-$('#vFind').addEventListener('click', () => { docFilter = (EX[visitFor] || EX.heart).doc; push('docs'); });
-$$('[data-find]').forEach((b) => b.addEventListener('click', (ev) => { ev.stopPropagation(); docFilter = EX[b.dataset.find].doc; push('docs'); }));
+$('#vFind').addEventListener('click', () => { const e = EXAMS.find((x) => x.id === visitFor); docFilter = e ? e.kind : 'Все'; push('docs'); });
+$('#vMark').addEventListener('click', () => {
+  const e = exams().find((x) => x.id === visitFor); if (!e) return;
+  if (e.last && e.st !== 'due') { delete store.done[e.id]; save(); toast('Отметка убрана'); drawVisit(); setMood(stateMood()); return; }
+  store.done[e.id] = new Date().toISOString(); save();
+  const nx = addMonths(new Date(), e.months); toast(`Отмечено. Следующий раз: ${monthYear(nx)}`);
+  react('joy', 1600); burstAt(...centerOf($('#vMark'))); drawVisit();
+  setTimeout(() => { if (cur === 'visit') back(); }, 1300);
+});
+
+// ─── календарь ───
+function drawCal() {
+  const L = exams(), due = dueOf(L), up = L.filter((e) => e.st !== 'due').sort((a, b) => a.next - b.next), past = L.filter((e) => e.last).sort((a, b) => b.last - a.last);
+  const row = (e, extra) => `<button class="row" data-v="${e.id}"><span class="ic">${I20(ICO[e.id])}</span><span><b>${e.doc}</b><span class="cap">${extra}</span></span><span class="end"><span class="chev">›</span></span></button>`;
+  const groups = []; if (due.length) groups.push(`<div class="tlG now"><div class="sh">Сейчас</div><div class="card">${due.map((e) => row(e, 'пора · ' + e.every)).join('')}</div></div>`);
+  const byMonth = {}; up.forEach((e) => { const k = monthYear(e.next); (byMonth[k] = byMonth[k] || []).push(e); });
+  Object.entries(byMonth).forEach(([k, arr]) => groups.push(`<div class="tlG"><div class="sh">${k[0].toUpperCase() + k.slice(1)}</div><div class="card">${arr.map((e) => row(e, e.every)).join('')}</div></div>`));
+  if (past.length) groups.push(`<div class="tlG done"><div class="sh">Пройдено</div><div class="card">${past.map((e) => row(e, dayMonth(e.last))).join('')}</div></div>`);
+  if (!up.length && !past.length) groups.push(`<div class="tlG"><div class="sh">Дальше</div><div class="card" style="padding:16px"><p class="t">Когда отметите осмотр пройденным, здесь появится дата следующего.</p></div></div>`);
+  $('#calList').innerHTML = groups.join('');
+}
+$('#calList').addEventListener('click', (ev) => { const r = ev.target.closest('.row'); if (!r) return; const [x, y] = centerOf(r); lookAt(x, y); visitFor = r.dataset.v; push('visit'); });
 
 // ─── врачи: пример карточек, без настоящих имён ───
 const DOCS = [
@@ -796,66 +871,56 @@ const DOCS = [
   { doc: 'Гинеколог', where: 'Uhříněves · 1,1 км', lang: 'CZ, EN', ok: true, x: 58, y: 34 },
   { doc: 'Стоматолог', where: 'Pitkovice · 2,9 км', lang: 'CZ, RU', ok: false, wait: 'ждать ~1 мес', x: 24, y: 70 },
   { doc: 'Терапевт', where: 'Kolovraty · 2,4 км', lang: 'CZ', ok: false, wait: 'ждать ~2 нед', x: 80, y: 66 },
-  { doc: 'Дерматолог', where: 'Strašnice · 7 км', lang: 'CZ, EN', ok: true, x: 14, y: 22 },
-  { doc: 'Окулист', where: 'Uhříněves · 1,0 км', lang: 'CZ', ok: false, wait: 'ждать ~3 нед', x: 66, y: 52 },
+  { doc: 'Стоматолог', where: 'Uhříněves · 1,3 км', lang: 'CZ, EN', ok: true, x: 36, y: 30 },
+  { doc: 'Уролог', where: 'Strašnice · 7 км', lang: 'CZ', ok: false, wait: 'ждать ~3 нед', x: 14, y: 22 },
+  { doc: 'Маммоцентр', where: 'Vinohrady · 9 км', lang: 'CZ, EN', ok: true, x: 88, y: 24 },
 ];
 let docFilter = 'Все';
-const AV = { 'Терапевт': '<path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"/>', 'Гинеколог': '<circle cx="12" cy="9" r="5"/><path d="M12 14v7M9 18h6"/>', 'Стоматолог': '<path d="M7 4c-2 0-3 1.6-3 4 0 3 1.4 4 2 8 .4 2.6 1 4 2 4s1.4-2 2-5c.3-1.4 1.7-1.4 2 0 .6 3 1 5 2 5s1.6-1.4 2-4c.6-4 2-5 2-8 0-2.4-1-4-3-4-1.6 0-2.4 1-5 1S8.6 4 7 4z"/>', 'Дерматолог': '<circle cx="12" cy="12" r="8"/><circle cx="9.5" cy="10" r="1.2" fill="#15141A"/><circle cx="14.5" cy="14" r="1.2" fill="#15141A"/>', 'Окулист': '<path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12z"/><circle cx="12" cy="12" r="3"/>' };
+const AV = { 'Терапевт': ICO.gp, 'Гинеколог': ICO.gyn, 'Стоматолог': ICO.dent, 'Уролог': ICO.psa, 'Маммоцентр': ICO.mammo };
 const MAP = `<svg viewBox="0 0 358 196" preserveAspectRatio="xMidYMid slice"><rect width="358" height="196" fill="#EEF1F6"/>
 <path d="M-10 150 C60 120 90 160 160 130 S280 90 370 110 L370 210 L-10 210Z" fill="#E3EFE4"/>
 <ellipse cx="290" cy="40" rx="70" ry="34" fill="#E3EFE4"/><path d="M40 20 q30 10 22 40 t30 30" fill="none" stroke="#D6E6F5" stroke-width="10" stroke-linecap="round"/>
 <g fill="none" stroke="#fff" stroke-linecap="round"><path d="M-10 92 C80 84 160 104 370 80" stroke-width="9"/><path d="M150 -10 C140 60 170 120 150 210" stroke-width="7"/><path d="M-10 40 L120 70 L250 150 L370 170" stroke-width="5"/><path d="M230 -10 L250 60 L320 210" stroke-width="5"/><path d="M60 210 L90 120 L40 60" stroke-width="4"/></g></svg>`;
 function drawDocs() {
-  const kinds = ['Все', 'Терапевт', female() ? 'Гинеколог' : 'Дерматолог', 'Стоматолог', 'Окулист', female() ? 'Дерматолог' : 'Гинеколог'];
+  const mine = [...new Set(exams().map((e) => e.kind))], kinds = ['Все', ...mine, ...['Терапевт', 'Стоматолог', 'Гинеколог', 'Маммоцентр', 'Уролог'].filter((k) => !mine.includes(k))];
   if (!kinds.includes(docFilter)) docFilter = 'Все';
   $('#docChips').innerHTML = kinds.map((k) => `<button class="chip${k === docFilter ? ' on' : ''}" data-k="${k}">${k}</button>`).join('');
   const list = DOCS.filter((d) => docFilter === 'Все' || d.doc === docFilter);
   $('#map').innerHTML = MAP + `<span class="ml">Praha 10</span><span class="mb">пример</span><span class="pin me" style="left:50%;top:56%"></span>` + DOCS.map((d) => `<span class="pin${d.ok ? '' : ' off'}" style="left:${d.x}%;top:${d.y}%;${list.includes(d) ? '' : 'opacity:.25;transform:scale(.7)'}"></span>`).join('');
-  $('#docCount').textContent = list.filter((d) => d.ok).length ? `Берут новых пациентов: ${list.filter((d) => d.ok).length} из ${list.length}` : 'Рядом с вами';
-  $('#docList').innerHTML = list.map((d) => `<button class="doc"><span class="av">${I20(AV[d.doc])}</span><span><b>${d.doc}</b><span class="cap">${d.where} · ${d.lang}</span></span><span class="st ${d.ok ? 'ok' : 'wait'}">${d.ok ? 'берёт новых' : d.wait}</span></button>`).join('');
+  const okN = list.filter((d) => d.ok).length;
+  $('#docCount').textContent = list.length ? `Берут новых пациентов: ${okN} из ${list.length}` : 'Пока нет примеров';
+  $('#docList').innerHTML = list.length ? list.map((d) => `<button class="doc"><span class="av">${I20(AV[d.doc])}</span><span><b>${d.doc}</b><span class="cap">${d.where} · ${d.lang}</span></span><span class="st ${d.ok ? 'ok' : 'wait'}">${d.ok ? 'берёт новых' : d.wait}</span></button>`).join('') : '<p class="t" style="padding:14px 0">В примере таких врачей нет. В настоящей карте будут все кабинеты района.</p>';
 }
-const I20 = (d) => `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#15141A" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">${d}</svg>`;
 $('#docChips').addEventListener('click', (ev) => { const c = ev.target.closest('.chip'); if (!c) return; docFilter = c.dataset.k; const [x, y] = centerOf(c); lookAt(x, y); drawDocs(); });
 $('#docList').addEventListener('click', (ev) => { const d = ev.target.closest('.doc'); if (!d) return; const [x, y] = centerOf(d); lookAt(x, y); toast('Запись к врачу появится в следующей версии'); });
-
-// ─── календарь ───
-function drawCal() {
-  const t = EX[thirdId()], row = (e, extra, id) => `<button class="row" data-v="${id || ''}"><span class="ic">${I20(AV[e.doc])}</span><span><b>${e.doc}</b><span class="cap">${extra}</span></span><span class="end">${id ? '<span class="chev">›</span>' : ''}</span></button>`;
-  $('#calList').innerHTML = `
-  <div class="tlG now"><div class="sh">Сейчас</div><div class="card">${row(EX.heart, 'пора · ' + EX.heart.every, 'heart')}${row(t, 'пора · ' + t.every, thirdId())}</div></div>
-  <div class="tlG"><div class="sh">Февраль 2027</div><div class="card">${row(EX.teeth, EX.teeth.every, 'teeth')}</div></div>
-  <div class="tlG"><div class="sh">Март 2027</div><div class="card">${row(EX.eyes, EX.eyes.every)}</div></div>
-  <div class="tlG done"><div class="sh">Пройдено в 2026</div><div class="card">${row(EX.teeth, 'август')}${row(EX.eyes, 'март')}</div></div>`;
-}
-$('#calList').addEventListener('click', (ev) => { const r = ev.target.closest('.row'); if (!r) return; const [x, y] = centerOf(r); lookAt(x, y); if (r.dataset.v) { visitFor = r.dataset.v; push('visit'); } else toast('Этот осмотр уже пройден'); });
 
 // ─── профиль и PDF ───
 const SMOKE = { no: ['не курите', 'ne'], quit: ['бросаете', 'přestává'], yes: ['курите', 'ano'] };
 const ANAM = [
-  ['Хронические болезни', 'нет', 'Chronická onemocnění', 'žádná'],
-  ['Операции', 'нет', 'Operace', 'žádné'],
-  ['Аллергии', '', 'Alergie', ''],
-  ['Лекарства', '', 'Užívané léky', ''],
-  ['Болезни в семье', '', 'Rodinná anamnéza', ''],
-  ['Прививки', '', 'Očkování', ''],
+  ['Хронические болезни', '', 'Chronická onemocnění'], ['Операции', '', 'Operace'], ['Аллергии', '', 'Alergie'],
+  ['Лекарства', '', 'Užívané léky'], ['Болезни в семье', '', 'Rodinná anamnéza'], ['Прививки', '', 'Očkování'],
 ];
 function drawProf() {
   const sm = SMOKE[ans.smoke] || ['не указано', 'neuvedeno'];
-  $('#profStats').innerHTML = [['Пол', ans.sex ? (female() ? 'женский' : 'мужской') : 'не указан', ''], ['Возраст', ans.age, 'лет'], ['Вес', ans.w, 'кг'], ['Курение', sm[0], '']].map(([k, v, u]) => `<button class="stat" data-soon2="Изменить можно будет в следующей версии"><div class="cap">${k}</div><div class="v"${typeof v === 'string' ? ' style="font-size:19px;line-height:32px;font-weight:400;letter-spacing:0"' : ''}>${v}${u ? `<small>${u}</small>` : ''}</div></button>`).join('');
-  const done = ANAM.filter((a) => a[1]).length;
-  $('#anam').innerHTML = `<div style="padding:12px 0 2px"><div style="display:flex;justify-content:space-between;font-size:15px;font-weight:500"><span>Заполнено</span><span>${done} из ${ANAM.length}</span></div><div class="meter"><i style="width:0" data-w="${done / ANAM.length * 100}"></i></div></div>`
-    + ANAM.map((a) => `<button class="row" data-soon2="Заполнять с помощью Камы можно будет в следующей версии"><span><b>${a[0]}</b></span><span class="end">${a[1] ? a[1] : '<span style="color:var(--ink);font-weight:500">Добавить</span>'}<span class="chev">›</span></span></button>`).join('');
+  $('#profStats').innerHTML = [['Пол', ans.sex ? (female() ? 'женский' : 'мужской') : 'не указан', ''], ['Возраст', ans.age, 'лет'], ['Вес', ans.w, 'кг'], ['Курение', sm[0], '']].map(([k, v, u]) => `<button class="stat" data-edit><div class="cap">${k}</div><div class="v"${typeof v === 'string' ? ' style="font-size:19px;line-height:32px;font-weight:400;letter-spacing:0"' : ''}>${v}${u ? `<small>${u}</small>` : ''}</div></button>`).join('');
+  const done = ANAM.filter((x) => x[1]).length;
+  $('#anam').innerHTML = `<div style="padding:12px 0 2px"><div style="display:flex;justify-content:space-between;font-size:15px;font-weight:500"><span>Заполнено</span><span>${done} из ${ANAM.length}</span></div><div class="meter"><i style="width:0" data-w="${Math.max(3, done / ANAM.length * 100)}"></i></div></div>`
+    + ANAM.map((x) => `<button class="row" data-soon2="Заполнять анамнез вместе с Камой можно будет в следующей версии"><span><b>${x[0]}</b></span><span class="end">${x[1] || '<span style="color:var(--ink);font-weight:500">Добавить</span>'}<span class="chev">›</span></span></button>`).join('');
   requestAnimationFrame(() => requestAnimationFrame(() => { const m = $('#anam .meter i'); if (m) m.style.width = m.dataset.w + '%'; }));
 }
 function drawPdf() {
   const sm = SMOKE[ans.smoke] || ['', 'neuvedeno'], d = new Date(), date = `${d.getDate()}. ${d.getMonth() + 1}. ${d.getFullYear()}`;
   const tr = (k, v) => `<tr><td>${k}</td><td>${v || '<span style="color:#9A98A4">neuvedeno</span>'}</td></tr>`;
+  const mm = (x) => `${String(x.getMonth() + 1).padStart(2, '0')}/${x.getFullYear()}`;
   $('#paper').innerHTML = `<div class="ph"><b>Anamnéza pacienta</b><span>KamaHealth</span></div>
   <table>${tr('Pohlaví', ans.sex ? (female() ? 'žena' : 'muž') : '')}${tr('Věk', ans.age + ' let')}${tr('Hmotnost', ans.w + ' kg')}${tr('Kouření', sm[1])}</table>
-  <div class="sec">Zdravotní stav</div><table>${ANAM.map((a) => tr(a[2], a[3])).join('')}</table>
-  <div class="sec">Preventivní prohlídky</div><table>${tr('Oční', '03/2026')}${tr('Zubní', '08/2026')}${tr('Praktický lékař', 'plánuje se')}</table>
+  <div class="sec">Zdravotní stav</div><table>${ANAM.map((x) => tr(x[2], '')).join('')}</table>
+  <div class="sec">Preventivní prohlídky (poslední)</div><table>${exams().map((e) => tr(e.cz, e.last ? mm(e.last) : '')).join('')}</table>
   <div class="pf">Vyplněno pacientem v aplikaci KamaHealth, ${date}. Nejde o lékařskou zprávu.</div>`;
 }
+let editMode = false;
+document.addEventListener('click', (ev) => { if (ev.target.closest('[data-edit], #editAns')) { editMode = true; go('sex'); } });
+$('#resetAll').addEventListener('click', () => { if (!confirm('Стереть ответы и отметки на этом телефоне?')) return; try { localStorage.removeItem(KEY); } catch (err) { /* нечего стирать */ } store.done = {}; store.onboarded = false; Object.assign(ans, { sex: null, age: 29, w: 62, smoke: null }); setAge(29); setW(62); $$('.opt').forEach((o) => o.classList.remove('on')); $('[data-next=age]').disabled = true; $('#finish').disabled = true; stack = []; go('welcome'); });
 $('#toPdf').addEventListener('click', () => push('pdf'));
 $('#toLab').addEventListener('click', () => push('lab'));
 
@@ -891,17 +956,38 @@ function labRun() {
 }
 $('#labShoot').addEventListener('click', () => { toast('В приложении здесь откроется камера. Пока покажу на примере'); labRun(); });
 $('#labDemo').addEventListener('click', labRun);
-$('#labGo').addEventListener('click', () => { visitFor = 'heart'; push('visit'); });
+$('#labGo').addEventListener('click', () => { visitFor = 'gp'; push('visit'); });
 document.addEventListener('click', (ev) => { const b = ev.target.closest('[data-soon2]'); if (!b) return; ev.stopPropagation(); toast(b.dataset.soon2); }, true);
 
 // ─── искры праздника ───
 let sparks = [];
+function burstAt(x, y) { const col = KamaOrb.MOODS.joy.c; for (let i = 0; i < 26; i++) { const a = Math.random() * Math.PI * 2, s = 120 + Math.random() * 220; sparks.push({ x, y, vx: Math.cos(a) * s, vy: Math.sin(a) * s - 160, r: 1.4 + Math.random() * 2.6, life: 0, max: 0.7 + Math.random() * 0.6, c: i % 3 ? col : '#FFFFFF' }); } }
 function burst() { const col = KamaOrb.MOODS.joy.c; for (let i = 0; i < 46; i++) { const a = Math.random() * Math.PI * 2, s = 140 + Math.random() * 320; sparks.push({ x: 195, y: 300, vx: Math.cos(a) * s, vy: Math.sin(a) * s - 140, r: 1.6 + Math.random() * 3.2, life: 0, max: 0.9 + Math.random() * 0.7, c: i % 3 ? col : '#FFFFFF' }); } }
 const fx = document.createElementNS('http://www.w3.org/2000/svg', 'svg'); fx.setAttribute('viewBox', '0 0 390 844'); Object.assign(fx.style, { position: 'absolute', left: 0, top: 0, width: '390px', height: '844px', zIndex: 5, pointerEvents: 'none' }); phone.appendChild(fx);
 
-// ─── касания ───
-phone.addEventListener('pointermove', (e) => { const [x, y] = local(e); lookAt(x, y); });
-phone.addEventListener('pointerdown', (e) => { const [x, y] = local(e); lookAt(x, y); if (Math.hypot(x - O.x.x, y - O.y.x) < O.size.x * 0.33 && !e.target.closest('button')) { orb.poke(); const m = mood; setMood('joy'); setTimeout(() => { if (mood === 'joy') setMood(m); }, 900); } });
+// ─── касания: на телефоне нет курсора, поэтому маскот реагирует на касания, прокрутку и появление нового ───
+let idleT = 0, nudges = 0, touchAt = 0;
+const react = (m, ms) => { orb.poke(); setMood(m); clearTimeout(react.t); react.t = setTimeout(() => setMood(cur === 'pdf' ? 'proud' : ['welcome', 'sex', 'age', 'weight', 'smoke', 'cele'].includes(cur) ? 'calm' : stateMood()), ms); };
+// смотрит на главное на новом экране, потом снова на человека
+function attend(sel) { clearTimeout(attend.t); nudges = 0; idleT = 0; attend.t = setTimeout(() => { const el = $('#p-' + cur + ' ' + sel) || $(sel); if (el && el.getBoundingClientRect().width) { const [x, y] = centerOf(el); lookAt(x, Math.min(800, y)); } }, 520); }
+// подсказка без слов: если долго ничего не нажимают, маскот кивает на главную кнопку
+const CTA = { welcome: '#start', sex: '#p-sex .opt', age: '#p-age [data-next]', weight: '#p-weight [data-next]', smoke: '#p-smoke .opt', cele: '#toHome', home: '#hero', prev: '.pt.due', visit: '#vTake .chk:not(.on)' };
+function idleStep(dt) {
+  idleT += dt; if (idleT < 7 + nudges * 6 || nudges >= 2) return;
+  idleT = 0; nudges++; const el = CTA[cur] && $('#p-' + cur + ' ' + CTA[cur].replace('#p-' + cur + ' ', '')); if (!el || !el.getBoundingClientRect().width) return;
+  const [x, y] = centerOf(el); lookAt(x, y); setTimeout(() => orb.poke(), 260);
+}
+// прокрутка: глаза следят за движением списка
+document.addEventListener('scroll', (e) => { const sc = e.target; if (!sc.classList || !sc.classList.contains('scr')) return; const dy = sc.scrollTop - (sc._y || 0); sc._y = sc.scrollTop; idleT = 0; orb.pointer([0, Math.max(-1, Math.min(1, dy * 0.08)) + 0.25]); }, true);
+// жест «назад» от левого края, как в iOS
+let edge = null;
+phone.addEventListener('pointerdown', (e) => { const [x, y] = local(e); if (x < 22 && stack.length) edge = { x, y }; }, true);
+phone.addEventListener('pointerup', (e) => { if (!edge) return; const [x, y] = local(e); if (x - edge.x > 70 && Math.abs(y - edge.y) < 80) back(); edge = null; }, true);
+// долгое нажатие на маскота: смущается
+let holdT = null;
+phone.addEventListener('pointerup', () => clearTimeout(holdT));
+phone.addEventListener('pointermove', (e) => { if (e.pointerType === 'mouse') { const [x, y] = local(e); lookAt(x, y); } });
+phone.addEventListener('pointerdown', (e) => { const [x, y] = local(e); lookAt(x, y); idleT = 0; touchAt = performance.now(); if (Math.hypot(x - O.x.x, y - O.y.x) < Math.max(34, O.size.x * 0.33) && !e.target.closest('button')) { react('joy', 900); holdT = setTimeout(() => react('shy', 1500), 520); } });
 
 // ─── панель ───
 $$('[data-go]').forEach((b) => (b.onclick = () => go(b.dataset.go)));
@@ -912,15 +998,18 @@ let last = performance.now();
 function tick(now) {
   const dt = Math.min(0.05, (now - last) / 1000); last = now; const n = Math.ceil(dt / (1 / 240));
   for (let i = 0; i < n; i++) { orb.step(dt / n); stepS(O.x, dt / n); stepS(O.y, dt / n); stepS(O.size, dt / n); }
-  orb.render(); const s = O.size.x; orbSvg.style.width = s + 'px'; orbSvg.style.height = s + 'px'; orbSvg.style.transform = `translate(${O.x.x - s / 2}px, ${O.y.x - s / 2}px)`;
+  idleStep(dt);
+  orb.render(); const s = O.size.x, v = Math.hypot(O.x.v, O.y.v), k = Math.min(0.22, v / 2600), ang = Math.atan2(O.y.v, O.x.v) * 180 / Math.PI;
+  orbSvg.style.width = s + 'px'; orbSvg.style.height = s + 'px';
+  orbSvg.style.transform = `translate(${O.x.x - s / 2}px, ${O.y.x - s / 2}px)` + (k > 0.01 ? ` rotate(${ang.toFixed(1)}deg) scale(${(1 + k).toFixed(3)}, ${(1 - k * 0.7).toFixed(3)}) rotate(${(-ang).toFixed(1)}deg)` : '');
   const fs = Math.max(360, s * 1.9); field.style.width = field.style.height = fs + 'px'; field.style.transform = `translate(${O.x.x - fs / 2}px, ${O.y.x - fs / 2}px)`;
   sparks = sparks.filter((p) => { p.life += dt; p.vy += 700 * dt; p.x += p.vx * dt; p.y += p.vy * dt; return p.life < p.max; });
   fx.innerHTML = sparks.map((p) => `<circle cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="${(p.r * (1 - p.life / p.max * 0.5)).toFixed(1)}" fill="${p.c}" opacity="${(1 - p.life / p.max).toFixed(2)}"/>`).join('');
   requestAnimationFrame(tick);
 }
-const start = new URLSearchParams(location.search).get('go') || 'welcome';
+const start = new URLSearchParams(location.search).get('go') || (store.onboarded ? 'home' : 'welcome');
 go(start); place(O.x.t, O.y.t, O.size.t, true);
 requestAnimationFrame(tick);
-window.__app = { go, setMood, orb, O };
+window.__app = { go, setMood, orb, O, store, ans, exams, save };
 </script>
 </html>
