@@ -10,8 +10,9 @@ orb = (lab / 'orb.js').read_text(encoding='utf8')
 tag = """<script>document.write('<script src="orb.js?t=' + Date.now() + '"><\\/script>');</script>"""
 assert tag in s, 'нет тега orb.js'
 s = s.replace(tag, '<script>\n' + orb + '\n</script>', 1)
-png = 'data:image/png;base64,' + base64.b64encode((lab / 'body-f.png').read_bytes()).decode()
-assert s.count('url(body-f.png)') == 2
-s = s.replace('url(body-f.png)', 'url(' + png + ')')
+for name in ('body-f.png', 'body-m.png'):
+    png = 'data:image/png;base64,' + base64.b64encode((lab / name).read_bytes()).decode()
+    assert s.count(f'url({name})') == 2, name
+    s = s.replace(f'url({name})', 'url(' + png + ')')
 (here / 'index.html').write_text(s, encoding='utf8')
 print('index.html', len(s))
