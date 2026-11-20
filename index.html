@@ -306,6 +306,9 @@
   .ans .chip.none.on, .ans .chip.on { background:var(--ink); color:#fff; box-shadow:none; }
   .ans input { width:100%; height:48px; border-radius:16px; border:0; box-shadow:inset 0 0 0 1.5px var(--ink); padding:0 16px; font:inherit; font-size:16px; margin-top:4px; outline:none; background:#fff; -webkit-user-select:text; user-select:text; }
   #p-anam.typing .ans { transform:translateY(-190px); }
+  .anHint { width:100%; font-size:14px; line-height:19px; color:#B4530F; margin:2px 4px 0; }
+  .anHint.wait { color:var(--mute); }
+  .btn.busy { opacity:.6; pointer-events:none; }
   #p-anam.typing .qHead { opacity:0; }
   #p-anam .btn2 { display:none !important; }
   #toast { position:absolute; left:50%; bottom:108px; transform:translate(-50%, 12px); background:rgba(21,20,26,.9); color:#fff; font-size:14px; font-weight:500; padding:12px 16px; border-radius:16px; opacity:0; transition:all .3s; z-index:10; white-space:nowrap; pointer-events:none; }
@@ -979,13 +982,13 @@ store.anam = store.anam || {};
 let anI = 0, anOne = false;
 const anOf = (q) => store.anam[q.k] || (store.anam[q.k] = { sel: [], none: false, other: '' });
 const anDone = (q) => { const a = store.anam[q.k]; return !!a && (a.none || a.sel.length > 0 || !!a.other); };
-const anText = (q, lang) => { const a = store.anam[q.k]; if (!a || !anDone(q)) return ''; if (a.none) return lang === 'cz' ? q.noneCz : q.none.toLowerCase(); const parts = a.sel.map((id) => { const o = q.o.find((x) => x[0] === id); return o ? (lang === 'cz' ? o[2] : o[1].toLowerCase()) : ''; }).filter(Boolean); if (a.other) parts.push(lang === 'cz' ? `${a.other} (uvedeno pacientem rusky)` : a.other); return parts.join(', '); };
+const anText = (q, lang) => { const a = store.anam[q.k]; if (!a || !anDone(q)) return ''; if (a.none) return lang === 'cz' ? q.noneCz : q.none.toLowerCase(); const parts = a.sel.map((id) => { const o = q.o.find((x) => x[0] === id); return o ? (lang === 'cz' ? o[2] : o[1].toLowerCase()) : ''; }).filter(Boolean); if (a.other) parts.push(lang === 'cz' ? (a.otherCz ? `${a.otherCz} (přeloženo)` : `${a.other} (uvedeno pacientem rusky)`) : a.other); return parts.join(', '); };
 function drawAnam() {
   const q = ANQ[anI], a = anOf(q), opts = q.o.filter((o) => !o[3] || (o[3] === 'f') === female());
   $('#anProg').innerHTML = ANQ.map((_, i) => `<i class="${i <= anI ? 'done' : ''}"></i>`).join('');
   $('#anQ').textContent = q.q; $('#anT').textContent = q.t;
   $('#anA').innerHTML = `<button class="chip none${a.none ? ' on' : ''}" data-none>${q.none}</button>` + opts.map((o) => `<button class="chip${a.sel.includes(o[0]) ? ' on' : ''}" data-o="${o[0]}">${o[1]}</button>`).join('')
-    + `<button class="chip${a.other ? ' on' : ''}" data-other>Другое</button>` + (a.other || a.showOther ? `<input id="anIn" maxlength="80" placeholder="Напишите своими словами" value="${a.other.replace(/"/g, '&quot;')}">` : '');
+    + `<button class="chip${a.other ? ' on' : ''}" data-other>Другое</button>` + (a.other || a.showOther ? `<input id="anIn" maxlength="80" enterkeyhint="done" placeholder="Напишите своими словами" value="${a.other.replace(/"/g, '&quot;')}">` + (a.hint ? `<p class="anHint" id="anHint">${a.hint}</p>` : '') : '');
   const last = anI === ANQ.length - 1 || anOne;
   $('#anNext').textContent = last ? 'Готово' : anDone(q) ? 'Дальше' : 'Пропустить';
 }
@@ -996,11 +999,56 @@ $('#anA').addEventListener('click', (ev) => {
   else { const id = c.dataset.o; a.none = false; a.sel = a.sel.includes(id) ? a.sel.filter((z) => z !== id) : [...a.sel, id]; }
   save(); drawAnam();
 });
-$('#anA').addEventListener('input', (ev) => { if (ev.target.id !== 'anIn') return; const a = anOf(ANQ[anI]); a.other = ev.target.value.trim(); a.none = false; save(); if (!(anI === ANQ.length - 1 || anOne)) $('#anNext').textContent = anDone(ANQ[anI]) ? 'Дальше' : 'Пропустить'; });
+$('#anA').addEventListener('input', (ev) => { if (ev.target.id !== 'anIn') return; const a = anOf(ANQ[anI]); a.other = ev.target.value.trim(); a.none = false; a.otherCz = ''; a.checked = ''; a.hint = ''; const h = $('#anHint'); if (h) h.remove(); save(); if (!(anI === ANQ.length - 1 || anOne)) $('#anNext').textContent = anDone(ANQ[anI]) ? 'Дальше' : 'Пропустить'; });
+$('#anA').addEventListener('keydown', (ev) => { if (ev.target.id === 'anIn' && ev.key === 'Enter') { ev.preventDefault(); anStep(); } });
 $('#anA').addEventListener('focusin', () => { $('#p-anam').classList.add('typing'); place(338, 78, 74); });
 $('#anA').addEventListener('focusout', () => { $('#p-anam').classList.remove('typing'); if (cur === 'anam') place(195, 156, 128); setTimeout(drawAnam, 50); });
-const anStep = () => {
-  const inp = $('#anIn'); if (inp) inp.blur();
+// ─── проверка своего ответа: сначала на телефоне, потом Кама на сервере (перевод на чешский) ───
+const API = 'https://188-166-80-237.sslip.io/kamahealth';
+const BAD = /(^|[^а-яёa-z])(х[уy][йяеёи]|пизд|[её]б[аеиуоёы]|бля|сук[аи]|муда|залуп|гандон|пид[оа]р|дерьм|говн|жоп|сран|fuck|shit|bitch|dick)/i;
+function localCheck(t) {
+  const x = t.toLowerCase();
+  if (x.replace(/[^a-zа-яё]/g, '').length < 3) return 'Слишком коротко. Напишите словами, например «гастрит».';
+  if (BAD.test(x)) return 'Давайте без грубых слов. Напишите, как сказали бы врачу.';
+  if (/https?:|www\.|@|\d{6,}/.test(x)) return 'Без ссылок, почты и номеров, только сведения о здоровье.';
+  if (/(.)\1{3,}/.test(x) || x.split(/[^a-zа-яё]+/).some((w) => w.length > 5 && !/[аеёиоуыэюяaeiouy]/.test(w))) return 'Не получилось разобрать. Напишите, пожалуйста, ещё раз.';
+  return '';
+}
+async function deviceToken() {
+  let t = ''; try { t = localStorage.getItem(KEY + ':dev') || ''; } catch (err) { /* без хранилища получим новый ключ */ }
+  if (t) return t;
+  const r = await fetch(API + '/v1/device', { method: 'POST' }); if (!r.ok) throw new Error('device');
+  t = (await r.json()).token; try { localStorage.setItem(KEY + ':dev', t); } catch (err) { /* ок */ }
+  return t;
+}
+async function checkOther(q, a) {
+  if (!a.other || a.checked === a.other) return true;
+  const bad = localCheck(a.other);
+  if (bad) { a.hint = bad; drawAnam(); react('calm', 600); return false; }
+  const btn = $('#anNext'); btn.classList.add('busy'); btn.textContent = 'Кама проверяет…'; lookAt(...centerOf($('#anIn') || btn));
+  try {
+    const ctl = new AbortController(), to = setTimeout(() => ctl.abort(), 9000);
+    const send = async (tok) => fetch(API + '/v1/ai/anam', { method: 'POST', signal: ctl.signal, headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + tok }, body: JSON.stringify({ field: q.k, text: a.other }) });
+    let r = await send(await deviceToken());
+    if (r.status === 401) { try { localStorage.removeItem(KEY + ':dev'); } catch (err) { /* ок */ } r = await send(await deviceToken()); }
+    clearTimeout(to);
+    if (!r.ok) throw new Error('http ' + r.status);
+    const d = await r.json();
+    a.checked = a.other;
+    if (d.ok) { a.otherCz = d.cz; a.hint = ''; save(); return true; }
+    a.otherCz = ''; a.hint = d.hint; save(); drawAnam(); react('calm', 600); return false;
+  } catch (err) {
+    // нет сети или сервер занят: оставляем ответ по-русски, врач увидит пометку
+    a.checked = a.other; a.otherCz = ''; a.hint = ''; save(); toast('Кама сейчас без связи, запишу ваш ответ по-русски');
+    return true;
+  } finally { btn.classList.remove('busy'); drawAnam(); }
+}
+let anBusy = false;
+const anStep = async () => {
+  if (anBusy) return; const inp = $('#anIn'); if (inp) inp.blur();
+  const q0 = ANQ[anI], a0 = anOf(q0);
+  anBusy = true; const pass = await checkOther(q0, a0); anBusy = false;
+  if (!pass) { const el = $('#anIn'); if (el) el.focus(); return; }
   if (anOne || anI === ANQ.length - 1) { save(); const all = ANQ.every(anDone); react('joy', 1400); if (all) burstAt(195, 300); toast(all ? 'Анамнез готов, он уже в PDF для врача' : 'Сохранено'); const one = anOne; anOne = false; if (one) back(); else { stack = stack.filter((x) => x !== 'anam'); go('pdf'); } return; }
   anI++; drawAnam(); $$('#p-anam .f').forEach((e) => { e.classList.remove('in'); setTimeout(() => e.classList.add('in'), 40); }); attend('#anA');
 };
