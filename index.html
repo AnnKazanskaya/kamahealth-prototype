@@ -130,8 +130,8 @@
   #toast { position:absolute; left:50%; bottom:104px; transform:translate(-50%, 12px); background:rgba(14,16,32,.88); color:#fff; font-size:14px; font-weight:500; padding:12px 16px; border-radius:16px; opacity:0; transition:all .3s; z-index:9; white-space:nowrap; pointer-events:none; }
   #toast.on { opacity:1; transform:translate(-50%, 0); }
   @media (prefers-reduced-motion: reduce) { .bl { animation:none; } .f { transition:opacity .2s; transform:none; } }
-  body.device { background:#0B0C12; overflow:hidden; }
-  body.device .lab { padding:0; min-height:100dvh; height:100dvh; align-items:center; overflow:hidden; }
+  html:has(body.device), body.device { background:#0B0C12; overflow:hidden; overscroll-behavior:none; height:100%; }
+  body.device .lab { position:fixed; inset:0; padding:0; min-height:0; align-items:center; overflow:hidden; }
   body.device .panel { display:none; }
   body.device .phone { border-radius:calc(46px / var(--s,1)); box-shadow:none; }
   body.device .island, body.device .status { display:none; }
@@ -362,7 +362,7 @@ root.KamaOrb = { MOODS, makeOrb, hex2rgb, mix, rgb };
 'use strict';
 const $ = (s, r) => (r || document).querySelector(s), $$ = (s, r) => Array.from((r || document).querySelectorAll(s));
 const phone = $('#phone');
-const device = innerWidth < 560; if (device) document.body.classList.add('device');
+const device = innerWidth < 560; if (device) { document.body.classList.add('device'); addEventListener('scroll', () => scrollTo(0, 0)); }
 const fit = () => { const s = device ? Math.min(innerWidth / 390, innerHeight / 844) : Math.min(1, (innerHeight - 32) / 844, (innerWidth - 32) / 390); document.documentElement.style.setProperty('--s', s); return s; };
 let scale = fit(); addEventListener('resize', () => { scale = fit(); });
 
