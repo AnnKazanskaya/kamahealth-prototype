@@ -138,6 +138,92 @@
   .badge { display:inline-block; margin-left:6px; height:20px; padding:0 8px; border-radius:10px; font-size:12px; line-height:20px; font-weight:600; vertical-align:2px; }
   .badge.due { background:#FFF0E5; color:#B4530F; }
   .act { margin-left:auto; height:40px; padding:0 16px; border-radius:20px; background:var(--ink); color:#fff; font-size:14px; font-weight:600; flex:none; }
+  /* общие детали разделов */
+  .scr { position:absolute; left:0; right:0; top:104px; bottom:0; overflow-y:auto; overflow-x:hidden; padding:4px 16px 128px; touch-action:pan-y; -webkit-overflow-scrolling:touch; scrollbar-width:none; overscroll-behavior:contain; }
+  .scr::-webkit-scrollbar { display:none; }
+  .scr.tabbed { top:128px; -webkit-mask-image:linear-gradient(#000 calc(100% - 130px), transparent calc(100% - 50px)); mask-image:linear-gradient(#000 calc(100% - 130px), transparent calc(100% - 50px)); }
+  .tabH { position:absolute; left:24px; top:62px; }
+  .tabH .h { font-size:28px; }
+  .card { background:#fff; border-radius:24px; padding:6px 16px; box-shadow:inset 0 0 0 1px var(--line); }
+  .card + .card { margin-top:12px; }
+  .sh { font-size:13px; line-height:16px; font-weight:500; color:var(--mute); margin:24px 4px 8px; }
+  .sh:first-child { margin-top:8px; }
+  .row { display:flex; align-items:center; gap:14px; min-height:60px; width:100%; text-align:left; border-bottom:1px solid #F0EFF4; }
+  .row:last-child { border-bottom:0; }
+  .row b { display:block; font-size:16px; line-height:21px; font-weight:500; }
+  .row .ic { width:38px; height:38px; border-radius:19px; background:var(--chip); display:grid; place-items:center; flex:none; }
+  .row .end { margin-left:auto; display:flex; align-items:center; gap:6px; font-size:14px; color:var(--mute); flex:none; }
+  .row .end .chev { margin:0; font-size:22px; }
+  .st { height:24px; padding:0 10px; border-radius:12px; font-size:12px; line-height:24px; font-weight:600; white-space:nowrap; flex:none; }
+  .st.ok { background:#E5F5EC; color:#1D7345; }
+  .st.wait { background:var(--chip); color:#5E5C68; }
+  .st.due { background:#FFF0E5; color:#B4530F; }
+  .chips { display:flex; gap:8px; overflow-x:auto; margin:0 -16px; padding:2px 16px; scrollbar-width:none; touch-action:pan-x; }
+  .chips::-webkit-scrollbar { display:none; }
+  .chip { height:38px; padding:0 15px; border-radius:19px; background:#fff; box-shadow:inset 0 0 0 1px var(--line); font-size:14px; font-weight:500; white-space:nowrap; flex:none; transition:background .2s, color .2s; }
+  .chip.on { background:var(--ink); color:#fff; box-shadow:none; }
+  .search { height:48px; border-radius:24px; background:#fff; box-shadow:inset 0 0 0 1px var(--line); display:flex; align-items:center; gap:10px; padding:0 16px; color:var(--mute); font-size:15px; width:100%; margin-bottom:12px; }
+  .note { font-size:13px; line-height:18px; color:var(--mute); padding:12px 14px; border-radius:16px; background:rgba(255,255,255,.6); box-shadow:inset 0 0 0 1px var(--line); margin-top:12px; }
+  .mapC { position:relative; height:196px; border-radius:24px; overflow:hidden; margin-top:12px; background:#EEF1F6; box-shadow:inset 0 0 0 1px var(--line); }
+  .mapC svg { position:absolute; inset:0; width:100%; height:100%; }
+  .mapC .ml { position:absolute; left:14px; top:12px; font-size:13px; font-weight:600; background:rgba(255,255,255,.85); padding:5px 10px; border-radius:12px; }
+  .mapC .mb { position:absolute; right:12px; top:12px; font-size:12px; font-weight:600; color:var(--mute); background:rgba(255,255,255,.85); padding:5px 10px; border-radius:12px; }
+  .pin { position:absolute; width:16px; height:16px; margin:-8px 0 0 -8px; border-radius:50%; background:var(--mood); box-shadow:0 0 0 4px rgba(255,255,255,.9), 0 4px 12px rgba(21,20,26,.18); transition:background 1s, transform .3s; }
+  .pin.off { background:#B9B7C3; }
+  .pin.me { background:var(--ink); width:12px; height:12px; margin:-6px 0 0 -6px; }
+  .doc { display:flex; align-items:center; gap:14px; width:100%; text-align:left; padding:14px 0; border-bottom:1px solid #F0EFF4; }
+  .doc:last-child { border:0; }
+  .doc .av { width:46px; height:46px; border-radius:23px; flex:none; display:grid; place-items:center; background:color-mix(in srgb, var(--mood) 18%, #fff); transition:background 1s; }
+  .doc b { display:block; font-size:16px; line-height:21px; font-weight:500; }
+  .doc .cap { display:block; margin-top:2px; }
+  .doc .st { margin-left:auto; }
+  .stats { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+  .stat { background:#fff; border-radius:20px; padding:14px 16px; box-shadow:inset 0 0 0 1px var(--line); text-align:left; }
+  .stat .v { font-size:28px; line-height:32px; font-weight:300; letter-spacing:-.5px; margin-top:4px; }
+  .stat .v small { font-size:15px; color:var(--mute); margin-left:3px; letter-spacing:0; }
+  .bigBtn { display:flex; align-items:center; gap:14px; width:100%; text-align:left; margin-top:12px; padding:16px; border-radius:24px; background:var(--ink); color:#fff; }
+  .bigBtn .ic { width:44px; height:44px; border-radius:22px; background:rgba(255,255,255,.12); display:grid; place-items:center; flex:none; }
+  .bigBtn b { display:block; font-size:17px; line-height:22px; font-weight:600; }
+  .bigBtn span.c2 { display:block; font-size:13px; line-height:17px; color:rgba(255,255,255,.66); margin-top:2px; }
+  .bigBtn .chev { color:rgba(255,255,255,.5); }
+  .meter { height:6px; border-radius:3px; background:#ECEBF1; overflow:hidden; margin:4px 0 10px; }
+  .meter i { display:block; height:100%; border-radius:3px; background:var(--mood); transition:width 1s cubic-bezier(.2,.8,.2,1), background 1s; }
+  .tline { position:relative; padding-left:26px; }
+  .tline::before { content:""; position:absolute; left:6px; top:10px; bottom:10px; width:2px; border-radius:1px; background:var(--line); }
+  .tlG { position:relative; margin-bottom:6px; }
+  .tlG::before { content:""; position:absolute; left:-25px; top:3px; width:12px; height:12px; border-radius:50%; background:#fff; box-shadow:inset 0 0 0 2px #C9C8D2; }
+  .tlG.now::before { background:var(--mood); box-shadow:0 0 0 4px color-mix(in srgb, var(--mood) 25%, transparent); transition:background 1s; }
+  .tlG.done::before { background:#C9C8D2; box-shadow:none; }
+  .tlG .sh { margin:0 0 8px; }
+  .tlG + .tlG { margin-top:22px; }
+  .tlG.done .row b { color:var(--mute); }
+  .vHead .h { font-size:26px; line-height:32px; }
+  .vHead .t { margin-top:6px; }
+  .chk { display:flex; align-items:center; gap:14px; min-height:56px; width:100%; text-align:left; border-bottom:1px solid #F0EFF4; font-size:16px; font-weight:500; }
+  .chk:last-child { border:0; }
+  .chk i { width:24px; height:24px; border-radius:8px; box-shadow:inset 0 0 0 1.5px #C9C8D2; flex:none; display:grid; place-items:center; transition:background .2s, box-shadow .2s; }
+  .chk.on i { background:var(--mood); box-shadow:none; }
+  .chk.on i::after { content:""; width:10px; height:5px; border-left:2px solid #fff; border-bottom:2px solid #fff; transform:rotate(-45deg) translate(1px,-1px); }
+  .chk.on span { color:var(--mute); text-decoration:line-through; text-decoration-color:rgba(21,20,26,.3); }
+  .chk small { display:block; font-size:13px; font-weight:400; color:var(--mute); text-decoration:none; }
+  .phrase { padding:16px; }
+  .phrase .cz { font-size:17px; line-height:24px; font-weight:500; }
+  .phrase .ru { font-size:14px; line-height:19px; color:var(--mute); margin-top:6px; }
+  .phrase .copy { margin-top:12px; height:36px; padding:0 14px; border-radius:18px; background:var(--chip); font-size:14px; font-weight:600; }
+  .dots { margin:4px 0; padding:0; list-style:none; }
+  .dots li { position:relative; padding:9px 0 9px 18px; font-size:15px; line-height:20px; border-bottom:1px solid #F0EFF4; }
+  .dots li:last-child { border:0; }
+  .dots li::before { content:""; position:absolute; left:2px; top:17px; width:6px; height:6px; border-radius:50%; background:var(--mood); transition:background 1s; }
+  .btnIn { position:static; margin-top:20px; width:100%; }
+  .paper { background:#fff; border-radius:6px; box-shadow:0 1px 2px rgba(21,20,26,.06), 0 18px 40px rgba(21,20,26,.10); padding:22px 20px 18px; font-family:-apple-system, "Helvetica Neue", Arial, sans-serif; color:#1B1B20; }
+  .paper .ph { display:flex; justify-content:space-between; align-items:baseline; border-bottom:1.5px solid #1B1B20; padding-bottom:8px; }
+  .paper .ph b { font-size:17px; font-weight:700; letter-spacing:-.2px; }
+  .paper .ph span { font-size:10px; color:#6E6C78; }
+  .paper table { width:100%; border-collapse:collapse; margin-top:8px; font-size:11px; line-height:15px; }
+  .paper td { padding:5px 0; border-bottom:1px solid #EEEDF2; vertical-align:top; }
+  .paper td:first-child { color:#6E6C78; width:44%; padding-right:8px; }
+  .paper .pf { margin-top:12px; font-size:9.5px; line-height:13px; color:#8C8A96; }
+  .paper .sec { margin-top:12px; font-size:10px; font-weight:700; text-transform:none; color:#1B1B20; }
   #toast { position:absolute; left:50%; bottom:108px; transform:translate(-50%, 12px); background:rgba(21,20,26,.9); color:#fff; font-size:14px; font-weight:500; padding:12px 16px; border-radius:16px; opacity:0; transition:all .3s; z-index:10; white-space:nowrap; pointer-events:none; }
   #toast.on { opacity:1; transform:translate(-50%, 0); }
 
@@ -222,24 +308,81 @@
         <button class="tile f" data-d="150" data-sec="docs"><div class="num">3</div><div class="tl"><i style="background:#2DB37A"></i>Врачи</div><div class="cap">берут новых рядом</div></button>
       </div>
       <button class="rowP f" data-d="180" id="profile"><div><b>Мой профиль</b><span class="cap">Анамнез для врача</span></div><span class="chev">›</span></button>
-      <nav class="tabbar f" data-d="210">
-        <button class="tab on"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11.5 12 5l8 6.5V19a1 1 0 0 1-1 1h-4v-5h-6v5H5a1 1 0 0 1-1-1z"/></svg>Главная</button>
-        <button class="tab" data-soon><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="5" width="16" height="15" rx="3"/><path d="M8 3v4M16 3v4M4 10h16"/></svg>Календарь</button>
-        <button class="tab" data-soon><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8.5" r="3.5"/><path d="M5 20c1.2-3.6 4-5.2 7-5.2s5.8 1.6 7 5.2"/></svg>Профиль</button>
+      <nav class="tabbar f" data-d="210" id="tabbar">
+        <button class="tab on" data-tab="home"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11.5 12 5l8 6.5V19a1 1 0 0 1-1 1h-4v-5h-6v5H5a1 1 0 0 1-1-1z"/></svg>Главная</button>
+        <button class="tab" data-tab="cal"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="5" width="16" height="15" rx="3"/><path d="M8 3v4M16 3v4M4 10h16"/></svg>Календарь</button>
+        <button class="tab" data-tab="prof"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8.5" r="3.5"/><path d="M5 20c1.2-3.6 4-5.2 7-5.2s5.8 1.6 7 5.2"/></svg>Профиль</button>
       </nav>
     </section>
 
     <section class="page" id="p-prev">
-      <div class="bar f" data-d="0"><button class="back" id="backHome" aria-label="Назад">‹</button><div class="ttl">Превенция</div></div>
+      <div class="bar f" data-d="0"><button class="back" data-back aria-label="Назад">‹</button><div class="ttl">Превенция</div></div>
       <div class="bodyW f" data-d="40" id="bodyW"><div class="body" id="body"></div></div>
       <div class="pts" id="pts"></div>
       <div class="score f" data-d="90"><div class="num">2<small>из</small>4</div><p class="t">осмотра в этом<br>году пройдено</p></div>
       <div class="sheet f" data-d="130">
         <div class="handle"></div>
         <h3 class="h">Что пора пройти</h3>
-        <div class="item" data-pt="heart"><span class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#15141A" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"/></svg></span><div><b>Терапевт<span class="badge due">пора</span></b><span class="cap">раз в 2 года</span></div><button class="act" data-soon>Найти врача</button></div>
+        <div class="item" data-pt="heart"><span class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#15141A" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"/></svg></span><div><b>Терапевт<span class="badge due">пора</span></b><span class="cap">раз в 2 года</span></div><button class="act" data-find="heart">Найти врача</button></div>
         <button class="item" data-pt="gyn" id="row2"><span class="ic" id="r2i"></span><div><b><span id="r2t">Гинеколог</span><span class="badge due">пора</span></b><span class="cap" id="r2c">каждый год</span></div><span class="chev">›</span></button>
         <button class="item" data-pt="teeth"><span class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#15141A" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M7 4c-2 0-3 1.6-3 4 0 3 1.4 4 2 8 .4 2.6 1 4 2 4s1.4-2 2-5c.3-1.4 1.7-1.4 2 0 .6 3 1 5 2 5s1.6-1.4 2-4c.6-4 2-5 2-8 0-2.4-1-4-3-4-1.6 0-2.4 1-5 1S8.6 4 7 4z"/></svg></span><div><b>Стоматолог</b><span class="cap">каждые 6 мес · через 3 мес</span></div><span class="chev">›</span></button>
+      </div>
+    </section>
+
+
+    <section class="page" id="p-docs">
+      <div class="bar f" data-d="0"><button class="back" data-back aria-label="Назад">‹</button><div class="ttl">Врачи</div></div>
+      <div class="scr" id="docsScr">
+        <button class="search f" data-d="40" data-soon2="Поиск по врачам появится в следующей версии"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="6.5"/><path d="m16 16 4 4"/></svg>Врач, клиника, район</button>
+        <div class="chips f" data-d="70" id="docChips"></div>
+        <div class="mapC f" data-d="100" id="map"></div>
+        <div class="note f" data-d="130">Пока это пример. Настоящие врачи вашего района, кто берёт новых пациентов, появятся в следующей версии.</div>
+        <div class="sh f" data-d="150" id="docCount">Рядом с вами</div>
+        <div class="card f" data-d="170" id="docList"></div>
+      </div>
+    </section>
+
+    <section class="page" id="p-visit">
+      <div class="bar f" data-d="0"><button class="back" data-back aria-label="Назад">‹</button><div class="ttl">Подготовка</div></div>
+      <div class="scr" id="visitScr">
+        <div class="vHead f" data-d="40"><h2 class="h" id="vT">Иду к терапевту</h2><p class="t" id="vS"></p></div>
+        <div class="sh f" data-d="80">Что взять с собой</div>
+        <div class="card f" data-d="100" id="vTake"></div>
+        <div class="sh f" data-d="130">Что будет на приёме</div>
+        <div class="card f" data-d="150"><ul class="dots" id="vDo"></ul></div>
+        <div class="sh f" data-d="170">Что сказать в регистратуре</div>
+        <div class="card phrase f" data-d="190"><div class="cz" id="vCz"></div><div class="ru" id="vRu"></div><button class="copy" id="vCopy">Скопировать</button></div>
+        <button class="btn btnIn f" data-d="220" id="vFind">Найти врача</button>
+      </div>
+    </section>
+
+    <section class="page" id="p-cal">
+      <div class="tabH f" data-d="0"><div class="cap">Осмотры на год вперёд</div><div class="h">Календарь</div></div>
+      <div class="scr tabbed" id="calScr"><div class="tline f" data-d="60" id="calList"></div></div>
+    </section>
+
+    <section class="page" id="p-prof">
+      <div class="tabH f" data-d="0"><div class="cap">Только на этом телефоне</div><div class="h">Мой профиль</div></div>
+      <div class="scr tabbed" id="profScr">
+        <div class="sh f" data-d="40">О вас</div>
+        <div class="stats f" data-d="60" id="profStats"></div>
+        <div class="sh f" data-d="90">Анамнез для врача</div>
+        <div class="card f" data-d="110" id="anam"></div>
+        <button class="bigBtn f" data-d="140" id="toPdf"><span class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3h7l5 5v12a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1z"/><path d="M14 3v5h5M9 13h6M9 17h4"/></svg></span><span><b>PDF для врача</b><span class="c2">На чешском, врач поймёт сразу</span></span><span class="chev">›</span></button>
+        <div class="sh f" data-d="160">Ещё</div>
+        <div class="card f" data-d="180">
+          <button class="row" data-soon2="Разбор анализа по фото появится в следующей версии"><span class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#15141A" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="5" width="16" height="14" rx="3"/><circle cx="12" cy="12" r="3"/><path d="M8 5l1.5-2h5L16 5"/></svg></span><span><b>Разбор анализа по фото</b><span class="cap">Цифры и к кому идти</span></span><span class="end"><span class="chev">›</span></span></button>
+          <button class="row" data-soon2="Настройки появятся в следующей версии"><span class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#15141A" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h10M18 7h2M4 17h4M12 17h8"/><circle cx="16" cy="7" r="2"/><circle cx="10" cy="17" r="2"/></svg></span><span><b>Напоминания и язык</b><span class="cap">Русский</span></span><span class="end"><span class="chev">›</span></span></button>
+        </div>
+      </div>
+    </section>
+
+    <section class="page" id="p-pdf">
+      <div class="bar f" data-d="0"><button class="back" data-back aria-label="Назад">‹</button><div class="ttl">PDF для врача</div></div>
+      <div class="scr" id="pdfScr">
+        <div class="paper f" data-d="60" id="paper"></div>
+        <p class="note f" data-d="110">Врач увидит это на чешском. Поля, которые вы не заполнили, помечены «neuvedeno».</p>
+        <button class="btn btnIn f" data-d="150" data-soon2="Отправка и печать появятся в следующей версии">Поделиться</button>
       </div>
     </section>
 
@@ -248,7 +391,7 @@
 
   <aside class="panel">
     <h2>Сцены</h2>
-    <div class="rb"><button data-go="welcome">Приветствие</button><button data-go="sex">Анкета</button><button data-go="cele">Готово</button><button data-go="home">Главная</button><button data-go="prev">Превенция</button></div>
+    <div class="rb"><button data-go="welcome">Приветствие</button><button data-go="sex">Анкета</button><button data-go="cele">Готово</button><button data-go="home">Главная</button><button data-go="prev">Превенция</button><button data-go="docs">Врачи</button><button data-go="visit">Иду к врачу</button><button data-go="cal">Календарь</button><button data-go="prof">Профиль</button><button data-go="pdf">PDF</button></div>
     <h2>Настроение</h2>
     <div class="rb" id="moods"></div>
     <p>Основа светлая, цвет даёт только свечение маскота, и оно меняется вместе с его настроением.</p>
@@ -437,8 +580,22 @@ const SCENE = {
   cele() { show('cele'); setMood('joy'); place(195, 312, 380); orb.poke(); burst(); },
   home() { show('home'); setMood('calm'); place(195, 214, 196); },
   prev() { setBody(); show('prev'); setMood('calm'); place(338, 78, 74); drawPts(); },
+  docs() { show('docs'); setMood('happy'); place(338, 78, 74); drawDocs(); },
+  visit() { show('visit'); setMood('happy'); place(338, 78, 74); drawVisit(); },
+  cal() { show('cal'); setMood('calm'); place(338, 78, 74); drawCal(); },
+  prof() { show('prof'); setMood('calm'); place(338, 78, 74); drawProf(); },
+  pdf() { show('pdf'); setMood('proud'); place(338, 78, 74); drawPdf(); },
 };
-const go = (n) => { if (n !== 'cele') sparks = []; SCENE[n](); };
+const TABS = ['home', 'cal', 'prof'];
+let stack = [];
+const go = (n) => {
+  if (n !== 'cele') sparks = [];
+  SCENE[n]();
+  const sc = $('#p-' + n + ' .scr'); if (sc) sc.scrollTop = 0;
+  if (TABS.includes(n)) { stack = []; const tb = $('#tabbar'); $('#p-' + n).appendChild(tb); $$('.tab', tb).forEach((t) => t.classList.toggle('on', t.dataset.tab === n)); tb.classList.remove('out'); tb.classList.add('in'); }
+};
+const push = (n) => { if (cur && cur !== n) stack.push(cur); go(n); };
+const back = () => go(stack.pop() || 'home');
 
 // ─── анкета ───
 const ans = { sex: null, age: 29, w: 62, smoke: null };
@@ -466,10 +623,12 @@ const wFrom = (e) => { const r = $('#track').getBoundingClientRect(); setW(40 + 
 $('#start').addEventListener('click', () => go('sex'));
 $('#finish').addEventListener('click', () => go('cele'));
 $('#toHome').addEventListener('click', () => go('home'));
-$$('[data-sec]').forEach((b) => b.addEventListener('click', () => { if (b.dataset.sec === 'prev') go('prev'); else toast('Карта врачей появится в следующей версии'); }));
-$('#backHome').addEventListener('click', () => go('home'));
+$$('[data-sec]').forEach((b) => b.addEventListener('click', () => push(b.dataset.sec)));
+$$('[data-back]').forEach((b) => b.addEventListener('click', back));
+$$('[data-tab]').forEach((b) => b.addEventListener('click', (e) => { e.stopPropagation(); if (cur !== b.dataset.tab) go(b.dataset.tab); }));
 const toast = (t) => { let el = $('#toast'); if (!el) { el = document.createElement('div'); el.id = 'toast'; phone.appendChild(el); } el.textContent = t; el.classList.add('on'); clearTimeout(toast.t); toast.t = setTimeout(() => el.classList.remove('on'), 1700); };
-$$('[data-soon], #profile').forEach((b) => b.addEventListener('click', (e) => { e.stopPropagation(); toast('Этот раздел появится в следующей версии'); }));
+$$('[data-soon]').forEach((b) => b.addEventListener('click', (e) => { e.stopPropagation(); toast('Этот раздел появится в следующей версии'); }));
+$('#profile').addEventListener('click', () => go('prof'));
 
 // ─── кольцо: одна дуга цвета состояния, без точек ───
 function drawRing() {
@@ -526,7 +685,112 @@ function pick(id) {
   if (p.done) toast(id === 'eyes' ? 'Окулист пройден в марте' : 'Стоматолог пройден, следующий через 3 месяца');
 }
 $('#pts').addEventListener('click', (e) => { const b = e.target.closest('.pt'); if (b) { e.stopPropagation(); pick(b.dataset.id); } });
-$$('#p-prev .item').forEach((r) => r.addEventListener('click', (e) => { if (e.target.closest('.act')) return; e.stopPropagation(); pick(r.dataset.pt); }));
+$$('#p-prev .item').forEach((r) => r.addEventListener('click', (e) => { if (e.target.closest('.act')) return; e.stopPropagation(); pick(r.dataset.pt); visitFor = r.dataset.pt; setTimeout(() => push('visit'), 380); }));
+
+// ─── осмотры: одно описание на все разделы ───
+const EX = {
+  heart: { doc: 'Терапевт', to: 'терапевту', every: 'раз в 2 года', st: 'due', sub: 'Профилактический осмотр раз в 2 года, по страховке бесплатно',
+    take: [['Карточка страховой', 'kartička pojištěnce'], ['Паспорт или ID'], ['Список лекарств, если пьёте'], ['PDF анамнеза', 'из «Моего профиля»']],
+    act: ['Давление, пульс, вес и рост', 'Анализ крови и мочи', 'Вопросы о самочувствии и болезнях в семье', 'Направления к другим врачам, если нужно'],
+    cz: (w) => `Dobrý den, ${w ? 'chtěla' : 'chtěl'} bych se objednat na preventivní prohlídku.`, ru: 'Здравствуйте, я бы хотел(а) записаться на профилактический осмотр.' },
+  gyn: { doc: 'Гинеколог', to: 'гинекологу', every: 'каждый год', st: 'due', sub: 'Профилактический осмотр раз в год, по страховке бесплатно',
+    take: [['Карточка страховой', 'kartička pojištěnce'], ['Паспорт или ID'], ['Дата начала последних месячных'], ['PDF анамнеза', 'из «Моего профиля»']],
+    act: ['Осмотр и разговор о самочувствии', 'Мазок на цитологию', 'УЗИ, если врач сочтёт нужным', 'Осмотр груди'],
+    cz: () => 'Dobrý den, chtěla bych se objednat na preventivní gynekologickou prohlídku.', ru: 'Здравствуйте, я бы хотела записаться на профилактический осмотр у гинеколога.' },
+  skin: { doc: 'Дерматолог', to: 'дерматологу', every: 'раз в год', st: 'due', sub: 'Осмотр родинок, особенно если их много или они меняются',
+    take: [['Карточка страховой', 'kartička pojištěnce'], ['Паспорт или ID'], ['Фото родинок, которые изменились'], ['PDF анамнеза', 'из «Моего профиля»']],
+    act: ['Осмотр кожи и родинок', 'Проверка дерматоскопом', 'Совет, за какими родинками следить'],
+    cz: (w) => `Dobrý den, ${w ? 'chtěla' : 'chtěl'} bych se objednat na kontrolu znamének.`, ru: 'Здравствуйте, я бы хотел(а) записаться на осмотр родинок.' },
+  teeth: { doc: 'Стоматолог', to: 'стоматологу', every: 'каждые 6 мес', st: 'soon', when: 'через 3 мес', sub: 'Профилактический осмотр два раза в год, по страховке бесплатно',
+    take: [['Карточка страховой', 'kartička pojištěnce'], ['Паспорт или ID']],
+    act: ['Осмотр зубов и дёсен', 'Чистка, если нужна', 'План лечения, если что-то найдут'],
+    cz: (w) => `Dobrý den, ${w ? 'chtěla' : 'chtěl'} bych se objednat na preventivní prohlídku zubů.`, ru: 'Здравствуйте, я бы хотел(а) записаться на профилактический осмотр зубов.' },
+  eyes: { doc: 'Окулист', to: 'окулисту', every: 'раз в 1–2 года', st: 'done', done: 'март 2026' },
+};
+const female = () => ans.sex === 'f';
+const thirdId = () => (female() ? 'gyn' : 'skin');
+let visitFor = 'heart';
+
+function drawVisit() {
+  const e = EX[visitFor] || EX.heart;
+  $('#vT').textContent = 'Иду к ' + e.to; $('#vS').textContent = e.sub;
+  $('#vTake').innerHTML = e.take.map(([a, b]) => `<button class="chk"><i></i><span>${a}${b ? `<small>${b}</small>` : ''}</span></button>`).join('');
+  $('#vDo').innerHTML = e.act.map((a) => `<li>${a}</li>`).join('');
+  $('#vCz').textContent = e.cz(female()); $('#vRu').textContent = e.ru;
+}
+$('#vTake').addEventListener('click', (ev) => { const c = ev.target.closest('.chk'); if (!c) return; c.classList.toggle('on'); const [x, y] = centerOf(c); lookAt(x, y); if ($$('#vTake .chk').every((k) => k.classList.contains('on'))) { orb.poke(); setMood('joy'); setTimeout(() => { if (cur === 'visit') setMood('happy'); }, 1200); } });
+$('#vCopy').addEventListener('click', () => { try { navigator.clipboard && navigator.clipboard.writeText($('#vCz').textContent); } catch (err) { /* без доступа к буферу просто показываем подсказку */ } toast('Фраза скопирована'); orb.poke(); });
+$('#vFind').addEventListener('click', () => { docFilter = (EX[visitFor] || EX.heart).doc; push('docs'); });
+$$('[data-find]').forEach((b) => b.addEventListener('click', (ev) => { ev.stopPropagation(); docFilter = EX[b.dataset.find].doc; push('docs'); }));
+
+// ─── врачи: пример карточек, без настоящих имён ───
+const DOCS = [
+  { doc: 'Терапевт', where: 'Uhříněves · 0,8 км', lang: 'CZ, EN', ok: true, x: 46, y: 46 },
+  { doc: 'Гинеколог', where: 'Uhříněves · 1,1 км', lang: 'CZ, EN', ok: true, x: 58, y: 34 },
+  { doc: 'Стоматолог', where: 'Pitkovice · 2,9 км', lang: 'CZ, RU', ok: false, wait: 'ждать ~1 мес', x: 24, y: 70 },
+  { doc: 'Терапевт', where: 'Kolovraty · 2,4 км', lang: 'CZ', ok: false, wait: 'ждать ~2 нед', x: 80, y: 66 },
+  { doc: 'Дерматолог', where: 'Strašnice · 7 км', lang: 'CZ, EN', ok: true, x: 14, y: 22 },
+  { doc: 'Окулист', where: 'Uhříněves · 1,0 км', lang: 'CZ', ok: false, wait: 'ждать ~3 нед', x: 66, y: 52 },
+];
+let docFilter = 'Все';
+const AV = { 'Терапевт': '<path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"/>', 'Гинеколог': '<circle cx="12" cy="9" r="5"/><path d="M12 14v7M9 18h6"/>', 'Стоматолог': '<path d="M7 4c-2 0-3 1.6-3 4 0 3 1.4 4 2 8 .4 2.6 1 4 2 4s1.4-2 2-5c.3-1.4 1.7-1.4 2 0 .6 3 1 5 2 5s1.6-1.4 2-4c.6-4 2-5 2-8 0-2.4-1-4-3-4-1.6 0-2.4 1-5 1S8.6 4 7 4z"/>', 'Дерматолог': '<circle cx="12" cy="12" r="8"/><circle cx="9.5" cy="10" r="1.2" fill="#15141A"/><circle cx="14.5" cy="14" r="1.2" fill="#15141A"/>', 'Окулист': '<path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12z"/><circle cx="12" cy="12" r="3"/>' };
+const MAP = `<svg viewBox="0 0 358 196" preserveAspectRatio="xMidYMid slice"><rect width="358" height="196" fill="#EEF1F6"/>
+<path d="M-10 150 C60 120 90 160 160 130 S280 90 370 110 L370 210 L-10 210Z" fill="#E3EFE4"/>
+<ellipse cx="290" cy="40" rx="70" ry="34" fill="#E3EFE4"/><path d="M40 20 q30 10 22 40 t30 30" fill="none" stroke="#D6E6F5" stroke-width="10" stroke-linecap="round"/>
+<g fill="none" stroke="#fff" stroke-linecap="round"><path d="M-10 92 C80 84 160 104 370 80" stroke-width="9"/><path d="M150 -10 C140 60 170 120 150 210" stroke-width="7"/><path d="M-10 40 L120 70 L250 150 L370 170" stroke-width="5"/><path d="M230 -10 L250 60 L320 210" stroke-width="5"/><path d="M60 210 L90 120 L40 60" stroke-width="4"/></g></svg>`;
+function drawDocs() {
+  const kinds = ['Все', 'Терапевт', female() ? 'Гинеколог' : 'Дерматолог', 'Стоматолог', 'Окулист', female() ? 'Дерматолог' : 'Гинеколог'];
+  if (!kinds.includes(docFilter)) docFilter = 'Все';
+  $('#docChips').innerHTML = kinds.map((k) => `<button class="chip${k === docFilter ? ' on' : ''}" data-k="${k}">${k}</button>`).join('');
+  const list = DOCS.filter((d) => docFilter === 'Все' || d.doc === docFilter);
+  $('#map').innerHTML = MAP + `<span class="ml">Praha 10</span><span class="mb">пример</span><span class="pin me" style="left:50%;top:56%"></span>` + DOCS.map((d) => `<span class="pin${d.ok ? '' : ' off'}" style="left:${d.x}%;top:${d.y}%;${list.includes(d) ? '' : 'opacity:.25;transform:scale(.7)'}"></span>`).join('');
+  $('#docCount').textContent = list.filter((d) => d.ok).length ? `Берут новых пациентов: ${list.filter((d) => d.ok).length} из ${list.length}` : 'Рядом с вами';
+  $('#docList').innerHTML = list.map((d) => `<button class="doc"><span class="av">${I20(AV[d.doc])}</span><span><b>${d.doc}</b><span class="cap">${d.where} · ${d.lang}</span></span><span class="st ${d.ok ? 'ok' : 'wait'}">${d.ok ? 'берёт новых' : d.wait}</span></button>`).join('');
+}
+const I20 = (d) => `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#15141A" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">${d}</svg>`;
+$('#docChips').addEventListener('click', (ev) => { const c = ev.target.closest('.chip'); if (!c) return; docFilter = c.dataset.k; const [x, y] = centerOf(c); lookAt(x, y); drawDocs(); });
+$('#docList').addEventListener('click', (ev) => { const d = ev.target.closest('.doc'); if (!d) return; const [x, y] = centerOf(d); lookAt(x, y); toast('Запись к врачу появится в следующей версии'); });
+
+// ─── календарь ───
+function drawCal() {
+  const t = EX[thirdId()], row = (e, extra, id) => `<button class="row" data-v="${id || ''}"><span class="ic">${I20(AV[e.doc])}</span><span><b>${e.doc}</b><span class="cap">${extra}</span></span><span class="end">${id ? '<span class="chev">›</span>' : ''}</span></button>`;
+  $('#calList').innerHTML = `
+  <div class="tlG now"><div class="sh">Сейчас</div><div class="card">${row(EX.heart, 'пора · ' + EX.heart.every, 'heart')}${row(t, 'пора · ' + t.every, thirdId())}</div></div>
+  <div class="tlG"><div class="sh">Февраль 2027</div><div class="card">${row(EX.teeth, EX.teeth.every, 'teeth')}</div></div>
+  <div class="tlG"><div class="sh">Март 2027</div><div class="card">${row(EX.eyes, EX.eyes.every)}</div></div>
+  <div class="tlG done"><div class="sh">Пройдено в 2026</div><div class="card">${row(EX.teeth, 'август')}${row(EX.eyes, 'март')}</div></div>`;
+}
+$('#calList').addEventListener('click', (ev) => { const r = ev.target.closest('.row'); if (!r) return; const [x, y] = centerOf(r); lookAt(x, y); if (r.dataset.v) { visitFor = r.dataset.v; push('visit'); } else toast('Этот осмотр уже пройден'); });
+
+// ─── профиль и PDF ───
+const SMOKE = { no: ['не курите', 'ne'], quit: ['бросаете', 'přestává'], yes: ['курите', 'ano'] };
+const ANAM = [
+  ['Хронические болезни', 'нет', 'Chronická onemocnění', 'žádná'],
+  ['Операции', 'нет', 'Operace', 'žádné'],
+  ['Аллергии', '', 'Alergie', ''],
+  ['Лекарства', '', 'Užívané léky', ''],
+  ['Болезни в семье', '', 'Rodinná anamnéza', ''],
+  ['Прививки', '', 'Očkování', ''],
+];
+function drawProf() {
+  const sm = SMOKE[ans.smoke] || ['не указано', 'neuvedeno'];
+  $('#profStats').innerHTML = [['Пол', ans.sex ? (female() ? 'женский' : 'мужской') : 'не указан', ''], ['Возраст', ans.age, 'лет'], ['Вес', ans.w, 'кг'], ['Курение', sm[0], '']].map(([k, v, u]) => `<button class="stat" data-soon2="Изменить можно будет в следующей версии"><div class="cap">${k}</div><div class="v"${typeof v === 'string' ? ' style="font-size:19px;line-height:32px;font-weight:400;letter-spacing:0"' : ''}>${v}${u ? `<small>${u}</small>` : ''}</div></button>`).join('');
+  const done = ANAM.filter((a) => a[1]).length;
+  $('#anam').innerHTML = `<div style="padding:12px 0 2px"><div style="display:flex;justify-content:space-between;font-size:15px;font-weight:500"><span>Заполнено</span><span>${done} из ${ANAM.length}</span></div><div class="meter"><i style="width:0" data-w="${done / ANAM.length * 100}"></i></div></div>`
+    + ANAM.map((a) => `<button class="row" data-soon2="Заполнять с помощью Камы можно будет в следующей версии"><span><b>${a[0]}</b></span><span class="end">${a[1] ? a[1] : '<span style="color:var(--ink);font-weight:500">Добавить</span>'}<span class="chev">›</span></span></button>`).join('');
+  requestAnimationFrame(() => requestAnimationFrame(() => { const m = $('#anam .meter i'); if (m) m.style.width = m.dataset.w + '%'; }));
+}
+function drawPdf() {
+  const sm = SMOKE[ans.smoke] || ['', 'neuvedeno'], d = new Date(), date = `${d.getDate()}. ${d.getMonth() + 1}. ${d.getFullYear()}`;
+  const tr = (k, v) => `<tr><td>${k}</td><td>${v || '<span style="color:#9A98A4">neuvedeno</span>'}</td></tr>`;
+  $('#paper').innerHTML = `<div class="ph"><b>Anamnéza pacienta</b><span>KamaHealth</span></div>
+  <table>${tr('Pohlaví', ans.sex ? (female() ? 'žena' : 'muž') : '')}${tr('Věk', ans.age + ' let')}${tr('Hmotnost', ans.w + ' kg')}${tr('Kouření', sm[1])}</table>
+  <div class="sec">Zdravotní stav</div><table>${ANAM.map((a) => tr(a[2], a[3])).join('')}</table>
+  <div class="sec">Preventivní prohlídky</div><table>${tr('Oční', '03/2026')}${tr('Zubní', '08/2026')}${tr('Praktický lékař', 'plánuje se')}</table>
+  <div class="pf">Vyplněno pacientem v aplikaci KamaHealth, ${date}. Nejde o lékařskou zprávu.</div>`;
+}
+$('#toPdf').addEventListener('click', () => push('pdf'));
+document.addEventListener('click', (ev) => { const b = ev.target.closest('[data-soon2]'); if (!b) return; ev.stopPropagation(); toast(b.dataset.soon2); }, true);
 
 // ─── искры праздника ───
 let sparks = [];
