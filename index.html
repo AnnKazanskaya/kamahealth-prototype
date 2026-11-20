@@ -1,0 +1,380 @@
+<!doctype html>
+<html lang="ru">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="KamaHealth">
+<meta name="theme-color" content="#0B0C12">
+<title>KamaHealth</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200;300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root { --ink:#0E1020; --mute:#5F6477; --font:"Manrope", -apple-system, BlinkMacSystemFont, "SF Pro Display", sans-serif; }
+  * { box-sizing:border-box; -webkit-tap-highlight-color:transparent; margin:0; }
+  html,body { height:100%; background:#E7E8EE; font-family:var(--font); color:var(--ink); }
+  .lab { min-height:100%; display:flex; justify-content:center; align-items:flex-start; gap:28px; padding:16px; flex-wrap:wrap; }
+  .wrapP { width:calc(390px * var(--s,1)); height:calc(844px * var(--s,1)); flex:none; }
+  .phone { width:390px; height:844px; transform:scale(var(--s,1)); transform-origin:0 0; border-radius:50px; overflow:hidden; position:relative; background:#F3F4F8; box-shadow:0 0 0 11px #0B0C12, 0 40px 80px rgba(10,12,30,.35); user-select:none; touch-action:none; isolation:isolate; }
+  button { font:inherit; color:inherit; border:0; background:none; cursor:pointer; }
+
+  /* фон: светящиеся пятна, цвет перетекает за настроением шара */
+  .bg { position:absolute; inset:-80px; z-index:0; transition:background-color 1.1s ease; }
+  .bl { position:absolute; border-radius:50%; filter:blur(70px); transition:background-color 1.1s ease, transform 1.4s cubic-bezier(.2,.8,.2,1), opacity .8s; }
+  .bl.b1 { width:440px; height:440px; left:-120px; top:300px; animation:drift1 13s ease-in-out infinite alternate; }
+  .bl.b2 { width:320px; height:320px; left:240px; top:-130px; animation:drift2 17s ease-in-out infinite alternate; }
+  .bl.b3 { width:420px; height:420px; left:120px; top:640px; animation:drift3 11s ease-in-out infinite alternate; }
+  @keyframes drift1 { to { transform:translate(60px, 40px) scale(1.1); } }
+  @keyframes drift2 { to { transform:translate(-70px, -30px) scale(.92); } }
+  @keyframes drift3 { to { transform:translate(80px, -50px) scale(1.15); } }
+  .grain { position:absolute; inset:0; z-index:1; opacity:.07; pointer-events:none; background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120'><filter id='n'><feTurbulence baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='120' height='120' filter='url(%23n)' opacity='.6'/></svg>"); mix-blend-mode:overlay; }
+
+  #orb { position:absolute; left:0; top:0; z-index:4; overflow:visible; pointer-events:none; }
+  .page { position:absolute; inset:0; z-index:3; display:none; color:#fff; }
+  .page.on { display:block; }
+  .page.light, .page.inkText { color:var(--ink); }
+  .page.inkText .btn { background:var(--ink); color:#fff; }
+  .page.inkText .glass { background:rgba(255,255,255,.4); border-color:rgba(255,255,255,.7); }
+  .f { opacity:0; transform:translateY(18px); transition:opacity .5s cubic-bezier(.2,.8,.2,1), transform .7s cubic-bezier(.16,1,.3,1); }
+  .f.in { opacity:1; transform:none; }
+  .f.out { opacity:0; transform:translateY(-10px); transition-duration:.18s; }
+
+  .status { position:absolute; left:32px; right:28px; top:18px; display:flex; justify-content:space-between; font-size:16px; font-weight:600; letter-spacing:.2px; z-index:6; transition:color .6s; color:#fff; }
+  .phone.lightui .status { color:var(--ink); }
+  .island { position:absolute; left:50%; top:11px; width:122px; height:35px; margin-left:-61px; border-radius:20px; background:#000; z-index:7; }
+
+  .wordmark { position:absolute; left:0; right:0; top:66px; text-align:center; font-size:17px; font-weight:600; letter-spacing:.3px; opacity:.9; }
+  .display { font-weight:300; letter-spacing:-1.2px; }
+  .page:not(.light):not(.inkText) .display, .page:not(.light):not(.inkText) .qSub, .page:not(.light):not(.inkText) .wSub, .page:not(.light):not(.inkText) .cSub { text-shadow:0 1px 18px rgba(0,10,40,.28); }
+  .wTitle { position:absolute; left:28px; right:28px; top:560px; font-size:44px; line-height:46px; }
+  .wSub { position:absolute; left:28px; right:48px; top:666px; font-size:17px; line-height:24px; opacity:.78; font-weight:400; }
+  .btn { position:absolute; left:20px; right:20px; bottom:38px; height:60px; border-radius:30px; background:#fff; color:var(--ink); font-size:18px; font-weight:600; display:flex; align-items:center; justify-content:center; gap:10px; box-shadow:0 14px 34px rgba(10,20,60,.22); transition:transform .14s, opacity .3s; }
+  .btn:active { transform:scale(.97); }
+  .btn[disabled] { opacity:.45; }
+  .btn.dark { background:var(--ink); color:#fff; }
+  .btn .chev { font-size:22px; font-weight:400; margin-top:-2px; }
+
+  .backQ { position:absolute; left:10px; top:54px; width:44px; height:44px; font-size:30px; line-height:1; display:grid; place-items:center; color:inherit; }
+  .prog { position:absolute; left:58px; right:184px; top:74px; display:flex; gap:6px; }
+  .prog i { flex:1; height:4px; border-radius:2px; background:rgba(255,255,255,.28); overflow:hidden; position:relative; }
+  .prog i::after { content:""; position:absolute; inset:0; background:#fff; transform:scaleX(0); transform-origin:left; transition:transform .6s cubic-bezier(.2,.8,.2,1); }
+  .prog i.done::after { transform:scaleX(1); }
+  .back { position:absolute; left:16px; top:96px; width:44px; height:44px; border-radius:22px; font-size:28px; display:grid; place-items:center; }
+  .qTitle { position:absolute; left:28px; right:28px; top:200px; font-size:46px; line-height:48px; }
+  .qSub { position:absolute; left:28px; right:40px; top:262px; font-size:17px; opacity:.75; }
+  .glass { background:rgba(255,255,255,.1); border:1px solid rgba(255,255,255,.3); backdrop-filter:blur(24px) saturate(150%); -webkit-backdrop-filter:blur(24px) saturate(150%); box-shadow:inset 0 1px 0 rgba(255,255,255,.35); }
+  .opts { position:absolute; left:20px; right:20px; top:360px; display:flex; flex-direction:column; gap:12px; }
+  .opt { height:74px; border-radius:26px; padding:0 24px; display:flex; align-items:center; justify-content:space-between; font-size:22px; font-weight:500; transition:background .3s, color .3s, transform .14s; }
+  .opt:active { transform:scale(.98); }
+  .opt .dot { width:26px; height:26px; border-radius:50%; border:2px solid rgba(255,255,255,.6); transition:all .3s; }
+  .opt.on { background:#fff; color:var(--ink); }
+  .opt.on .dot { border-color:var(--ink); background:radial-gradient(circle, var(--ink) 0 6px, transparent 7px); }
+  .picker { position:absolute; left:20px; right:20px; top:340px; height:270px; border-radius:34px; display:flex; flex-direction:column; align-items:center; justify-content:center; touch-action:none; }
+  .picker .n { font-size:140px; line-height:1; font-weight:200; letter-spacing:-6px; font-variant-numeric:tabular-nums; transition:transform .25s cubic-bezier(.2,1.4,.4,1); }
+  .picker .u { font-size:18px; opacity:.75; margin-top:6px; }
+  .picker .ghost { font-size:34px; font-weight:200; opacity:.38; font-variant-numeric:tabular-nums; }
+  .picker .pm { position:absolute; top:50%; margin-top:-28px; width:56px; height:56px; border-radius:28px; font-size:30px; font-weight:300; display:grid; place-items:center; }
+  .picker .pm.l { left:16px; } .picker .pm.r { right:16px; }
+  .wbig { position:absolute; left:0; right:0; top:370px; text-align:center; font-size:132px; line-height:1; font-weight:200; letter-spacing:-6px; font-variant-numeric:tabular-nums; }
+  .wbig small { font-size:26px; letter-spacing:0; margin-left:6px; opacity:.8; font-weight:300; }
+  .track { position:absolute; left:28px; right:28px; top:550px; height:64px; border-radius:32px; touch-action:none; }
+  .track .fill { position:absolute; left:6px; top:6px; bottom:6px; border-radius:26px; background:rgba(255,255,255,.9); }
+  .track .ticks { position:absolute; left:24px; right:24px; top:50%; height:14px; margin-top:-7px; background:repeating-linear-gradient(90deg, rgba(255,255,255,.45) 0 2px, transparent 2px 12px); }
+
+  .cTitle { position:absolute; left:0; right:0; top:560px; text-align:center; font-size:44px; line-height:46px; }
+  .cSub { position:absolute; left:0; right:0; top:620px; text-align:center; font-size:18px; opacity:.8; }
+
+  /* главная: светлая, яркие плитки как в GCT */
+  .hello { position:absolute; left:24px; top:66px; font-size:17px; color:var(--mute); font-weight:500; }
+  .helloB { position:absolute; left:24px; top:88px; font-size:32px; font-weight:400; letter-spacing:-.6px; }
+  .hero { position:absolute; left:16px; right:16px; top:144px; height:318px; border-radius:38px; overflow:hidden; color:#fff; background:radial-gradient(70% 60% at 22% 30%, rgba(255,214,150,.75), transparent 70%), linear-gradient(160deg, #9C7BE6 0%, #7466EC 45%, #4A4FD8 100%); box-shadow:0 24px 50px rgba(94,98,232,.28); }
+  .hero::before { content:""; position:absolute; inset:0; background:radial-gradient(120% 70% at 85% 110%, rgba(255,255,255,.35), transparent 60%), radial-gradient(60% 50% at 10% 0%, rgba(255,255,255,.4), transparent 70%); }
+  .hero .lbl { position:absolute; left:24px; bottom:56px; font-size:26px; line-height:30px; font-weight:400; letter-spacing:-.4px; }
+  .hero .lbl2 { position:absolute; left:24px; bottom:24px; font-size:15px; opacity:.85; }
+  .hero .num { position:absolute; right:22px; top:22px; text-align:right; }
+  .hero .num b { display:block; font-size:96px; line-height:.9; font-weight:200; letter-spacing:-4px; }
+  .hero .num span { font-size:14px; opacity:.85; }
+  .tiles { position:absolute; left:16px; right:16px; top:476px; display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+  .tile { display:block; height:176px; border-radius:32px; padding:0; position:relative; overflow:hidden; color:#fff; text-align:left; transition:transform .14s; }
+  .tile:active { transform:scale(.97); }
+  .tile b { position:absolute; left:16px; top:12px; display:block; font-size:70px; line-height:.95; font-weight:200; letter-spacing:-3px; }
+  .tile .t1 { position:absolute; left:18px; bottom:42px; font-size:19px; font-weight:500; }
+  .tile .t2 { position:absolute; left:18px; right:12px; bottom:18px; font-size:13px; opacity:.85; }
+  .tile.teal { background:radial-gradient(120% 120% at 20% 10%, #33D1C6 0%, #0E7C8C 55%, #0A4E66 100%); }
+  .tile.coral { background:radial-gradient(130% 130% at 85% 0%, #FFA552 0%, #F0525C 42%, #B92E7C 100%); }
+  .wide { position:absolute; left:16px; right:16px; top:664px; height:70px; border-radius:26px; display:flex; align-items:center; padding:0 22px; background:rgba(255,255,255,.75); backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px); box-shadow:0 8px 24px rgba(14,16,32,.06); font-size:17px; font-weight:500; color:var(--ink); }
+  .wide span { color:var(--mute); font-weight:400; margin-left:8px; }
+  .wide .chev { margin-left:auto; font-size:26px; color:#A0A4B4; }
+  .tabbar { position:absolute; left:50%; bottom:28px; width:250px; margin-left:-125px; height:62px; border-radius:31px; display:flex; align-items:center; justify-content:space-around; background:rgba(255,255,255,.7); backdrop-filter:blur(24px); -webkit-backdrop-filter:blur(24px); box-shadow:0 10px 30px rgba(14,16,32,.12), inset 0 1px 0 #fff; }
+  .tabbar .mid { width:84px; height:46px; border-radius:23px; background:var(--ink); display:grid; place-items:center; }
+
+  /* превенция: светящееся кольцо как в mivo */
+  .pv { background:transparent; }
+  .pvTitle { position:absolute; left:0; right:0; top:104px; text-align:center; font-size:20px; font-weight:600; }
+  .ring { position:absolute; left:50%; top:160px; width:290px; height:290px; margin-left:-145px; }
+  .ringNum { position:absolute; left:0; right:0; top:262px; text-align:center; font-size:84px; line-height:1; font-weight:200; letter-spacing:-3px; }
+  .ringNum small { font-size:30px; opacity:.7; letter-spacing:0; }
+  .ringSub { position:absolute; left:0; right:0; top:352px; text-align:center; font-size:15px; opacity:.85; }
+  .sheet { position:absolute; left:0; right:0; bottom:0; top:486px; background:#fff; border-radius:38px 38px 0 0; color:var(--ink); padding:14px 20px 0; box-shadow:0 -10px 40px rgba(0,0,0,.08); }
+  .sheet .handle { width:40px; height:5px; border-radius:3px; background:#E2E4EC; margin:0 auto 16px; }
+  .sheet h3 { font-size:22px; font-weight:500; letter-spacing:-.3px; margin-bottom:6px; }
+  .rowP { display:flex; align-items:center; gap:14px; padding:16px 0; border-bottom:1px solid #EEF0F4; }
+  .rowP:last-child { border:0; }
+  .rowP .ic { width:44px; height:44px; border-radius:22px; display:grid; place-items:center; flex:none; }
+  .rowP b { display:block; font-size:17px; font-weight:600; } .rowP span { font-size:14px; color:var(--mute); }
+  .pill { margin-left:auto; height:44px; padding:0 16px; border-radius:19px; background:#F1F2F6; font-size:14px; font-weight:600; flex:none; transition:all .25s; }
+  .pill.on { background:var(--ink); color:#fff; }
+  .backG { position:absolute; left:16px; top:94px; color:var(--ink); width:46px; height:46px; border-radius:23px; display:grid; place-items:center; font-size:26px; z-index:6; }
+
+  #toast { position:absolute; left:50%; bottom:104px; transform:translate(-50%, 12px); background:rgba(14,16,32,.88); color:#fff; font-size:14px; font-weight:500; padding:12px 16px; border-radius:16px; opacity:0; transition:all .3s; z-index:9; white-space:nowrap; pointer-events:none; }
+  #toast.on { opacity:1; transform:translate(-50%, 0); }
+  @media (prefers-reduced-motion: reduce) { .bl { animation:none; } .f { transition:opacity .2s; transform:none; } }
+  body.device { background:#0B0C12; overflow:hidden; }
+  body.device .lab { padding:0; min-height:100dvh; height:100dvh; align-items:center; overflow:hidden; }
+  body.device .panel { display:none; }
+  body.device .phone { border-radius:calc(46px / var(--s,1)); box-shadow:none; }
+  body.device .island, body.device .status { display:none; }
+  .panel { width:260px; font-family:-apple-system, sans-serif; }
+  .panel h2 { font-size:13px; color:#6B7083; margin:12px 2px 8px; font-weight:600; }
+  .panel .rb { display:flex; flex-wrap:wrap; gap:8px; }
+  .panel button { height:36px; padding:0 13px; border-radius:18px; background:#fff; font-size:13px; font-weight:600; }
+  .panel p { font-size:13px; color:#6B7083; margin:10px 2px; line-height:1.45; }
+</style>
+<div class="lab">
+  <div class="wrapP"><div class="phone" id="phone">
+    <div class="bg" id="bg"><div class="bl b1" id="b1"></div><div class="bl b2" id="b2"></div><div class="bl b3" id="b3"></div></div>
+    <div class="grain"></div>
+    <div class="island"></div>
+    <div class="status"><span>9:41</span><svg width="68" height="13" viewBox="0 0 68 13" fill="currentColor"><rect x="0" y="8" width="3" height="5" rx="1"/><rect x="5" y="6" width="3" height="7" rx="1"/><rect x="10" y="3" width="3" height="10" rx="1"/><rect x="15" y="0" width="3" height="13" rx="1"/><path d="M31 3.2a9 9 0 0 1 12 0l-1.4 1.5a7 7 0 0 0-9.2 0zM33.3 5.7a5.6 5.6 0 0 1 7.4 0l-1.5 1.5a3.4 3.4 0 0 0-4.4 0zM35.6 8.3a2.2 2.2 0 0 1 2.8 0L37 9.8z"/><rect x="45" y="1" width="21" height="11" rx="3" fill="none" stroke="currentColor" stroke-opacity=".5"/><rect x="47" y="3" width="15" height="7" rx="1.5"/><rect x="66.5" y="4.5" width="1.5" height="4" rx=".7" opacity=".5"/></svg></div>
+
+    <section class="page" id="p-welcome">
+      <div class="wordmark f" data-d="0">KamaHealth</div>
+      <h1 class="wTitle display f" data-d="80">Помогу дойти до&nbsp;врача</h1>
+      <p class="wSub f" data-d="160">Подскажу, какие осмотры пора пройти, и найду врача рядом</p>
+      <button class="btn f" data-d="240" id="start">Начать <span class="chev">›</span></button>
+    </section>
+
+    <section class="page" id="p-sex">
+      <button class="backQ f" data-d="0" data-prev="welcome" aria-label="Назад">‹</button>
+      <div class="prog f" data-d="0"><i class="done"></i><i></i><i></i><i></i></div>
+      <h2 class="qTitle display f" data-d="60">Ваш пол</h2>
+      <p class="qSub f" data-d="120">От него зависит список осмотров</p>
+      <div class="opts">
+        <button class="opt glass f" data-d="160" data-v="f">Женский <i class="dot"></i></button>
+        <button class="opt glass f" data-d="200" data-v="m">Мужской <i class="dot"></i></button>
+      </div>
+      <button class="btn f" data-d="260" data-next="age" disabled>Дальше <span class="chev">›</span></button>
+    </section>
+
+    <section class="page" id="p-age">
+      <button class="backQ f" data-d="0" data-prev="sex" aria-label="Назад">‹</button>
+      <div class="prog f" data-d="0"><i class="done"></i><i class="done"></i><i></i><i></i></div>
+      <h2 class="qTitle display f" data-d="60">Сколько вам лет</h2>
+      <p class="qSub f" data-d="120">По возрасту считаю сроки осмотров</p>
+      <div class="picker glass f" data-d="160" id="picker">
+        <div class="ghost" id="ageP">28</div><div class="n" id="ageN">29</div><div class="ghost" id="ageX">30</div>
+        <button class="pm l glass" data-step="-1" aria-label="Меньше">−</button><button class="pm r glass" data-step="1" aria-label="Больше">+</button>
+      </div>
+      <button class="btn f" data-d="240" data-next="weight">Дальше <span class="chev">›</span></button>
+    </section>
+
+    <section class="page" id="p-weight">
+      <button class="backQ f" data-d="0" data-prev="age" aria-label="Назад">‹</button>
+      <div class="prog f" data-d="0"><i class="done"></i><i class="done"></i><i class="done"></i><i></i></div>
+      <h2 class="qTitle display f" data-d="60">Ваш вес</h2>
+      <p class="qSub f" data-d="120">Примерно, точность не нужна</p>
+      <div class="wbig display f" data-d="160"><span id="wv">62</span><small>кг</small></div>
+      <div class="track glass f" data-d="200" id="track"><div class="ticks"></div><div class="fill" id="fill"></div></div>
+      <button class="btn f" data-d="240" data-next="smoke">Дальше <span class="chev">›</span></button>
+    </section>
+
+    <section class="page" id="p-smoke">
+      <button class="backQ f" data-d="0" data-prev="weight" aria-label="Назад">‹</button>
+      <div class="prog f" data-d="0"><i class="done"></i><i class="done"></i><i class="done"></i><i class="done"></i></div>
+      <h2 class="qTitle display f" data-d="60">Вы курите?</h2>
+      <p class="qSub f" data-d="120">Честно, я не осуждаю</p>
+      <div class="opts">
+        <button class="opt glass f" data-d="160" data-v="no">Нет <i class="dot"></i></button>
+        <button class="opt glass f" data-d="200" data-v="quit">Бросаю <i class="dot"></i></button>
+        <button class="opt glass f" data-d="240" data-v="yes">Да <i class="dot"></i></button>
+      </div>
+      <button class="btn f" data-d="280" id="finish" disabled>Готово <span class="chev">›</span></button>
+    </section>
+
+    <section class="page" id="p-cele">
+      <h2 class="cTitle display f" data-d="0">Карта заведена</h2>
+      <p class="cSub f" data-d="80">Подобрала 4 осмотра под вас</p>
+      <button class="btn f" data-d="180" id="toHome">На главную <span class="chev">›</span></button>
+    </section>
+
+    <section class="page light" id="p-home">
+      <div class="hello f" data-d="0">Добрый вечер</div>
+      <div class="helloB f" data-d="40">Анна</div>
+      <div class="hero f" data-d="80"><div class="lbl">Сегодня<br>всё спокойно</div><div class="lbl2">2 осмотра ждут записи</div><div class="num"><b>4</b><span>осмотра в этом году</span></div></div>
+      <div class="tiles">
+        <button class="tile teal f" data-d="130" data-sec="prev"><b>2</b><div class="t1">Превенция</div><div class="t2">осмотра пора пройти</div></button>
+        <button class="tile coral f" data-d="170" data-sec="docs"><b>3</b><div class="t1">Врачи</div><div class="t2">берут новых рядом</div></button>
+      </div>
+      <button class="wide f" data-d="210">Мой профиль <span>анамнез для врача</span><i class="chev">›</i></button>
+      <div class="tabbar f" data-d="250">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#0E1020" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 11.5 12 5l8 6.5V19a1 1 0 0 1-1 1h-4v-5h-6v5H5a1 1 0 0 1-1-1z"/></svg>
+        <span class="mid"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="7.5"/><path d="M12 8.5v7M8.5 12h7"/></svg></span>
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#0E1020" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8.5" r="3.5"/><path d="M5 20c1.2-3.6 4-5.2 7-5.2s5.8 1.6 7 5.2"/></svg>
+      </div>
+    </section>
+
+    <section class="page pv light" id="p-prev">
+      <button class="backG glass" id="backHome" aria-label="Назад">‹</button>
+      <div class="pvTitle f" data-d="0">Превенция</div>
+      <svg class="ring f" data-d="60" viewBox="0 0 290 290" id="ring"></svg>
+      <div class="ringNum display f" data-d="100">2<small> из 4</small></div>
+      <div class="ringSub f" data-d="140">осмотров в этом году пройдено</div>
+      <div class="sheet f" data-d="160">
+        <div class="handle"></div>
+        <h3>Что пора пройти</h3>
+        <div class="rowP"><span class="ic" style="background:#E8EEFF"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#2F5FE0" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"/></svg></span><div><b>Терапевт</b><span>раз в 2 года · пора</span></div><button class="pill">Напомнить</button></div>
+        <div class="rowP"><span class="ic" style="background:#E5F7F4"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#0E7C8C" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 4c-2 0-3 1.6-3 4 0 3 1.4 4 2 8 .4 2.6 1 4 2 4s1.4-2 2-5c.3-1.4 1.7-1.4 2 0 .6 3 1 5 2 5s1.6-1.4 2-4c.6-4 2-5 2-8 0-2.4-1-4-3-4-1.6 0-2.4 1-5 1S8.6 4 7 4z"/></svg></span><div><b>Стоматолог</b><span>раз в полгода · через 3 месяца</span></div><button class="pill">Напомнить</button></div>
+        <div class="rowP"><span class="ic" style="background:#FDEAF2"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#C2306F" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="9" r="5"/><path d="M12 14v7M9 18h6"/></svg></span><div><b>Гинеколог</b><span>раз в год · пора</span></div><button class="pill">Напомнить</button></div>
+      </div>
+    </section>
+
+    <svg id="orb" viewBox="0 0 300 300"></svg>
+  </div></div>
+
+  <aside class="panel">
+    <h2>Сцены</h2>
+    <div class="rb"><button data-go="welcome">Приветствие</button><button data-go="sex">Анкета</button><button data-go="cele">Готово</button><button data-go="home">Главная</button><button data-go="prev">Превенция</button></div>
+    <h2>Настроение шара</h2>
+    <div class="rb" id="moods"></div>
+    <p>Цвет экрана перетекает вместе с настроением шара. Шар смотрит туда, куда вы нажимаете. В него можно ткнуть.</p>
+  </aside>
+</div>
+<script src="orb.js"></script>
+<script>
+'use strict';
+const $ = (s, r) => (r || document).querySelector(s), $$ = (s, r) => Array.from((r || document).querySelectorAll(s));
+const phone = $('#phone');
+const device = innerWidth < 560; if (device) document.body.classList.add('device');
+const fit = () => { const s = device ? Math.min(innerWidth / 390, innerHeight / 844) : Math.min(1, (innerHeight - 32) / 844, (innerWidth - 32) / 390); document.documentElement.style.setProperty('--s', s); return s; };
+let scale = fit(); addEventListener('resize', () => { scale = fit(); });
+
+// ─── палитры: смелые, светящиеся; фон следует за настроением шара ───
+const PAL = {
+  calm:  { base: '#2142D6', b: ['#3A2FC4', '#5FB0F7', '#1846B8'] },
+  proud: { base: '#0A6F88', b: ['#0A4A86', '#3CCFD3', '#07566C'] },
+  tired: { base: '#4A40D0', b: ['#5A2FC0', '#8E96FF', '#3428A8'] },
+  happy: { base: '#0B7A52', b: ['#0B5C78', '#52DB9A', '#086443'] },
+  joy:   { base: '#F7B21E', b: ['#FFC94A', '#FFE7A0', '#FF9A5E'], dark: true },
+  sad:   { base: '#2F6AD8', b: ['#3A3FC0', '#8FC6FF', '#2550B0'] },
+  light: { base: '#F3F4F8', b: ['#D9F6EE', '#DCE5FF', '#FFE2EE'], dark: true },
+  pv:    { base: '#F7E6EE', b: ['#FFC2DA', '#A9CBFF', '#FFA3C6'], dark: true },
+};
+function paint(name) { const p = PAL[name]; $('#bg').style.backgroundColor = p.base; ['#b1', '#b2', '#b3'].forEach((id, i) => ($(id).style.backgroundColor = p.b[i])); phone.classList.toggle('lightui', !!p.dark); document.querySelectorAll('.page').forEach((pg) => pg.classList.toggle('inkText', !!p.dark && !pg.classList.contains('light'))); }
+
+// ─── шар: один на всё приложение, перелетает между экранами ───
+const orbSvg = $('#orb');
+const orb = KamaOrb.makeOrb(orbSvg, 'calm', { label: false });
+const sp = (x, k, c) => ({ x, v: 0, t: x, k, c });
+const stepS = (s, dt) => { s.v += (-s.k * (s.x - s.t) - s.c * s.v) * dt; s.x += s.v * dt; };
+const O = { x: sp(195, 70, 14), y: sp(300, 70, 14), size: sp(340, 70, 15) };
+const place = (x, y, size, snap) => { O.x.t = x; O.y.t = y; O.size.t = size; if (snap) { O.x.x = x; O.y.x = y; O.size.x = size; } };
+let mood = 'calm', pageMood = true;
+function setMood(m, keepBg) { mood = m; orb.set(m); if (!keepBg && pageMood && PAL[m]) paint(m); orb.setLight(pageMood ? 0.5 : 0); } // на ярком фоне шар светится светлее
+function lookAt(x, y) { const s = O.size.x; orb.pointer([(x - O.x.x) / (s * 0.42), (y - (O.y.x - s * 0.18)) / (s * 0.42)]); }
+
+// ─── страницы: ведущий элемент первым, остальное с перекрытием ───
+let cur = null;
+function show(id) {
+  if (cur && cur !== id) { const old = $('#p-' + cur); $$('.f', old).forEach((e) => { e.classList.add('out'); e.classList.remove('in'); }); setTimeout(() => { old.classList.remove('on'); $$('.f', old).forEach((e) => e.classList.remove('out')); }, 190); }
+  cur = id; const p = $('#p-' + id); p.classList.add('on'); p.offsetWidth;
+  $$('.f', p).forEach((e) => { e.classList.remove('in', 'out'); setTimeout(() => e.classList.add('in'), 120 + (+e.dataset.d || 0)); });
+}
+const SCENE = {
+  welcome() { show('welcome'); pageMood = true; setMood('calm'); place(195, 318, 360); },
+  sex() { show('sex'); pageMood = true; setMood('proud'); place(306, 132, 176); },
+  age() { show('age'); pageMood = true; setMood('tired'); place(306, 132, 176); },
+  weight() { show('weight'); pageMood = true; setMood('happy'); place(306, 132, 176); },
+  smoke() { show('smoke'); pageMood = true; setMood(ans.smoke === 'no' ? 'happy' : 'calm'); place(306, 132, 176); },
+  cele() { show('cele'); pageMood = true; setMood('joy'); place(195, 300, 400); orb.poke(); burst(); },
+  home() { show('home'); pageMood = false; paint('light'); setMood('calm', true); place(112, 268, 190); },
+  prev() { show('prev'); pageMood = false; paint('pv'); setMood('happy', true); place(318, 118, 132); drawRing(); },
+};
+const go = (n) => SCENE[n]();
+
+// ─── анкета ───
+const ans = { sex: null, age: 29, w: 62, smoke: null };
+$$('.opts').forEach((box) => box.addEventListener('click', (e) => {
+  const b = e.target.closest('.opt'); if (!b) return; $$('.opt', box).forEach((x) => x.classList.toggle('on', x === b));
+  const r = b.getBoundingClientRect(), pr = phone.getBoundingClientRect(); lookAt((r.left - pr.left + r.width / 2) / scale, (r.top - pr.top + r.height / 2) / scale);
+  const page = box.closest('.page').id;
+  if (page === 'p-sex') { ans.sex = b.dataset.v; orb.poke(); $('[data-next=age]').disabled = false; }
+  if (page === 'p-smoke') { ans.smoke = b.dataset.v; setMood(b.dataset.v === 'no' ? 'happy' : 'calm'); $('#finish').disabled = false; } // «не осуждаю»: на «Да» и «Бросаю» шар спокоен, без тревожного цвета
+}));
+$$('[data-next]').forEach((b) => b.addEventListener('click', () => go(b.dataset.next)));
+$$('[data-prev]').forEach((b) => b.addEventListener('click', () => go(b.dataset.prev)));
+const setAge = (v) => { ans.age = Math.max(15, Math.min(99, v)); $('#ageN').textContent = ans.age; $('#ageP').textContent = ans.age - 1; $('#ageX').textContent = ans.age + 1; const n = $('#ageN'); n.style.transform = 'scale(1.06)'; setTimeout(() => (n.style.transform = ''), 120); };
+$$('[data-step]').forEach((b) => b.addEventListener('click', (e) => { e.stopPropagation(); setAge(ans.age + +b.dataset.step); orb.poke(); }));
+let drag = null;
+$('#picker').addEventListener('pointerdown', (e) => { if (e.target.closest('[data-step]')) return; drag = { y: e.clientY, a: ans.age }; $('#picker').setPointerCapture(e.pointerId); });
+$('#picker').addEventListener('pointermove', (e) => { if (!drag) return; setAge(drag.a + Math.round((drag.y - e.clientY) / (14 * scale))); });
+$('#picker').addEventListener('pointerup', () => (drag = null));
+const setW = (v) => { ans.w = Math.round(Math.max(40, Math.min(150, v))); $('#wv').textContent = ans.w; const f = (ans.w - 40) / 110; $('#fill').style.width = (52 + f * 270) + 'px'; };
+setW(62);
+let wd = false;
+const wFrom = (e) => { const r = $('#track').getBoundingClientRect(); setW(40 + ((e.clientX - r.left) / r.width) * 110); const pr = phone.getBoundingClientRect(); lookAt((e.clientX - pr.left) / scale, (r.top - pr.top) / scale); };
+$('#track').addEventListener('pointerdown', (e) => { wd = true; $('#track').setPointerCapture(e.pointerId); wFrom(e); });
+$('#track').addEventListener('pointermove', (e) => { if (wd) wFrom(e); });
+$('#track').addEventListener('pointerup', () => { wd = false; orb.poke(); });
+$('#start').addEventListener('click', () => go('sex'));
+$('#finish').addEventListener('click', () => go('cele'));
+$('#toHome').addEventListener('click', () => go('home'));
+$$('[data-sec]').forEach((b) => b.addEventListener('click', () => { if (b.dataset.sec === 'prev') go('prev'); else { orb.poke(); toast('Карта врачей появится в следующей версии'); } }));
+$('#backHome').addEventListener('click', () => go('home'));
+const toast = (t) => { let el = $('#toast'); if (!el) { el = document.createElement('div'); el.id = 'toast'; phone.appendChild(el); } el.textContent = t; el.classList.add('on'); clearTimeout(toast.t); toast.t = setTimeout(() => el.classList.remove('on'), 1600); };
+document.querySelectorAll('.wide, .tabbar svg, .tabbar .mid').forEach((b) => b.addEventListener('click', () => toast('Этот раздел появится в следующей версии')));
+$$('.pill').forEach((p) => p.addEventListener('click', () => { p.classList.toggle('on'); p.textContent = p.classList.contains('on') ? 'Напомню' : 'Напомнить'; setMood('joy', true); orb.poke(); setTimeout(() => setMood('happy', true), 1000); }));
+
+// ─── кольцо превенции ───
+function drawRing() {
+  const R = 118, C = 2 * Math.PI * R, done = 2 / 4;
+  const pts = [0, 0.25, 0.5, 0.75].map((u, i) => { const a = -Math.PI / 2 + u * 2 * Math.PI; return `<circle cx="${145 + Math.cos(a) * R}" cy="${145 + Math.sin(a) * R}" r="${i < 2 ? 9 : 6}" fill="${i < 2 ? '#fff' : 'rgba(255,255,255,.55)'}" ${i < 2 ? 'filter="url(#gl)"' : ''}/>`; }).join('');
+  $('#ring').innerHTML = `<defs><linearGradient id="rg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FF5FA2"/><stop offset="1" stop-color="#7B6CFF"/></linearGradient><filter id="gl" x="-200%" y="-200%" width="500%" height="500%"><feGaussianBlur stdDeviation="4" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter><radialGradient id="rf"><stop offset="0" stop-color="#fff" stop-opacity=".55"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></radialGradient></defs>
+  <circle cx="145" cy="145" r="140" fill="url(#rf)"/>
+  <circle cx="145" cy="145" r="${R}" fill="none" stroke="rgba(255,255,255,.7)" stroke-width="10"/>
+  <circle cx="145" cy="145" r="${R}" fill="none" stroke="url(#rg)" stroke-width="10" stroke-linecap="round" stroke-dasharray="${C}" stroke-dashoffset="${C}" transform="rotate(-90 145 145)" id="arc" style="transition:stroke-dashoffset 1.4s cubic-bezier(.2,.8,.2,1)"/>${pts}`;
+  requestAnimationFrame(() => requestAnimationFrame(() => { const a = $('#arc'); if (a) a.style.strokeDashoffset = C * (1 - done); }));
+}
+
+// ─── искры праздника ───
+let sparks = [];
+function burst() { for (let i = 0; i < 60; i++) { const a = Math.random() * Math.PI * 2, s = 160 + Math.random() * 380; sparks.push({ x: 195, y: 290, vx: Math.cos(a) * s, vy: Math.sin(a) * s - 160, r: 1.5 + Math.random() * 3.5, life: 0, max: 0.9 + Math.random() * 0.8 }); } }
+const fx = document.createElementNS('http://www.w3.org/2000/svg', 'svg'); fx.setAttribute('viewBox', '0 0 390 844'); Object.assign(fx.style, { position: 'absolute', left: 0, top: 0, width: '390px', height: '844px', zIndex: 5, pointerEvents: 'none' }); phone.appendChild(fx);
+
+// ─── касания: шар смотрит на палец, тычок в шар ───
+phone.addEventListener('pointermove', (e) => { const r = phone.getBoundingClientRect(); lookAt((e.clientX - r.left) / scale, (e.clientY - r.top) / scale); });
+phone.addEventListener('pointerdown', (e) => {
+  const r = phone.getBoundingClientRect(), x = (e.clientX - r.left) / scale, y = (e.clientY - r.top) / scale; lookAt(x, y);
+  if (Math.hypot(x - O.x.x, y - O.y.x) < O.size.x * 0.34 && !e.target.closest('button')) { orb.poke(); const m = mood; setMood('joy', !pageMood); setTimeout(() => { if (mood === 'joy') setMood(m, !pageMood); }, 900); }
+});
+
+// ─── панель ───
+$$('[data-go]').forEach((b) => (b.onclick = () => go(b.dataset.go)));
+Object.entries(KamaOrb.MOODS).forEach(([k, m]) => { const b = document.createElement('button'); b.textContent = m.name; b.onclick = () => setMood(k); $('#moods').appendChild(b); });
+
+// ─── кадр ───
+let last = performance.now();
+function tick(now) {
+  const dt = Math.min(0.05, (now - last) / 1000); last = now; const n = Math.ceil(dt / (1 / 240));
+  for (let i = 0; i < n; i++) { orb.step(dt / n); stepS(O.x, dt / n); stepS(O.y, dt / n); stepS(O.size, dt / n); }
+  orb.render(); const s = O.size.x; orbSvg.style.width = s + 'px'; orbSvg.style.height = s + 'px'; orbSvg.style.transform = `translate(${O.x.x - s / 2}px, ${O.y.x - s / 2}px)`;
+  sparks = sparks.filter((p) => { p.life += dt; p.vy += 700 * dt; p.x += p.vx * dt; p.y += p.vy * dt; return p.life < p.max; });
+  fx.innerHTML = sparks.map((p) => `<circle cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="${(p.r * (1 - p.life / p.max * 0.5)).toFixed(1)}" fill="#fff" opacity="${(1 - p.life / p.max).toFixed(2)}"/>`).join('');
+  requestAnimationFrame(tick);
+}
+const start = new URLSearchParams(location.search).get('go') || 'welcome';
+go(start); place(O.x.t, O.y.t, O.size.t, true);
+requestAnimationFrame(tick);
+window.__app = { go, setMood, orb, O };
+</script>
+</html>
