@@ -16,7 +16,7 @@
   html,body { height:100%; background:#E7E8EE; font-family:var(--font); color:var(--ink); }
   .lab { min-height:100%; display:flex; justify-content:center; align-items:flex-start; gap:28px; padding:16px; flex-wrap:wrap; }
   .wrapP { width:calc(390px * var(--s,1)); height:calc(844px * var(--s,1)); flex:none; }
-  .phone { width:390px; height:844px; transform:scale(var(--s,1)); transform-origin:0 0; border-radius:50px; overflow:hidden; position:relative; background:#F3F4F8; box-shadow:0 0 0 11px #0B0C12, 0 40px 80px rgba(10,12,30,.35); user-select:none; touch-action:none; isolation:isolate; }
+  .phone { width:390px; height:844px; transform:scale(var(--s,1)); transform-origin:0 0; border-radius:50px; overflow:hidden; overflow:clip; position:relative; background:#F3F4F8; box-shadow:0 0 0 11px #0B0C12, 0 40px 80px rgba(10,12,30,.35); user-select:none; touch-action:none; isolation:isolate; }
   button { font:inherit; color:inherit; border:0; background:none; cursor:pointer; }
 
   /* фон: светящиеся пятна, цвет перетекает за настроением шара */
@@ -362,6 +362,7 @@ root.KamaOrb = { MOODS, makeOrb, hex2rgb, mix, rgb };
 'use strict';
 const $ = (s, r) => (r || document).querySelector(s), $$ = (s, r) => Array.from((r || document).querySelectorAll(s));
 const phone = $('#phone');
+phone.addEventListener('scroll', () => { phone.scrollTop = 0; phone.scrollLeft = 0; }); // браузер подкручивает к кнопке в фокусе: не даём
 const device = innerWidth < 560; if (device) { document.body.classList.add('device'); addEventListener('scroll', () => scrollTo(0, 0)); }
 const fit = () => { const s = device ? Math.min(innerWidth / 390, innerHeight / 844) : Math.min(1, (innerHeight - 32) / 844, (innerWidth - 32) / 390); document.documentElement.style.setProperty('--s', s); return s; };
 let scale = fit(); addEventListener('resize', () => { scale = fit(); });
