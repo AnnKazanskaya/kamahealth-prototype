@@ -147,8 +147,8 @@
   /* шапка: содержимое уходит под неё и размывается, без резкой границы */
   .page { --pg:var(--bg); }
   #p-prev { --pg:color-mix(in srgb, var(--mood) 52%, #fff); }
-  .hb { position:absolute; left:0; right:0; top:0; height:172px; z-index:1; pointer-events:none; -webkit-backdrop-filter:blur(18px); backdrop-filter:blur(18px); background:linear-gradient(var(--pg) 56%, color-mix(in srgb, var(--pg) 88%, transparent) 70%, color-mix(in srgb, var(--pg) 0%, transparent)); -webkit-mask-image:linear-gradient(#000 74%, transparent); mask-image:linear-gradient(#000 74%, transparent); transition:background 1s; }
-  .hb.low { height:142px; }
+  .hb { position:absolute; left:0; right:0; top:0; height:190px; z-index:1; pointer-events:none; -webkit-backdrop-filter:blur(22px); backdrop-filter:blur(22px); background:linear-gradient(color-mix(in srgb, var(--pg) 90%, transparent) 48%, color-mix(in srgb, var(--pg) 62%, transparent) 68%, color-mix(in srgb, var(--pg) 0%, transparent)); -webkit-mask-image:linear-gradient(#000 58%, transparent); mask-image:linear-gradient(#000 58%, transparent); transition:background 1s; }
+  .hb.low { height:160px; }
   .bar { z-index:2; }
   .tabH { position:absolute; left:24px; top:62px; z-index:2; }
   .tabH .h { font-size:28px; }
