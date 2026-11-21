@@ -589,7 +589,7 @@
     <h2>Сцены</h2>
     <div class="rb"><button data-go="welcome">Приветствие</button><button data-go="sex">Анкета</button><button data-go="cele">Готово</button><button data-go="prev">Превенция</button><button data-go="vacc">Прививки</button><button data-go="docs">Врачи</button><button data-go="visit">Иду к врачу</button><button data-go="cal">Календарь</button><button data-go="prof">Профиль</button><button data-go="pdf">PDF</button><button data-go="lab">Анализ</button><button data-go="anam">Анамнез</button></div>
     <h2>Фон экранов</h2>
-    <div class="rb"><button onclick="__app.setBg(0)">Как было</button><button onclick="__app.setBg(1)">1 мягче и крупнее</button><button onclick="__app.setBg(2)">2 без свечения</button><button onclick="__app.setBg(3)">3 сильный градиент</button></div>
+    <div class="rb"><button onclick="__app.setBg(1)">1 мягче и крупнее</button><button onclick="__app.setBg(2)">2 без свечения</button><button onclick="__app.setBg(3)">3 сильный градиент</button></div>
     <h2>Настроение</h2>
     <div class="rb" id="moods"></div>
     <p>Основа светлая, цвет даёт только свечение маскота, и оно меняется вместе с его настроением.</p>
@@ -801,7 +801,7 @@ const back = () => go(stack.pop() || 'prev');
 
 $$('.page').forEach((pg) => { const sc = $('.scr', pg); if (!sc) return; const h = document.createElement('div'); h.className = 'hb' + ($('.tabH', pg) ? '' : ' low'); pg.insertBefore(h, sc); });
 
-let BGV = +(new URLSearchParams(location.search).get('g') || 0);
+let BGV = +(new URLSearchParams(location.search).get('g') || 1); // по умолчанию вариант 1: мягкое крупное свечение (выбрала Анна 21.11.2026)
 const setBg = (v) => { BGV = v; phone.classList.remove('g1', 'g2', 'g3'); if (v) phone.classList.add('g' + v); };
 setBg(BGV);
 
