@@ -141,10 +141,16 @@
   .badge.due { background:#FFF0E5; color:#B4530F; }
   .act { margin-left:auto; height:40px; padding:0 16px; border-radius:20px; background:var(--ink); color:#fff; font-size:14px; font-weight:600; flex:none; }
   /* общие детали разделов */
-  .scr { position:absolute; left:0; right:0; top:104px; bottom:0; overflow-y:auto; overflow-x:hidden; padding:4px 16px 128px; touch-action:pan-y; -webkit-overflow-scrolling:touch; scrollbar-width:none; overscroll-behavior:contain; }
+  .scr { position:absolute; left:0; right:0; top:68px; bottom:0; overflow-y:auto; overflow-x:hidden; padding:40px 16px 128px; touch-action:pan-y; -webkit-overflow-scrolling:touch; scrollbar-width:none; overscroll-behavior:contain; }
   .scr::-webkit-scrollbar { display:none; }
-  .scr.tabbed { top:128px; -webkit-mask-image:linear-gradient(transparent, #000 18px, #000 calc(100% - 130px), transparent calc(100% - 50px)); mask-image:linear-gradient(transparent, #000 18px, #000 calc(100% - 130px), transparent calc(100% - 50px)); padding-top:14px; }
-  .tabH { position:absolute; left:24px; top:62px; }
+  .scr.tabbed { top:92px; padding-top:56px; -webkit-mask-image:linear-gradient(#000 calc(100% - 130px), transparent calc(100% - 50px)); mask-image:linear-gradient(#000 calc(100% - 130px), transparent calc(100% - 50px)); }
+  /* шапка: содержимое уходит под неё и размывается, без резкой границы */
+  .page { --pg:var(--bg); }
+  #p-prev { --pg:color-mix(in srgb, var(--mood) 52%, #fff); }
+  .hb { position:absolute; left:0; right:0; top:0; height:172px; z-index:1; pointer-events:none; -webkit-backdrop-filter:blur(18px); backdrop-filter:blur(18px); background:linear-gradient(var(--pg) 56%, color-mix(in srgb, var(--pg) 88%, transparent) 70%, color-mix(in srgb, var(--pg) 0%, transparent)); -webkit-mask-image:linear-gradient(#000 74%, transparent); mask-image:linear-gradient(#000 74%, transparent); transition:background 1s; }
+  .hb.low { height:142px; }
+  .bar { z-index:2; }
+  .tabH { position:absolute; left:24px; top:62px; z-index:2; }
   .tabH .h { font-size:28px; }
   .card { background:#fff; border-radius:24px; padding:6px 16px; box-shadow:inset 0 0 0 1px var(--line); }
   .card + .card { margin-top:12px; }
@@ -785,6 +791,8 @@ const go = (n) => {
 const push = (n) => { if (cur && cur !== n) stack.push(cur); go(n); };
 const back = () => go(stack.pop() || 'prev');
 
+$$('.page').forEach((pg) => { const sc = $('.scr', pg); if (!sc) return; const h = document.createElement('div'); h.className = 'hb' + ($('.tabH', pg) ? '' : ' low'); pg.insertBefore(h, sc); });
+
 // ─── анкета ───
 const ans = { sex: null, age: 29, w: 62, smoke: null, h: null, ins: null, alc: null };
 $$('.opts').forEach((box) => box.addEventListener('click', (e) => {
@@ -841,7 +849,7 @@ const PDFT = ['PDF анамнеза', 'из «Моего профиля»'];
 const EXAMS = [
   { id: 'gp', doc: 'Терапевт', gen: 'терапевта', title: 'Иду к терапевту', months: 24, every: 'раз в 2 года', kind: 'Терапевт', cz: 'Praktický lékař', when: (a) => a.age >= 18,
     sub: 'Профилактический осмотр раз в 2 года, по страховке бесплатно', take: [...TAKE, ['Список лекарств, если пьёте'], PDFT],
-    act: (a) => ['Давление, пульс, вес, талия', a.age >= 40 ? 'Анализ крови, холестерин и сахар' : 'Анализ крови и мочи', 'Вопросы о самочувствии и болезнях в семье', 'Направления на скрининги по возрасту'],
+    act: (a) => ['Давление, пульс, вес, талия', a.age >= 40 ? 'Анализ крови: холестерин и сахар' : 'Анализ крови и мочи', ...(a.age >= 50 ? ['Проверка работы почек'] : []), ...(a.age >= 65 && a.age <= 80 ? ['Оценка памяти'] : []), 'Проверка прививок', 'Направления на скрининги по возрасту'],
     phrase: (w) => `Dobrý den, ${w ? 'chtěla' : 'chtěl'} bych se objednat na preventivní prohlídku.`, ru: 'Здравствуйте, хочу записаться на профилактический осмотр.' },
   { id: 'dent', doc: 'Стоматолог', gen: 'стоматолога', title: 'Иду к стоматологу', months: 12, every: 'раз в год', kind: 'Стоматолог', cz: 'Zubní lékař', when: () => true,
     sub: 'Профилактика раз в год, по страховке бесплатно', take: [...TAKE],
@@ -852,22 +860,34 @@ const EXAMS = [
     act: (a) => ['Осмотр и разговор о самочувствии', 'Мазок на цитологию', ...([35, 45, 55].includes(a.age) ? ['Тест на ВПЧ: в этом возрасте его оплачивает страховая'] : []), 'Осмотр груди'],
     phrase: () => 'Dobrý den, chtěla bych se objednat na preventivní gynekologickou prohlídku.', ru: 'Здравствуйте, хочу записаться на профилактический осмотр у гинеколога.' },
   { id: 'mammo', doc: 'Маммография', gen: 'маммографии', title: 'Иду на маммографию', months: 24, every: 'раз в 2 года', kind: 'Маммоцентр', cz: 'Mamografie', when: (a) => a.sex === 'f' && a.age >= 45,
-    sub: 'Скрининг груди с 45 лет раз в 2 года, по страховке бесплатно', take: [...TAKE, ['Направление, если дал врач'], ['Прошлые снимки, если есть']],
+    sub: 'Скрининг груди с 45 лет раз в 2 года, по страховке бесплатно', take: [...TAKE, ['Направление от гинеколога или терапевта'], ['Прошлые снимки, если есть']],
     act: () => ['Снимок груди с двух сторон', 'Результат придёт вам и вашему врачу'],
     phrase: () => 'Dobrý den, chtěla bych se objednat na screeningovou mamografii.', ru: 'Здравствуйте, хочу записаться на скрининговую маммографию.' },
   { id: 'colon', doc: 'Тест на скрытую кровь', gen: 'теста на скрытую кровь', title: 'Сдаю тест на скрытую кровь', months: 24, every: 'раз в 2 года', kind: 'Терапевт', cz: 'TOKS', when: (a) => a.age >= 45 && a.age <= 74,
     sub: 'Скрининг кишечника с 45 лет: тест раз в 2 года или колоноскопия раз в 10 лет', take: [...TAKE],
     act: () => ['Набор для теста даст терапевт или гинеколог', 'Сдаёте дома и приносите обратно', 'Если тест положительный, направят на колоноскопию'],
     phrase: (w) => `Dobrý den, ${w ? 'chtěla' : 'chtěl'} bych test na skryté krvácení do stolice.`, ru: 'Здравствуйте, хочу сдать тест на скрытую кровь в кале.' },
-  { id: 'psa', doc: 'Анализ PSA', gen: 'анализа PSA', title: 'Сдаю анализ PSA', months: 24, every: 'пилотная программа', kind: 'Уролог', cz: 'PSA', when: (a) => a.sex !== 'f' && a.age >= 50 && a.age <= 69,
+  { id: 'psa', doc: 'Анализ PSA', gen: 'анализа PSA', title: 'Сдаю анализ PSA', months: 24, every: 'раз в 2–4 года, по результату', flex: true, kind: 'Уролог', cz: 'PSA', when: (a) => a.sex !== 'f' && a.age >= 50 && a.age <= 69,
     sub: 'Скрининг простаты для мужчин 50–69 лет, пилотная программа', take: [...TAKE],
     act: () => ['Анализ крови на PSA', 'При отклонении направят к урологу'],
     phrase: () => 'Dobrý den, chtěl bych se objednat na vyšetření PSA.', ru: 'Здравствуйте, хочу сдать анализ PSA.' },
-  { id: 'lung', doc: 'КТ лёгких', gen: 'КТ лёгких', title: 'Иду на КТ лёгких', months: 12, every: 'раз в год', kind: 'Терапевт', cz: 'CT plic', when: (a) => (a.smoke === 'yes' || a.smoke === 'quit') && a.age >= 55 && a.age <= 74,
+  { id: 'lung', doc: 'КТ лёгких', gen: 'КТ лёгких', title: 'Иду на КТ лёгких', months: 12, every: 'раз в 1–2 года', flex: true, kind: 'Терапевт', cz: 'CT plic', when: (a) => (a.smoke === 'yes' || a.smoke === 'quit') && a.age >= 55 && a.age <= 74,
     sub: 'Для тех, кто курил 20 и больше пачко-лет. Направляет терапевт, пилотная программа', take: [...TAKE, PDFT],
     act: () => ['Терапевт посчитает стаж курения', 'КТ низкой дозы, без уколов', 'Результат обсудите с врачом'],
     phrase: (w) => `Dobrý den, ${w ? 'chtěla' : 'chtěl'} bych se informovat o screeningu plic.`, ru: 'Здравствуйте, хочу узнать о скрининге лёгких.' },
+  { id: 'aaa', doc: 'УЗИ брюшной аорты', gen: 'УЗИ брюшной аорты', title: 'Иду на УЗИ аорты', months: 0, once: true, every: 'один раз в жизни', kind: 'Терапевт', cz: 'Screening aneurysmatu břišní aorty', when: (a) => a.sex !== 'f' && a.age >= 65 && a.age <= 67,
+    sub: 'УЗИ живота мужчинам 65–67 лет, один раз в жизни, по страховке бесплатно', take: [...TAKE, ['Направление от терапевта']],
+    act: () => ['Терапевт выдаёт направление', 'УЗИ живота, без подготовки и уколов', 'Результат обсудите с терапевтом'],
+    phrase: () => 'Dobrý den, chtěl bych žádanku na screening aneurysmatu břišní aorty.', ru: 'Здравствуйте, хочу направление на скрининг аневризмы брюшной аорты.' },
+  { id: 'dxa', doc: 'Плотность костей', gen: 'проверки костей', title: 'Проверяю плотность костей', months: 24, flex: true, every: 'по назначению врача', kind: 'Терапевт', cz: 'Denzitometrie (DXA)', when: (a) => (a.sex === 'f' ? a.age >= 60 : a.age >= 70),
+    sub: 'Проверка на остеопороз: женщинам с 60 лет, мужчинам с 70', take: [...TAKE],
+    act: () => ['Терапевт или гинеколог оценит риск переломов', 'При риске направит на денситометрию (DXA)', 'Это быстрый снимок, готовиться не нужно'],
+    phrase: (w) => `Dobrý den, ${w ? 'chtěla' : 'chtěl'} bych se zeptat na vyšetření osteoporózy.`, ru: 'Здравствуйте, хочу спросить о проверке на остеопороз.' },
 ];
+ICO.aaa = '<path d="M10 3v5c-2 1-3 3-3 4s1 3 3 4v5M14 3v5c2 1 3 3 3 4s-1 3-3 4v5"/>';
+ICO.dxa = '<path d="M7.5 4.5a2 2 0 0 1 3 2.5l6.5 6.5a2 2 0 1 1 2 3 2 2 0 1 1-3 2L9.5 12a2 2 0 1 1-2-3 2 2 0 0 1 0-4.500z"/>';
+// когда следующий раз: у разовых не нужен, у части программ срок назначает врач по результату
+const nextText = (e) => (e.once ? 'повторять не нужно' : e.flex ? 'когда повторить, скажет врач' : 'следующий: ' + monthYear(e.next));
 const female = () => ans.sex === 'f';
 const MON = ['январь', 'февраль', 'март', 'апрель', 'май', 'июнь', 'июль', 'август', 'сентябрь', 'октябрь', 'ноябрь', 'декабрь'];
 const MONG = ['января', 'февраля', 'марта', 'апреля', 'мая', 'июня', 'июля', 'августа', 'сентября', 'октября', 'ноября', 'декабря'];
@@ -878,7 +898,8 @@ const dayMonth = (d) => `${d.getDate()} ${MONG[d.getMonth()]} ${d.getFullYear()}
 function exams() {
   const now = new Date();
   return EXAMS.filter((e) => e.when(ans)).map((e) => {
-    const last = store.done[e.id] ? new Date(store.done[e.id]) : null, next = last ? addMonths(last, e.months) : null;
+    if (e.id === 'dent' && ans.age < 18) e = { ...e, months: 6, every: 'два раза в год' }; // до 18 лет профилактика у стоматолога дважды в год
+    const last = store.done[e.id] ? new Date(store.done[e.id]) : null, next = last ? (e.once ? new Date(2200, 0, 1) : addMonths(last, e.months)) : null;
     const st = !next || next <= now ? 'due' : next - now < 62 * 864e5 ? 'soon' : 'ok';
     return { ...e, last, next, st, plan: store.plan[e.id] ? new Date(store.plan[e.id] + 'T12:00') : null };
   });
@@ -900,6 +921,8 @@ const MORE = {
   gyn: { desc: 'Осмотр и мазок на цитологию: находит изменения до симптомов', todo: 'записаться на профилактический осмотр', why: 'женщинам с 15 лет', free: true },
   mammo: { desc: 'Снимок груди помогает найти опухоль на ранней стадии', todo: 'попросить направление у гинеколога или терапевта', why: 'женщинам с 45 лет', free: true },
   colon: { desc: 'Тест находит скрытую кровь, ранний признак болезней кишечника', todo: 'взять набор для теста у терапевта', why: 'всем с 45 до 74 лет', free: true },
+  aaa: { desc: 'УЗИ ищет расширение аорты, которое долго не даёт симптомов', todo: 'попросить направление у терапевта', why: 'мужчинам 65–67 лет', free: true },
+  dxa: { desc: 'Показывает, не стали ли кости хрупкими', todo: 'спросить терапевта или гинеколога о проверке на остеопороз', why: (a) => (a.sex === 'f' ? 'женщинам с 60 лет' : 'мужчинам с 70 лет') },
   psa: { desc: 'Анализ крови помогает рано заметить болезни простаты', todo: 'обсудить анализ с терапевтом или урологом', why: 'мужчинам 50–69 лет' },
   lung: { desc: 'КТ низкой дозы для тех, кто долго курит или курил', todo: 'спросить терапевта о программе скрининга', why: 'курящим 55–74 лет' },
 };
@@ -924,15 +947,15 @@ $('#mB').addEventListener('keydown', (ev) => { if (ev.key === 'Enter' && mOk) { 
 // ─── тело и точки ───
 const SPOT = {
   f: { dent: [195, 219, 1], gp: [216, 318, 1], lung: [228, 290, 1], mammo: [166, 334, -1], colon: [195, 418, -1], gyn: [195, 486, -1] },
-  m: { dent: [195, 211, 1], gp: [217, 336, 1], lung: [168, 322, -1], colon: [195, 425, -1], psa: [195, 500, -1] },
+  m: { dent: [195, 211, 1], gp: [217, 336, 1], lung: [168, 322, -1], aaa: [195, 392, 1], colon: [195, 425, -1], psa: [195, 500, -1] },
 };
-const LABEL = { gp: 'Сердце', dent: 'Зубы', gyn: 'Гинекология', mammo: 'Грудь', colon: 'Кишечник', psa: 'Простата', lung: 'Лёгкие' };
+const LABEL = { gp: 'Сердце', dent: 'Зубы', gyn: 'Гинекология', mammo: 'Грудь', colon: 'Кишечник', psa: 'Простата', lung: 'Лёгкие', aaa: 'Аорта' };
 let PTS = [];
 function recCard(e) {
   const m = MORE[e.id], g = stage(e), my = myDoc(e.kind);
   return `<div class="rec" data-ex="${e.id}"><div class="rh"><span class="ic">${I20(ICO[e.id])}</span><b>${e.doc}</b>${stageChip(e)}</div>
     <p class="d">${m.desc}. <span class="todo">Что сделать: ${m.todo}.</span></p>
-    <div class="meta"><span class="tag">${e.every}</span><span class="tag">${m.why}</span>${g === 'done' ? `<span class="tag">следующий: ${monthYear(e.next)}</span>` : ''}</div>
+    <div class="meta"><span class="tag">${e.every}</span><span class="tag">${typeof m.why === 'function' ? m.why(ans) : m.why}</span>${g === 'done' ? `<span class="tag">${nextText(e)}</span>` : ''}</div>
     <div class="acts"><button class="mini" data-doc="${e.id}">${my ? 'Мой врач' : 'Выбрать врача'}</button><button class="mini ghost" data-more="${e.id}">Как подготовиться</button></div></div>`;
 }
 function setBody() {
@@ -957,7 +980,7 @@ function toDoctor(e) {
   if (my && my.d) { docShow = my.d; push('doc'); return; }
   if (my) { visitFor = e.id; push('visit'); return; }
   docFilter = e.kind; docNew = false; docAt = null; go('docs'); toast(`Выберите, к кому пойдёте: ${e.kind.toLowerCase()}`);
-  setTimeout(() => { const sc = $('#docsScr'), t = $('#findSh'); if (sc && t) sc.scrollTo({ top: t.offsetTop - 8, behavior: 'smooth' }); }, 500);
+  setTimeout(() => { const sc = $('#docsScr'), t = $('#findSh'); if (sc && t) sc.scrollTo({ top: t.offsetTop - 60, behavior: 'smooth' }); }, 500);
 }
 $('#recList').addEventListener('click', (ev) => {
   const c = ev.target.closest('.rec'); if (!c) return; const e = exams().find((x) => x.id === c.dataset.ex); if (!e) return;
@@ -973,7 +996,7 @@ const hasChronic = () => { const a = store.anam.chronic; return !!a && (a.sel.le
 const VACC = [
   { id: 'tet', n: 'Столбняк', cz: 'tetanus', desc: 'Ревакцинация взрослым. Защищает при ранах и травмах', every: (a) => (a.age >= 60 ? 'каждые 10 лет' : 'каждые 10–15 лет'), months: (a) => (a.age >= 60 ? 120 : 180), rec: () => true, pay: '' },
   { id: 'tbe', n: 'Клещевой энцефалит', cz: 'klíšťová encefalitida', desc: 'В Чехии много клещей. Три дозы, потом ревакцинация', every: () => 'каждые 3–5 лет', months: (a) => (a.age >= 60 ? 36 : 60), rec: () => true, pay: 'Страховая оплачивает с 50 лет' },
-  { id: 'flu', n: 'Грипп', cz: 'chřipka', desc: 'Делают каждую осень, до начала сезона', every: () => 'каждый год', months: () => 12, rec: (a) => a.age >= 50 || hasChronic(), pay: 'Страховая оплачивает с 65 лет и при хронических болезнях' },
+  { id: 'flu', n: 'Грипп', cz: 'chřipka', desc: 'Делают каждую осень, до начала сезона', every: () => 'каждый год', months: () => 12, rec: (a) => a.age >= 65 || hasChronic(), pay: 'Страховая оплачивает с 65 лет и при хронических болезнях' },
   { id: 'pneu', n: 'Пневмококк', cz: 'pneumokok', desc: 'Защищает от тяжёлого воспаления лёгких', every: () => 'один раз', months: () => 0, when: (a) => a.age >= 60 || hasChronic(), rec: (a) => a.age >= 65, pay: 'Страховая оплачивает с 65 лет' },
   { id: 'covid', n: 'COVID-19', cz: 'COVID-19', desc: 'Обновлённая вакцина осенью', every: () => 'каждый год', months: () => 12, rec: (a) => a.age >= 60 || hasChronic(), pay: 'Бесплатно до 2027 года' },
 ];
@@ -1018,7 +1041,7 @@ function drawVisit() {
   const e = exams().find((x) => x.id === visitFor) || exams()[0]; if (!e) return;
   $('#vT').textContent = e.title; $('#vS').textContent = e.sub.replace(', по страховке бесплатно', '') + (MORE[e.id].free ? '. ' + payNote() : '');
   const st = $('#vSt'); st.className = 'vSt on' + (e.st === 'due' ? ' due' : '');
-  st.textContent = e.last ? `Пройден ${dayMonth(e.last)} · следующий ${monthYear(e.next)}` : e.plan ? `Запланировано на ${dayMonth(e.plan)}` : 'Рекомендовано, визит пока не запланирован';
+  st.textContent = e.last ? `Пройден ${dayMonth(e.last)} · ${nextText(e)}` : e.plan ? `Запланировано на ${dayMonth(e.plan)}` : 'Рекомендовано, визит пока не запланирован';
   const my = myDoc(e.kind); $('#vDocT').textContent = my ? `Мой врач: ${my.name}` : 'Выбрать врача'; $('#vDocC').textContent = my ? (my.d ? my.d.a.split(' · ')[0] : 'вы указали сами') : 'Из списка рядом или указать своего';
   $('#vPlanT').textContent = e.plan ? `Визит: ${dayMonth(e.plan)}` : 'Запланировать визит'; $('#vPlanC').textContent = e.plan ? 'Нажмите, чтобы изменить дату' : 'Поставьте дату, когда запишетесь';
   $('#vDate').value = store.plan[e.id] || ''; $('#vDate').min = isoToday();
@@ -1036,7 +1059,7 @@ $('#vMark').addEventListener('click', () => {
   const e = exams().find((x) => x.id === visitFor); if (!e) return;
   if (e.last && e.st !== 'due') { delete store.done[e.id]; save(); toast('Отметка убрана'); drawVisit(); setMood(stateMood()); return; }
   store.done[e.id] = new Date().toISOString(); delete store.plan[e.id]; save();
-  const nx = addMonths(new Date(), e.months); toast(`Отмечено. Следующий раз: ${monthYear(nx)}`);
+  toast(e.once || e.flex ? 'Отмечено' : `Отмечено. Следующий раз: ${monthYear(addMonths(new Date(), e.months))}`);
   react('joy', 1600); burstAt(...centerOf($('#vMark'))); drawVisit();
   setTimeout(() => { if (cur === 'visit') back(); }, 1300);
 });
@@ -1047,7 +1070,7 @@ function drawCal() {
   const row = (ic, title, extra, attr) => `<button class="row" ${attr}><span class="ic">${I20(ic)}</span><span><b>${title}</b><span class="cap">${extra}</span></span><span class="end"><span class="chev">›</span></span></button>`;
   const ex = (e, extra) => row(ICO[e.id], e.doc, extra, `data-v="${e.id}"`), SY = '<path d="m18 2 4 4M17 7l3-3M19 9 8.7 19.3a1 1 0 0 1-.7.3H5v-3a1 1 0 0 1 .3-.7L15 5M9 11l4 4M5 19l-3 3"/>';
   const planned = L.filter((e) => stage(e) === 'plan').sort((a, b) => a.plan - b.plan), rec = L.filter((e) => stage(e) === 'rec');
-  const up = [...L.filter((e) => e.st !== 'due').map((e) => ({ d: e.next, h: ex(e, e.every) })), ...V.filter((v) => v.st === 'ok' && v.next).map((v) => ({ d: v.next, h: row(SY, v.n, 'прививка · ' + v.every(ans), 'data-vc') }))].sort((a, b) => a.d - b.d);
+  const up = [...L.filter((e) => e.st !== 'due' && !e.once).map((e) => ({ d: e.next, h: ex(e, e.every) })), ...V.filter((v) => v.st === 'ok' && v.next).map((v) => ({ d: v.next, h: row(SY, v.n, 'прививка · ' + v.every(ans), 'data-vc') }))].sort((a, b) => a.d - b.d);
   const past = L.filter((e) => e.last).sort((a, b) => b.last - a.last);
   const groups = [];
   if (planned.length) groups.push(`<div class="tlG now"><div class="sh">Запланировано</div><div class="card">${planned.map((e) => ex(e, dayMonth(e.plan))).join('')}</div></div>`);
