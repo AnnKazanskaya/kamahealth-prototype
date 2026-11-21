@@ -359,6 +359,11 @@
   .mRow span { flex:1; }
   .mRow input { width:76px; height:38px; border:0; border-radius:12px; box-shadow:inset 0 0 0 1px var(--line); font:inherit; font-size:16px; font-weight:600; text-align:center; outline:none; -webkit-user-select:text; user-select:text; }
   .mRow small { width:58px; font-size:12px; color:var(--mute); }
+  /* варианты фона внутренних экранов: g1 мягкое свечение крупнее, g2 без свечения, g3 сильный градиент */
+  .phone.g1.inapp #field { opacity:.56; }
+  .phone.g1 .page:not(#p-prev):not(#p-welcome):not(#p-sex):not(#p-age):not(#p-weight):not(#p-smoke):not(#p-cele):not(#p-anam) .hb { background:radial-gradient(circle 250px at 338px 78px, color-mix(in srgb, var(--mood) 40%, transparent), color-mix(in srgb, var(--mood) 0%, transparent)), linear-gradient(color-mix(in srgb, var(--pg) 90%, transparent) 48%, color-mix(in srgb, var(--pg) 62%, transparent) 68%, color-mix(in srgb, var(--pg) 0%, transparent)); }
+  .phone.g2.inapp #field { display:none; }
+  .phone.g3 .page:not(#p-prev):not(#p-welcome):not(#p-sex):not(#p-age):not(#p-weight):not(#p-smoke):not(#p-cele):not(#p-anam) { --pg:color-mix(in srgb, var(--mood) 36%, #fff); background:linear-gradient(180deg, color-mix(in srgb, var(--mood) 42%, #fff) 0%, color-mix(in srgb, var(--mood) 20%, #F7F7FB) 38%, #F5F4F8 78%); transition:background 1s; }
   #toast { position:absolute; left:50%; bottom:108px; transform:translate(-50%, 12px); background:rgba(21,20,26,.9); color:#fff; font-size:14px; font-weight:500; padding:12px 16px; border-radius:16px; opacity:0; transition:all .3s; z-index:10; white-space:nowrap; pointer-events:none; }
   #toast.on { opacity:1; transform:translate(-50%, 0); }
 
@@ -583,6 +588,8 @@
   <aside class="panel">
     <h2>Сцены</h2>
     <div class="rb"><button data-go="welcome">Приветствие</button><button data-go="sex">Анкета</button><button data-go="cele">Готово</button><button data-go="prev">Превенция</button><button data-go="vacc">Прививки</button><button data-go="docs">Врачи</button><button data-go="visit">Иду к врачу</button><button data-go="cal">Календарь</button><button data-go="prof">Профиль</button><button data-go="pdf">PDF</button><button data-go="lab">Анализ</button><button data-go="anam">Анамнез</button></div>
+    <h2>Фон экранов</h2>
+    <div class="rb"><button onclick="__app.setBg(0)">Как было</button><button onclick="__app.setBg(1)">1 мягче и крупнее</button><button onclick="__app.setBg(2)">2 без свечения</button><button onclick="__app.setBg(3)">3 сильный градиент</button></div>
     <h2>Настроение</h2>
     <div class="rb" id="moods"></div>
     <p>Основа светлая, цвет даёт только свечение маскота, и оно меняется вместе с его настроением.</p>
@@ -783,6 +790,7 @@ const SCENE = {
 const TABS = ['prof', 'prev', 'docs']; // слева направо: кто я, что отследить, к кому обратиться
 let stack = [];
 const go = (n) => {
+  phone.classList.toggle('inapp', !['welcome', 'sex', 'age', 'weight', 'smoke', 'cele', 'anam'].includes(n));
   if (n !== 'cele') sparks = [];
   SCENE[n]();
   const sc = $('#p-' + n + ' .scr'); if (sc) sc.scrollTop = 0;
@@ -792,6 +800,10 @@ const push = (n) => { if (cur && cur !== n) stack.push(cur); go(n); };
 const back = () => go(stack.pop() || 'prev');
 
 $$('.page').forEach((pg) => { const sc = $('.scr', pg); if (!sc) return; const h = document.createElement('div'); h.className = 'hb' + ($('.tabH', pg) ? '' : ' low'); pg.insertBefore(h, sc); });
+
+let BGV = +(new URLSearchParams(location.search).get('g') || 0);
+const setBg = (v) => { BGV = v; phone.classList.remove('g1', 'g2', 'g3'); if (v) phone.classList.add('g' + v); };
+setBg(BGV);
 
 // ─── анкета ───
 const ans = { sex: null, age: 29, w: 62, smoke: null, h: null, ins: null, alc: null };
@@ -1416,14 +1428,14 @@ function tick(now) {
   orb.render(); const s = O.size.x, v = Math.hypot(O.x.v, O.y.v), k = Math.min(0.22, v / 2600), ang = Math.atan2(O.y.v, O.x.v) * 180 / Math.PI;
   orbSvg.style.width = s + 'px'; orbSvg.style.height = s + 'px';
   orbSvg.style.transform = `translate(${O.x.x - s / 2}px, ${O.y.x - s / 2}px)` + (k > 0.01 ? ` rotate(${ang.toFixed(1)}deg) scale(${(1 + k).toFixed(3)}, ${(1 - k * 0.7).toFixed(3)}) rotate(${(-ang).toFixed(1)}deg)` : '');
-  const fs = Math.max(360, s * 1.9); field.style.width = field.style.height = fs + 'px'; field.style.transform = `translate(${O.x.x - fs / 2}px, ${O.y.x - fs / 2}px)`;
+  const fs = Math.max(360, s * 1.9) * (BGV === 1 && phone.classList.contains('inapp') ? 1.45 : 1); field.style.width = field.style.height = fs + 'px'; field.style.transform = `translate(${O.x.x - fs / 2}px, ${O.y.x - fs / 2}px)`;
   sparks = sparks.filter((p) => { p.life += dt; p.vy += 700 * dt; p.x += p.vx * dt; p.y += p.vy * dt; return p.life < p.max; });
   fx.innerHTML = sparks.map((p) => `<circle cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="${(p.r * (1 - p.life / p.max * 0.5)).toFixed(1)}" fill="${p.c}" opacity="${(1 - p.life / p.max).toFixed(2)}"/>`).join('');
   requestAnimationFrame(tick);
 }
 const start = new URLSearchParams(location.search).get('go') || (store.onboarded ? 'prev' : 'welcome');
-place(195, 422, 300, true); go(start); // на заставке маскот в центре экрана, отсюда он летит на своё место
+place(195, 422, 300, true); go(start); if (new URLSearchParams(location.search).has('snap')) place(O.x.t, O.y.t, O.size.t, true); // на заставке маскот в центре экрана, отсюда он летит на своё место
 requestAnimationFrame(tick);
-window.__app = { go, setMood, orb, O, store, ans, exams, save };
+window.__app = { go, setMood, orb, O, store, ans, exams, save, setBg };
 </script>
 </html>
