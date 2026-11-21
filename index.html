@@ -846,10 +846,11 @@ const ICO = {
 };
 const TAKE = [['Карточка страховой', 'kartička pojištěnce'], ['Паспорт или ID']];
 const PDFT = ['PDF анамнеза', 'из «Моего профиля»'];
+const LUNG27 = () => new Date() >= new Date(2027, 0, 1); // с 2027 года скрининг лёгких с 50 до 79 лет
 const EXAMS = [
   { id: 'gp', doc: 'Терапевт', gen: 'терапевта', title: 'Иду к терапевту', months: 24, every: 'раз в 2 года', kind: 'Терапевт', cz: 'Praktický lékař', when: (a) => a.age >= 18,
     sub: 'Профилактический осмотр раз в 2 года, по страховке бесплатно', take: [...TAKE, ['Список лекарств, если пьёте'], PDFT],
-    act: (a) => ['Давление, пульс, вес, талия', a.age >= 40 ? 'Анализ крови: холестерин и сахар' : 'Анализ крови и мочи', ...(a.age >= 50 ? ['Проверка работы почек'] : []), ...(a.age >= 65 && a.age <= 80 ? ['Оценка памяти'] : []), 'Проверка прививок', 'Направления на скрининги по возрасту'],
+    act: (a) => ['Давление, пульс, вес, талия', 'Анализ крови на сахар', a.age >= 40 ? 'Холестерин и общий анализ крови' : 'Холестерин: в 25 и 30 лет, потом раз в 4 года', ...(a.age >= 40 ? ['ЭКГ раз в 4 года'] : []), ...(a.age >= 50 ? ['Проверка работы почек'] : []), ...((a.sex === 'f' ? a.age >= 50 && a.age < 60 : a.age >= 65 && a.age < 70) ? ['Оценка риска остеопороза'] : []), ...(a.age >= 65 && a.age <= 80 ? ['Оценка памяти'] : []), 'Проверка прививок', 'Направления на скрининги по возрасту'],
     phrase: (w) => `Dobrý den, ${w ? 'chtěla' : 'chtěl'} bych se objednat na preventivní prohlídku.`, ru: 'Здравствуйте, хочу записаться на профилактический осмотр.' },
   { id: 'dent', doc: 'Стоматолог', gen: 'стоматолога', title: 'Иду к стоматологу', months: 12, every: 'раз в год', kind: 'Стоматолог', cz: 'Zubní lékař', when: () => true,
     sub: 'Профилактика раз в год, по страховке бесплатно', take: [...TAKE],
@@ -869,21 +870,26 @@ const EXAMS = [
     phrase: (w) => `Dobrý den, ${w ? 'chtěla' : 'chtěl'} bych test na skryté krvácení do stolice.`, ru: 'Здравствуйте, хочу сдать тест на скрытую кровь в кале.' },
   { id: 'psa', doc: 'Анализ PSA', gen: 'анализа PSA', title: 'Сдаю анализ PSA', months: 24, every: 'раз в 2–4 года, по результату', flex: true, kind: 'Уролог', cz: 'PSA', when: (a) => a.sex !== 'f' && a.age >= 50 && a.age <= 69,
     sub: 'Скрининг простаты для мужчин 50–69 лет, пилотная программа', take: [...TAKE],
-    act: () => ['Анализ крови на PSA', 'При отклонении направят к урологу'],
+    act: () => ['Анализ крови на PSA у терапевта или уролога', 'PSA ниже 1: повтор через 4 года', 'PSA от 1 до 3: повтор через 2 года', 'PSA 3 и выше: направят к урологу'],
     phrase: () => 'Dobrý den, chtěl bych se objednat na vyšetření PSA.', ru: 'Здравствуйте, хочу сдать анализ PSA.' },
-  { id: 'lung', doc: 'КТ лёгких', gen: 'КТ лёгких', title: 'Иду на КТ лёгких', months: 12, every: 'раз в 1–2 года', flex: true, kind: 'Терапевт', cz: 'CT plic', when: (a) => (a.smoke === 'yes' || a.smoke === 'quit') && a.age >= 55 && a.age <= 74,
+  { id: 'lung', doc: 'КТ лёгких', gen: 'КТ лёгких', title: 'Иду на КТ лёгких', months: 12, every: 'раз в 1–2 года', flex: true, kind: 'Терапевт', cz: 'CT plic', when: (a) => (a.smoke === 'yes' || a.smoke === 'quit') && (LUNG27() ? a.age >= 50 && a.age <= 79 : a.age >= 55 && a.age <= 74),
     sub: 'Для тех, кто курил 20 и больше пачко-лет. Направляет терапевт, пилотная программа', take: [...TAKE, PDFT],
     act: () => ['Терапевт посчитает стаж курения', 'КТ низкой дозы, без уколов', 'Результат обсудите с врачом'],
     phrase: (w) => `Dobrý den, ${w ? 'chtěla' : 'chtěl'} bych se informovat o screeningu plic.`, ru: 'Здравствуйте, хочу узнать о скрининге лёгких.' },
+  { id: 'eye', doc: 'Окулист', gen: 'окулиста', title: 'Иду к окулисту', months: 48, every: 'раз в 4 года', kind: 'Окулист', cz: 'Oční vyšetření', when: (a) => a.age >= 45 && a.age <= 61,
+    sub: 'Профилактическая проверка зрения с 45 до 61 года раз в 4 года, по страховке бесплатно', take: [...TAKE, ['Очки или линзы, если носите']],
+    act: () => ['Терапевт рекомендует проверку на своём осмотре', 'Проводит окулист: проверка зрения и осмотр глаз', 'Нужно ли направление, уточните при записи'],
+    phrase: (w) => `Dobrý den, ${w ? 'chtěla' : 'chtěl'} bych se objednat na preventivní oční vyšetření.`, ru: 'Здравствуйте, хочу записаться на профилактическую проверку зрения.' },
   { id: 'aaa', doc: 'УЗИ брюшной аорты', gen: 'УЗИ брюшной аорты', title: 'Иду на УЗИ аорты', months: 0, once: true, every: 'один раз в жизни', kind: 'Терапевт', cz: 'Screening aneurysmatu břišní aorty', when: (a) => a.sex !== 'f' && a.age >= 65 && a.age <= 67,
     sub: 'УЗИ живота мужчинам 65–67 лет, один раз в жизни, по страховке бесплатно', take: [...TAKE, ['Направление от терапевта']],
     act: () => ['Терапевт выдаёт направление', 'УЗИ живота, без подготовки и уколов', 'Результат обсудите с терапевтом'],
     phrase: () => 'Dobrý den, chtěl bych žádanku na screening aneurysmatu břišní aorty.', ru: 'Здравствуйте, хочу направление на скрининг аневризмы брюшной аорты.' },
   { id: 'dxa', doc: 'Плотность костей', gen: 'проверки костей', title: 'Проверяю плотность костей', months: 24, flex: true, every: 'по назначению врача', kind: 'Терапевт', cz: 'Denzitometrie (DXA)', when: (a) => (a.sex === 'f' ? a.age >= 60 : a.age >= 70),
-    sub: 'Проверка на остеопороз: женщинам с 60 лет, мужчинам с 70', take: [...TAKE],
+    sub: 'Денситометрия на остеопороз: женщинам с 60 лет, мужчинам с 70, по страховке бесплатно', take: [...TAKE],
     act: () => ['Терапевт или гинеколог оценит риск переломов', 'При риске направит на денситометрию (DXA)', 'Это быстрый снимок, готовиться не нужно'],
     phrase: (w) => `Dobrý den, ${w ? 'chtěla' : 'chtěl'} bych se zeptat na vyšetření osteoporózy.`, ru: 'Здравствуйте, хочу спросить о проверке на остеопороз.' },
 ];
+ICO.eye = '<path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12z"/><circle cx="12" cy="12" r="3"/>';
 ICO.aaa = '<path d="M10 3v5c-2 1-3 3-3 4s1 3 3 4v5M14 3v5c2 1 3 3 3 4s-1 3-3 4v5"/>';
 ICO.dxa = '<path d="M7.5 4.5a2 2 0 0 1 3 2.5l6.5 6.5a2 2 0 1 1 2 3 2 2 0 1 1-3 2L9.5 12a2 2 0 1 1-2-3 2 2 0 0 1 0-4.500z"/>';
 // когда следующий раз: у разовых не нужен, у части программ срок назначает врач по результату
@@ -921,10 +927,11 @@ const MORE = {
   gyn: { desc: 'Осмотр и мазок на цитологию: находит изменения до симптомов', todo: 'записаться на профилактический осмотр', why: 'женщинам с 15 лет', free: true },
   mammo: { desc: 'Снимок груди помогает найти опухоль на ранней стадии', todo: 'попросить направление у гинеколога или терапевта', why: 'женщинам с 45 лет', free: true },
   colon: { desc: 'Тест находит скрытую кровь, ранний признак болезней кишечника', todo: 'взять набор для теста у терапевта', why: 'всем с 45 до 74 лет', free: true },
+  eye: { desc: 'После 45 зрение меняется, а некоторые болезни глаз долго незаметны', todo: 'записаться к окулисту', why: 'с 45 до 61 года', free: true },
   aaa: { desc: 'УЗИ ищет расширение аорты, которое долго не даёт симптомов', todo: 'попросить направление у терапевта', why: 'мужчинам 65–67 лет', free: true },
-  dxa: { desc: 'Показывает, не стали ли кости хрупкими', todo: 'спросить терапевта или гинеколога о проверке на остеопороз', why: (a) => (a.sex === 'f' ? 'женщинам с 60 лет' : 'мужчинам с 70 лет') },
+  dxa: { desc: 'Показывает, не стали ли кости хрупкими', todo: 'спросить терапевта или гинеколога о проверке на остеопороз', why: (a) => (a.sex === 'f' ? 'женщинам с 60 лет' : 'мужчинам с 70 лет'), free: true },
   psa: { desc: 'Анализ крови помогает рано заметить болезни простаты', todo: 'обсудить анализ с терапевтом или урологом', why: 'мужчинам 50–69 лет' },
-  lung: { desc: 'КТ низкой дозы для тех, кто долго курит или курил', todo: 'спросить терапевта о программе скрининга', why: 'курящим 55–74 лет' },
+  lung: { desc: 'КТ низкой дозы для тех, кто долго курит или курил', todo: 'спросить терапевта о программе скрининга', why: () => (LUNG27() ? 'курящим 50–79 лет' : 'курящим 55–74 лет'), free: true },
 };
 const payNote = () => ({ vzp: 'По страховке бесплатно', pub: 'По страховке бесплатно', com: 'По коммерческой страховке может быть платно, проверьте полис', none: 'Без страховки платно, цену уточните в кабинете' }[ans.ins] || 'По государственной страховке бесплатно');
 const myDoc = (kind) => { const m = store.mydocs[kind]; if (!m) return null; if (m.id) { const d = DOCS.find((q) => q.id === m.id); return d ? { name: d.n, d } : null; } return { name: m.name }; };
@@ -946,10 +953,10 @@ $('#mB').addEventListener('keydown', (ev) => { if (ev.key === 'Enter' && mOk) { 
 
 // ─── тело и точки ───
 const SPOT = {
-  f: { dent: [195, 219, 1], gp: [216, 318, 1], lung: [228, 290, 1], mammo: [166, 334, -1], colon: [195, 418, -1], gyn: [195, 486, -1] },
-  m: { dent: [195, 211, 1], gp: [217, 336, 1], lung: [168, 322, -1], aaa: [195, 392, 1], colon: [195, 425, -1], psa: [195, 500, -1] },
+  f: { eye: [207, 194, 1], dent: [195, 219, 1], gp: [216, 318, 1], lung: [228, 290, 1], mammo: [166, 334, -1], colon: [195, 418, -1], gyn: [195, 486, -1] },
+  m: { eye: [208, 183, 1], dent: [195, 211, 1], gp: [217, 336, 1], lung: [168, 322, -1], aaa: [195, 392, 1], colon: [195, 425, -1], psa: [195, 500, -1] },
 };
-const LABEL = { gp: 'Сердце', dent: 'Зубы', gyn: 'Гинекология', mammo: 'Грудь', colon: 'Кишечник', psa: 'Простата', lung: 'Лёгкие', aaa: 'Аорта' };
+const LABEL = { gp: 'Сердце', dent: 'Зубы', gyn: 'Гинекология', mammo: 'Грудь', colon: 'Кишечник', psa: 'Простата', lung: 'Лёгкие', aaa: 'Аорта', eye: 'Глаза' };
 let PTS = [];
 function recCard(e) {
   const m = MORE[e.id], g = stage(e), my = myDoc(e.kind);
@@ -992,13 +999,16 @@ $('#toVacc').addEventListener('click', () => push('vacc'));
 $('#toCal').addEventListener('click', () => push('cal'));
 
 // ─── вакцинация (Чехия): рекомендованные по возрасту и анамнезу, остальные по желанию ───
-const hasChronic = () => { const a = store.anam.chronic; return !!a && (a.sel.length > 0 || !!a.other); };
+// болезни, при которых прививки от гриппа, пневмококка и COVID рекомендуют в первую очередь
+const hasChronic = () => { const a = store.anam.chronic; return !!a && (a.sel.some((x) => ['htn', 'dm', 'asthma'].includes(x)) || !!a.other); };
 const VACC = [
-  { id: 'tet', n: 'Столбняк', cz: 'tetanus', desc: 'Ревакцинация взрослым. Защищает при ранах и травмах', every: (a) => (a.age >= 60 ? 'каждые 10 лет' : 'каждые 10–15 лет'), months: (a) => (a.age >= 60 ? 120 : 180), rec: () => true, pay: '' },
-  { id: 'tbe', n: 'Клещевой энцефалит', cz: 'klíšťová encefalitida', desc: 'В Чехии много клещей. Три дозы, потом ревакцинация', every: () => 'каждые 3–5 лет', months: (a) => (a.age >= 60 ? 36 : 60), rec: () => true, pay: 'Страховая оплачивает с 50 лет' },
-  { id: 'flu', n: 'Грипп', cz: 'chřipka', desc: 'Делают каждую осень, до начала сезона', every: () => 'каждый год', months: () => 12, rec: (a) => a.age >= 65 || hasChronic(), pay: 'Страховая оплачивает с 65 лет и при хронических болезнях' },
-  { id: 'pneu', n: 'Пневмококк', cz: 'pneumokok', desc: 'Защищает от тяжёлого воспаления лёгких', every: () => 'один раз', months: () => 0, when: (a) => a.age >= 60 || hasChronic(), rec: (a) => a.age >= 65, pay: 'Страховая оплачивает с 65 лет' },
-  { id: 'covid', n: 'COVID-19', cz: 'COVID-19', desc: 'Обновлённая вакцина осенью', every: () => 'каждый год', months: () => 12, rec: (a) => a.age >= 60 || hasChronic(), pay: 'Бесплатно до 2027 года' },
+  { id: 'tet', n: 'Столбняк', cz: 'tetanus', desc: 'Обязательная ревакцинация взрослых, первая в 25–26 лет', every: () => 'каждые 10–15 лет', months: () => 180, when: (a) => a.age >= 25, rec: () => true, pay: 'Оплачивает государственная страховка',
+    nextText: (v) => `следующая: ${v.last.getFullYear() + 10}–${v.last.getFullYear() + 15} год` },
+  { id: 'tbe', n: 'Клещевой энцефалит', cz: 'klíšťová encefalitida', desc: 'Советуют всем, кто бывает там, где водятся клещи: в лесу, парке, на даче. Три дозы, потом ревакцинация', every: () => 'ревакцинация раз в 3–5 лет', months: () => 36, rec: (a) => a.age >= 50, pay: 'Страховая оплачивает с 50 лет',
+    nextText: () => 'следующая через 3–5 лет, зависит от вакцины' },
+  { id: 'flu', n: 'Грипп', cz: 'chřipka', desc: 'Каждую осень. Особенно советуют с 50 лет, при хронических болезнях и беременным', every: () => 'каждый год', months: () => 12, rec: (a) => a.age >= 50 || hasChronic(), pay: 'Страховая оплачивает с 65 лет и при болезнях сердца, лёгких, почек и диабете, которые лечат лекарствами' },
+  { id: 'pneu', n: 'Пневмококк', cz: 'pneumokok', desc: 'Защищает от тяжёлого воспаления лёгких', every: () => 'один раз', months: () => 0, when: (a) => a.age >= 65 || hasChronic(), rec: () => true, pay: 'Страховая оплачивает с 65 лет' },
+  { id: 'covid', n: 'COVID-19', cz: 'COVID-19', desc: 'Одна доза осенью. Советуют с 65 лет и при хронических болезнях, остальным по решению с врачом', every: () => 'каждый год', months: () => 12, rec: (a) => a.age >= 65 || hasChronic(), pay: 'В этом сезоне бесплатно для всех, с 2027 года условия могут измениться' },
 ];
 function vaccs() {
   const now = new Date();
@@ -1008,12 +1018,12 @@ function drawVacc() {
   const L = vaccs(), t = isoToday();
   const card = (v) => `<div class="rec" data-v="${v.id}"><div class="rh"><b>${v.n}</b>${v.st === 'ok' ? '<span class="st ok">сделана</span>' : v.rec ? '<span class="st due">рекомендовано</span>' : '<span class="st wait">по желанию</span>'}</div>
     <p class="d">${v.desc}.${v.pay ? ' ' + v.pay + '.' : ''}</p>
-    <div class="meta"><span class="tag">${v.every(ans)}</span>${v.last ? `<span class="tag">последняя: ${dayMonth(v.last)}</span>` : ''}${v.next && v.st === 'ok' ? `<span class="tag">следующая: ${monthYear(v.next)}</span>` : ''}</div>
+    <div class="meta"><span class="tag">${v.every(ans)}</span>${v.last ? `<span class="tag">последняя: ${dayMonth(v.last)}</span>` : ''}${v.st === 'ok' && (v.nextText || v.next) ? `<span class="tag">${v.nextText ? v.nextText(v) : 'следующая: ' + monthYear(v.next)}</span>` : ''}</div>
     <div class="acts"><label class="mini${v.last ? ' ghost' : ''}">${v.last ? 'Изменить дату' : 'Указать дату'}<input type="date" class="dateIn" data-vd="${v.id}" max="${t}" value="${store.vacc[v.id] || ''}"></label>${v.last ? `<button class="mini ghost" data-vx="${v.id}">Убрать отметку</button>` : `<button class="mini ghost" data-vt="${v.id}">Сделана сегодня</button>`}</div></div>`;
   const rec = L.filter((v) => v.rec), opt = L.filter((v) => !v.rec);
   $('#vaccList').innerHTML = `<p class="pvHi" style="margin:4px 4px 16px">Прививки для взрослых в Чехии. Отметьте, что уже сделано: я посчитаю, когда следующая.</p>`
     + (rec.length ? `<div class="sh" style="margin-top:0">Рекомендуем вам</div>${rec.map(card).join('')}` : '') + (opt.length ? `<div class="sh">По желанию</div>${opt.map(card).join('')}` : '')
-    + '<p class="note">Какая вакцина и когда подходит именно вам, решает врач. Если не помните дату, спросите терапевта: прививки записаны в карте.</p>';
+    + '<p class="note">Какая вакцина и когда подходит именно вам, решает врач. Если не помните дату, спросите терапевта: прививки записаны в карте. Условия оплаты указаны для государственной страховки на ноябрь 2026 и могут измениться.</p>';
 }
 const setVacc = (id, val) => { if (val) store.vacc[id] = val; else delete store.vacc[id]; save(); drawVacc(); };
 $('#vaccList').addEventListener('change', (ev) => { const i = ev.target.closest('[data-vd]'); if (!i) return; setVacc(i.dataset.vd, i.value); if (i.value) { toast('Прививка отмечена'); react('joy', 900); } });
@@ -1070,7 +1080,7 @@ function drawCal() {
   const row = (ic, title, extra, attr) => `<button class="row" ${attr}><span class="ic">${I20(ic)}</span><span><b>${title}</b><span class="cap">${extra}</span></span><span class="end"><span class="chev">›</span></span></button>`;
   const ex = (e, extra) => row(ICO[e.id], e.doc, extra, `data-v="${e.id}"`), SY = '<path d="m18 2 4 4M17 7l3-3M19 9 8.7 19.3a1 1 0 0 1-.7.3H5v-3a1 1 0 0 1 .3-.7L15 5M9 11l4 4M5 19l-3 3"/>';
   const planned = L.filter((e) => stage(e) === 'plan').sort((a, b) => a.plan - b.plan), rec = L.filter((e) => stage(e) === 'rec');
-  const up = [...L.filter((e) => e.st !== 'due' && !e.once).map((e) => ({ d: e.next, h: ex(e, e.every) })), ...V.filter((v) => v.st === 'ok' && v.next).map((v) => ({ d: v.next, h: row(SY, v.n, 'прививка · ' + v.every(ans), 'data-vc') }))].sort((a, b) => a.d - b.d);
+  const up = [...L.filter((e) => e.st !== 'due' && !e.once).map((e) => ({ d: e.next, h: ex(e, e.every) })), ...V.filter((v) => v.st === 'ok' && v.next && !v.nextText).map((v) => ({ d: v.next, h: row(SY, v.n, 'прививка · ' + v.every(ans), 'data-vc') }))].sort((a, b) => a.d - b.d);
   const past = L.filter((e) => e.last).sort((a, b) => b.last - a.last);
   const groups = [];
   if (planned.length) groups.push(`<div class="tlG now"><div class="sh">Запланировано</div><div class="card">${planned.map((e) => ex(e, dayMonth(e.plan))).join('')}</div></div>`);
@@ -1089,6 +1099,7 @@ const STL = { yes: ['ok', 'берёт новых'], maybe: ['ok', 'вероят�
 const knownN = DOCS.filter((d) => d.st !== 'unk').length;
 let docFilter = 'Все', docNew = false, docAt = null, docSel = null;
 const AV = { 'Терапевт': ICO.gp, 'Гинеколог': ICO.gyn, 'Стоматолог': ICO.dent, 'Уролог': ICO.psa };
+AV['Окулист'] = ICO.eye; AV['Маммоцентр'] = ICO.mammo;
 const AVX = '<path d="M12 5v14M5 12h14"/>';
 const clusters = () => { const C = []; DOCS.forEach((d) => { let c = C.find((q) => Math.abs(q.x - d.x) < 2.2 && Math.abs(q.y - d.y) < 3.2); if (!c) { c = { x: d.x, y: d.y, a: d.a, list: [] }; C.push(c); } c.list.push(d); }); return C; };
 function docList() { return DOCS.filter((d) => (docFilter === 'Все' || d.k === docFilter) && (!docNew || ['yes', 'maybe', 'part'].includes(d.st)) && (!docAt || docAt.list.includes(d))); }
