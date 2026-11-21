@@ -141,14 +141,14 @@
   .badge.due { background:#FFF0E5; color:#B4530F; }
   .act { margin-left:auto; height:40px; padding:0 16px; border-radius:20px; background:var(--ink); color:#fff; font-size:14px; font-weight:600; flex:none; }
   /* общие детали разделов */
-  .scr { position:absolute; left:0; right:0; top:68px; bottom:0; overflow-y:auto; overflow-x:hidden; padding:40px 16px 128px; touch-action:pan-y; -webkit-overflow-scrolling:touch; scrollbar-width:none; overscroll-behavior:contain; }
+  .scr { position:absolute; left:0; right:0; top:68px; bottom:0; overflow-y:auto; overflow-x:hidden; padding:54px 16px 128px; touch-action:pan-y; -webkit-overflow-scrolling:touch; scrollbar-width:none; overscroll-behavior:contain; }
   .scr::-webkit-scrollbar { display:none; }
   .scr.tabbed { top:92px; padding-top:56px; -webkit-mask-image:linear-gradient(#000 calc(100% - 130px), transparent calc(100% - 50px)); mask-image:linear-gradient(#000 calc(100% - 130px), transparent calc(100% - 50px)); }
   /* шапка: содержимое уходит под неё и размывается, без резкой границы */
   .page { --pg:var(--bg); }
   #p-prev { --pg:color-mix(in srgb, var(--mood) 52%, #fff); }
   .hb { position:absolute; left:0; right:0; top:0; height:190px; z-index:1; pointer-events:none; -webkit-backdrop-filter:blur(22px); backdrop-filter:blur(22px); background:linear-gradient(color-mix(in srgb, var(--pg) 90%, transparent) 48%, color-mix(in srgb, var(--pg) 62%, transparent) 68%, color-mix(in srgb, var(--pg) 0%, transparent)); -webkit-mask-image:linear-gradient(#000 58%, transparent); mask-image:linear-gradient(#000 58%, transparent); transition:background 1s; }
-  .hb.low { height:160px; }
+  .hb.low { height:140px; }
   .bar { z-index:2; }
   .tabH { position:absolute; left:24px; top:62px; z-index:2; }
   .tabH .h { font-size:28px; }
@@ -252,6 +252,10 @@
   .labIntro .h { font-size:24px; line-height:30px; margin-top:20px; }
   .labIntro .t { margin-top:8px; }
   .btn2 { width:100%; height:52px; border-radius:26px; margin-top:10px; background:#fff; box-shadow:inset 0 0 0 1px var(--line); font-size:16px; font-weight:600; }
+  .labImg { position:absolute; left:14px; top:14px; width:calc(100% - 28px); height:calc(100% - 28px); object-fit:contain; border-radius:14px; display:none; }
+  .labx.photo .labImg { display:block; }
+  .labx.photo .blank { display:none; }
+  .labx.busy .btn, .labx.busy .btn2 { opacity:.5; pointer-events:none; }
   .labRes { display:none; }
   .labx.done .labRes { display:block; }
   .labx.done .labIntro, .labx.done .shot { display:none; }
@@ -364,6 +368,20 @@
   .phone.g1 .page:not(#p-prev):not(#p-welcome):not(#p-sex):not(#p-age):not(#p-weight):not(#p-smoke):not(#p-cele):not(#p-anam) .hb { background:radial-gradient(circle 380px at 338px 78px, color-mix(in srgb, var(--mood) 36%, transparent), color-mix(in srgb, var(--mood) 16%, transparent) 50%, color-mix(in srgb, var(--mood) 0%, transparent)), linear-gradient(color-mix(in srgb, var(--pg) 90%, transparent) 48%, color-mix(in srgb, var(--pg) 62%, transparent) 68%, color-mix(in srgb, var(--pg) 0%, transparent)); }
   .phone.g2.inapp #field { display:none; }
   .phone.g3 .page:not(#p-prev):not(#p-welcome):not(#p-sex):not(#p-age):not(#p-weight):not(#p-smoke):not(#p-cele):not(#p-anam) { --pg:color-mix(in srgb, var(--mood) 36%, #fff); background:linear-gradient(180deg, color-mix(in srgb, var(--mood) 42%, #fff) 0%, color-mix(in srgb, var(--mood) 20%, #F7F7FB) 38%, #F5F4F8 78%); transition:background 1s; }
+  /* запись приёма и памятка */
+  .recBox { padding:16px; margin-top:12px; min-height:150px; }
+  .recTop { display:flex; align-items:center; gap:10px; }
+  .recTop b { font-size:22px; font-weight:300; font-variant-numeric:tabular-nums; letter-spacing:-.3px; }
+  .recDot { width:10px; height:10px; border-radius:50%; background:#C9C8D2; flex:none; }
+  .recOn .recDot { background:#E5484D; animation:recPulse 1.2s ease-in-out infinite; }
+  @keyframes recPulse { 50% { opacity:.3; } }
+  .recText { font-size:15px; line-height:21px; color:var(--mute); margin-top:12px; max-height:210px; overflow-y:auto; touch-action:pan-y; }
+  .recText i { font-style:normal; color:#A6A4B0; }
+  .recArea { display:block; width:100%; min-height:150px; margin-top:12px; border:0; border-radius:20px; box-shadow:inset 0 0 0 1.5px var(--ink); padding:14px 16px; font:inherit; font-size:16px; line-height:22px; outline:none; resize:none; background:#fff; -webkit-user-select:text; user-select:text; }
+  .ck { width:26px; height:26px; border-radius:13px; box-shadow:inset 0 0 0 1.5px #C9C8D2; display:grid; place-items:center; flex:none; }
+  .ck.on { background:#2DB37A; box-shadow:none; }
+  .ck.on::after { content:""; width:10px; height:5px; border-left:2px solid #fff; border-bottom:2px solid #fff; transform:rotate(-45deg) translate(1px,-1px); }
+  .row.off b { color:var(--mute); text-decoration:line-through; text-decoration-color:rgba(21,20,26,.3); }
   #toast { position:absolute; left:50%; bottom:108px; transform:translate(-50%, 12px); background:rgba(21,20,26,.9); color:#fff; font-size:14px; font-weight:500; padding:12px 16px; border-radius:16px; opacity:0; transition:all .3s; z-index:10; white-space:nowrap; pointer-events:none; }
   #toast.on { opacity:1; transform:translate(-50%, 0); }
 
@@ -450,6 +468,7 @@
         </div></div>
         <div class="sh f" data-d="100">Рекомендации для вас</div>
         <div class="f" data-d="120" id="recList"></div>
+        <div id="pvRx"></div>
         <div class="sh f" data-d="150">Ещё в превенции</div>
         <div class="card f" data-d="170" id="pvRows">
           <button class="row" id="toVacc"><span class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#15141A" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="m18 2 4 4M17 7l3-3M19 9 8.7 19.3a1 1 0 0 1-.7.3H5v-3a1 1 0 0 1 .3-.7L15 5M9 11l4 4M5 19l-3 3"/></svg></span><span><b>Вакцинация</b><span class="cap" id="pvVacc"></span></span><span class="end"><span class="chev">›</span></span></button>
@@ -471,6 +490,8 @@
     <section class="page" id="p-docs">
       <div class="tabH f" data-d="0"><div class="cap">К кому обратиться</div><div class="h">Врачи</div></div>
       <div class="scr tabbed" id="docsScr">
+        <button class="bigBtn f" data-d="10" id="toRec" style="margin-top:4px"><span class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5.5 11a6.5 6.5 0 0 0 13 0M12 17.5V21"/></svg></span><span><b>Записать приём у врача</b><span class="c2">Объясню по-русски, что сказал врач</span></span><span class="chev">›</span></button>
+        <div id="visitsW"></div>
         <div class="sh f" data-d="20">Мои врачи</div>
         <div class="card f" data-d="30" id="mine"></div>
         <div class="sh f" data-d="36" id="findSh">Найти врача</div>
@@ -491,6 +512,7 @@
         <div class="card f" data-d="60" id="vAct" style="margin-top:16px">
           <button class="row" id="vFind"><span class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#15141A" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-6.5-5.6-6.5-11a6.5 6.5 0 0 1 13 0c0 5.4-6.5 11-6.5 11z"/><path d="M12 7.5v5M9.5 10h5"/></svg></span><span style="min-width:0"><b id="vDocT"></b><span class="cap" id="vDocC"></span></span><span class="end"><span class="chev">›</span></span></button>
           <label class="row" id="vPlan" style="position:relative"><span class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#15141A" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="5" width="16" height="15" rx="3"/><path d="M8 3v4M16 3v4M4 10h16"/></svg></span><span><b id="vPlanT"></b><span class="cap" id="vPlanC"></span></span><span class="end"><span class="chev">›</span></span><input type="date" id="vDate" class="dateIn"></label>
+          <button class="row" id="vRec"><span class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#15141A" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5.5 11a6.5 6.5 0 0 0 13 0M12 17.5V21"/></svg></span><span><b>Записать приём</b><span class="cap">На приёме: запишу и объясню по-русски</span></span><span class="end"><span class="chev">›</span></span></button>
         </div>
         <div class="sh f" data-d="80">Что взять с собой</div>
         <div class="card f" data-d="100" id="vTake"></div>
@@ -514,6 +536,7 @@
         <div class="stats f" data-d="60" id="profStats"></div>
         <div class="sh f" data-d="90">Моё состояние</div>
         <div class="card f" data-d="110" id="stateList"></div>
+        <div id="medsW"></div>
         <div class="sh f" data-d="130">Анамнез для врача</div>
         <div class="card f" data-d="150" id="anam"></div>
         <button class="bigBtn f" data-d="170" id="toPdf"><span class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3h7l5 5v12a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1z"/><path d="M14 3v5h5M9 13h6M9 17h4"/></svg></span><span><b>PDF для врача</b><span class="c2">На чешском, врач поймёт сразу</span></span><span class="chev">›</span></button>
@@ -540,20 +563,26 @@
         <div class="shot f" data-d="40" id="shot">
           <div class="frame"><i></i><i></i><i></i><i></i></div>
           <div class="blank" id="blank"><div class="bt"><span>Krevní obraz, biochemie</span><span>пример</span></div></div>
+          <img class="labImg" id="labImg" alt="">
           <div class="scan"></div>
         </div>
         <div class="labIntro f" data-d="90">
           <h2 class="h">Сфотографируйте бланк анализа</h2>
           <p class="t">Покажу, какие цифры вне нормы и к какому врачу с ними идти. Диагнозов не ставлю и лечение не советую.</p>
-          <button class="btn btnIn" id="labShoot" style="margin-top:20px">Сфотографировать</button>
+          <p class="anHint" id="labErr"></p>
+          <input type="file" accept="image/*" id="labFile" style="display:none">
+          <button class="btn btnIn" id="labShoot" style="margin-top:20px">Сфотографировать или выбрать фото</button>
           <button class="btn2" id="labDemo">Посмотреть на примере</button>
+          <p class="note">Фото уходит на сервер KamaHealth только для распознавания и нигде не сохраняется. В день можно разобрать до 20 бланков.</p>
         </div>
         <div class="labRes">
-          <div class="card sum f" data-d="0"><div class="cap">Пример разбора</div><div class="h" id="labSum"></div><p class="t" id="labSub"></p></div>
+          <div class="card sum f" data-d="0"><div class="cap" id="labCap">Пример разбора</div><div class="h" id="labSum"></div><p class="t" id="labSub"></p></div>
           <div class="sh f" data-d="40">Показатели</div>
           <div class="card f" data-d="70" id="labList"></div>
+          <div id="labQw"><div class="sh f" data-d="90">Что спросить у врача</div><div class="card f" data-d="100"><ul class="dots" id="labQ"></ul></div></div>
           <button class="btn btnIn f" data-d="110" id="labSave">Сохранить в «Моё состояние»</button>
           <button class="btn2 f" data-d="120" id="labGo">Подготовиться к терапевту</button>
+          <button class="btn2 f" data-d="130" id="labAgain">Разобрать другой бланк</button>
           <p class="note f" data-d="140">Это не диагноз. Нормы зависят от лаборатории, пола и возраста, итог всегда за врачом.</p>
         </div>
       </div>
@@ -580,6 +609,26 @@
       <button class="btn f" data-d="200" id="anNext">Дальше</button>
     </section>
 
+    <section class="page" id="p-rec">
+      <div class="bar f" data-d="0"><button class="back" data-back aria-label="Назад">‹</button><div class="ttl">Запись приёма</div></div>
+      <div class="scr" id="recScr">
+        <div class="vHead f" data-d="40"><h2 class="h">Запишу, что скажет врач</h2><p class="t">Положите телефон рядом. После приёма объясню по-русски: что с вами, как лечиться и как принимать лекарства.</p></div>
+        <div class="sh f" data-d="70">На каком языке говорит врач</div>
+        <div class="chips f" data-d="90" id="recLang"></div>
+        <div class="card recBox f" data-d="110"><div class="recTop"><i class="recDot"></i><b id="recTime">00:00</b><span class="cap" id="recState"></span></div><p class="recText" id="recText"></p></div>
+        <p class="anHint" id="recErr"></p>
+        <button class="btn btnIn f" data-d="140" id="recBtn">Начать запись</button>
+        <button class="btn2 f" data-d="150" id="recType">Описать приём текстом</button>
+        <div id="recTypeW" style="display:none"><textarea id="recArea" class="recArea" maxlength="6000" placeholder="Например: врач сказал, что давление высокое, назначил таблетки утром и вечером после еды на месяц и анализ крови через месяц"></textarea><button class="btn btnIn" id="recSend">Разобрать</button></div>
+        <p class="note f" data-d="170">Предупредите врача, что записываете приём. Речь в текст превращает распознавание речи Apple на iPhone. В KamaHealth звук не попадает и не сохраняется, на наш сервер уходит только текст.</p>
+      </div>
+    </section>
+
+    <section class="page" id="p-recap">
+      <div class="bar f" data-d="0"><button class="back" data-back aria-label="Назад">‹</button><div class="ttl">Памятка приёма</div></div>
+      <div class="scr" id="recapScr"><div id="recapBody"></div></div>
+    </section>
+
     <div id="modal"><div class="mBack"></div><div class="mCard"><h3 class="h" id="mT"></h3><div id="mB"></div><div class="mBtns"><button class="btn2" id="mX">Отмена</button><button class="btn btnIn" id="mOk">Готово</button></div></div></div>
 
     <svg id="orb" viewBox="0 0 300 300"></svg>
@@ -587,7 +636,7 @@
 
   <aside class="panel">
     <h2>Сцены</h2>
-    <div class="rb"><button data-go="welcome">Приветствие</button><button data-go="sex">Анкета</button><button data-go="cele">Готово</button><button data-go="prev">Превенция</button><button data-go="vacc">Прививки</button><button data-go="docs">Врачи</button><button data-go="visit">Иду к врачу</button><button data-go="cal">Календарь</button><button data-go="prof">Профиль</button><button data-go="pdf">PDF</button><button data-go="lab">Анализ</button><button data-go="anam">Анамнез</button></div>
+    <div class="rb"><button data-go="welcome">Приветствие</button><button data-go="sex">Анкета</button><button data-go="cele">Готово</button><button data-go="prev">Превенция</button><button data-go="vacc">Прививки</button><button data-go="rec">Запись приёма</button><button data-go="docs">Врачи</button><button data-go="visit">Иду к врачу</button><button data-go="cal">Календарь</button><button data-go="prof">Профиль</button><button data-go="pdf">PDF</button><button data-go="lab">Анализ</button><button data-go="anam">Анамнез</button></div>
     <h2>Фон экранов</h2>
     <div class="rb"><button onclick="__app.setBg(1)">1 мягче и крупнее</button><button onclick="__app.setBg(2)">2 без свечения</button><button onclick="__app.setBg(3)">3 сильный градиент</button></div>
     <h2>Настроение</h2>
@@ -776,6 +825,8 @@ const SCENE = {
   weight() { show('weight'); setMood('happy'); place(195, 168, 132); },
   smoke() { show('smoke'); setMood(ans.smoke === 'no' ? 'happy' : 'calm'); place(195, 168, 132); },
   cele() { setCele(); show('cele'); setMood('joy'); place(195, 312, 380); orb.poke(); burst(); },
+  rec() { show('rec'); setMood('calm'); place(338, 78, 74); drawRec(); attend('#recBtn'); },
+  recap() { show('recap'); setMood(stateMood()); place(338, 78, 74); drawRecap(); attend('#recapBody .pvHi'); },
   vacc() { show('vacc'); setMood(stateMood()); place(338, 78, 74); drawVacc(); attend('#vaccList .rec'); },
   prev() { setBody(); show('prev'); setMood(stateMood()); place(338, 78, 74); drawPts(); attend('.pt.due'); },
   docs() { show('docs'); setMood(stateMood()); place(338, 78, 74); drawDocs(); attend('#map'); },
@@ -790,6 +841,7 @@ const SCENE = {
 const TABS = ['prof', 'prev', 'docs']; // слева направо: кто я, что отследить, к кому обратиться
 let stack = [];
 const go = (n) => {
+  if (cur === 'rec' && n !== 'rec' && typeof recOn !== 'undefined' && recOn) recStop(false);
   phone.classList.toggle('inapp', !['welcome', 'sex', 'age', 'weight', 'smoke', 'cele', 'anam'].includes(n));
   if (n !== 'cele') sparks = [];
   SCENE[n]();
@@ -840,8 +892,8 @@ $$('[data-soon]').forEach((b) => b.addEventListener('click', (e) => { e.stopProp
 // ─── сохранение на телефоне ───
 const KEY = 'kamahealth2';
 const store = (() => { try { return JSON.parse(localStorage.getItem(KEY)) || {}; } catch (err) { return {}; } })();
-store.done = store.done || {}; store.plan = store.plan || {}; store.vacc = store.vacc || {}; store.state = store.state || {}; store.mydocs = store.mydocs || {};
-const save = () => { try { localStorage.setItem(KEY, JSON.stringify({ ans, done: store.done, anam: store.anam, plan: store.plan, vacc: store.vacc, state: store.state, mydocs: store.mydocs, onboarded: store.onboarded })); } catch (err) { /* приватный режим: работаем без сохранения */ } };
+store.done = store.done || {}; store.plan = store.plan || {}; store.vacc = store.vacc || {}; store.state = store.state || {}; store.mydocs = store.mydocs || {}; store.visits = store.visits || [];
+const save = () => { try { localStorage.setItem(KEY, JSON.stringify({ ans, done: store.done, anam: store.anam, plan: store.plan, vacc: store.vacc, state: store.state, mydocs: store.mydocs, visits: store.visits, onboarded: store.onboarded })); } catch (err) { /* приватный режим: работаем без сохранения */ } };
 if (store.ans) Object.assign(ans, store.ans);
 setAge(ans.age); setW(ans.w);
 
@@ -990,6 +1042,7 @@ function setBody() {
   $('#pvHi').textContent = what ? `Вот что мы рекомендуем для вашего здоровья. Сейчас актуально: ${what}.` : 'Все рекомендации на сейчас выполнены. Напомню, когда подойдёт срок следующих.';
   const order = { rec: 0, plan: 1, done: 2 };
   $('#recList').innerHTML = L.sort((a, b) => order[stage(a)] - order[stage(b)]).map(recCard).join('');
+  drawRx();
   $('#pvVacc').textContent = vd ? `${vd} ${plural(vd, 'прививку', 'прививки', 'прививок')} пора сделать` : 'Рекомендованные прививки сделаны';
   const pl = L.filter((e) => e.plan && e.st === 'due').sort((a, b) => a.plan - b.plan)[0];
   $('#pvCal').textContent = pl ? `Ближайший визит: ${shortDate(pl.plan)}, ${pl.doc.toLowerCase()}` : 'Визиты и пройденные осмотры';
@@ -1127,7 +1180,7 @@ function chooseDoc(k) {
 }
 $('#mine').addEventListener('click', (ev) => { const r = ev.target.closest('[data-kind]'); if (!r) return; lookAt(...centerOf(r)); const my = myDoc(r.dataset.kind); if (my && my.d) { docShow = my.d; push('doc'); } else chooseDoc(r.dataset.kind); });
 function drawDocs() {
-  drawMine();
+  drawMine(); drawVisits();
   const mine = [...new Set(exams().map((e) => e.kind))].filter((k) => DOCS.some((d) => d.k === k));
   const byN = Object.entries(DOCS.reduce((m, d) => ((m[d.k] = (m[d.k] || 0) + 1), m), {})).sort((x, y) => y[1] - x[1]).map((x) => x[0]);
   const kinds = ['Все', ...mine, ...byN.filter((k) => !mine.includes(k))];
@@ -1287,6 +1340,7 @@ function drawProf() {
   $('#stateList').innerHTML = keys.map((k) => { const st = store.state[k], m = MET[k]; if (!st) return `<button class="row" data-m="${k}"><span><b>${m.n}</b></span><span class="end"><span style="color:var(--ink);font-weight:500">Добавить</span><span class="chev">›</span></span></button>`; const [c, w] = metWord(k, st.v); return `<button class="row" data-m="${k}"><span style="min-width:0"><b>${m.n}</b><span class="cap mw ${c}">${w} · ${mmYY(new Date(st.d))}${st.src ? ' · ' + st.src : ''}</span></span><span class="end"><b class="mv">${metVal(k, st.v)}</b><small>${m.u}</small><span class="chev">›</span></span></button>`; }).join('')
     + (keys.length < Object.keys(MET).length ? `<button class="row" id="metMore"><span><b>Другой показатель</b></span><span class="end"><span class="chev">›</span></span></button>` : '')
     + `<button class="row" id="toLab"><span class="ic">${I20('<path d="M9 3h6M10 3v6l-5 9a2 2 0 0 0 1.8 3h10.4a2 2 0 0 0 1.8-3l-5-9V3"/><path d="M7.5 15h9"/>')}</span><span><b>Загрузить бланк анализа</b><span class="cap">Распознаю показатели, вы проверите</span></span><span class="end"><span class="chev">›</span></span></button>`;
+  drawMeds();
   const done = ANQ.filter(anDone).length;
   $('#anam').innerHTML = `<div style="padding:12px 0 2px"><div style="display:flex;justify-content:space-between;font-size:15px;font-weight:500"><span>Заполнено</span><span>${done} из ${ANQ.length}</span></div><div class="meter"><i style="width:0" data-w="${Math.max(3, done / ANQ.length * 100)}"></i></div></div>`
     + (done < ANQ.length ? `<button class="row" id="anGo"><span class="ic" style="background:color-mix(in srgb, var(--mood) 22%, #fff)">${I20('<path d="M4 12a8 8 0 1 1 3.3 6.5L4 20l1.2-3.6A8 8 0 0 1 4 12z"/>')}</span><span><b>Заполнить вместе с Камой</b><span class="cap">${ANQ.length} коротких вопросов, около минуты</span></span><span class="end"><span class="chev">›</span></span></button>` : '')
@@ -1336,7 +1390,7 @@ function drawPdf() {
 }
 let editMode = false;
 document.addEventListener('click', (ev) => { if (ev.target.closest('[data-edit], #editAns')) { editMode = true; go('sex'); } });
-$('#resetAll').addEventListener('click', () => { if (!confirm('Стереть ответы и отметки на этом телефоне?')) return; try { localStorage.removeItem(KEY); } catch (err) { /* нечего стирать */ } ['done', 'anam', 'plan', 'vacc', 'state', 'mydocs'].forEach((k) => { store[k] = {}; }); store.onboarded = false; Object.assign(ans, { sex: null, age: 29, w: 62, smoke: null, h: null, ins: null, alc: null }); setAge(29); setW(62); $$('.opt').forEach((o) => o.classList.remove('on')); $('[data-next=age]').disabled = true; $('#finish').disabled = true; stack = []; go('welcome'); });
+$('#resetAll').addEventListener('click', () => { if (!confirm('Стереть ответы и отметки на этом телефоне?')) return; try { localStorage.removeItem(KEY); } catch (err) { /* нечего стирать */ } ['done', 'anam', 'plan', 'vacc', 'state', 'mydocs'].forEach((k) => { store[k] = {}; }); store.visits = []; store.onboarded = false; Object.assign(ans, { sex: null, age: 29, w: 62, smoke: null, h: null, ins: null, alc: null }); setAge(29); setW(62); $$('.opt').forEach((o) => o.classList.remove('on')); $('[data-next=age]').disabled = true; $('#finish').disabled = true; stack = []; go('welcome'); });
 $('#toPdf').addEventListener('click', () => push('pdf'));
 $('#anam').addEventListener('click', (ev) => { const g = ev.target.closest('#anGo'); if (g) { const first = ANQ.findIndex((q) => !anDone(q)); openAnam(first < 0 ? 0 : first, false); return; } const r = ev.target.closest('[data-an]'); if (r) openAnam(+r.dataset.an, true); });
 
@@ -1350,40 +1404,191 @@ const LAB = [
 ];
 const num = (x) => String(x).replace('.', ',');
 $('#blank').insertAdjacentHTML('beforeend', LAB.map((r) => `<div class="br"><span>${r.cz}</span><span>${num(r.v)}</span><span>${r.lo ? num(r.lo) + '–' : '< '}${num(r.hi)}</span></div>`).join('') + '<div class="br" style="border:0;color:#8C8A96"><span>Odběr 12. 11. 2026</span><span></span><span></span></div>');
-function labReset() { $('#labScr').classList.remove('scanning', 'done'); }
+let labRows = [], labSrc = 'пример бланка', labDate = null, labDoc = 'gp';
+function labReset() { $('#labScr').classList.remove('scanning', 'done', 'photo', 'busy'); $('#labErr').textContent = ''; $('#labFile').value = ''; }
+function labShow(cap, sum, sub, html, questions) {
+  const box = $('#labScr'); box.classList.remove('scanning', 'busy'); box.classList.add('done'); box.scrollTop = 0;
+  $('#labCap').textContent = cap; $('#labSum').textContent = sum; $('#labSub').textContent = sub; $('#labList').innerHTML = html;
+  $('#labQw').style.display = questions.length ? '' : 'none'; $('#labQ').innerHTML = questions.map((q) => `<li>${esc(q)}</li>`).join('');
+  $('#labSave').style.display = labRows.length ? '' : 'none';
+  const ex = exams().find((e) => e.id === labDoc) || exams().find((e) => e.id === 'gp'); labDoc = ex ? ex.id : 'gp';
+  $('#labGo').textContent = labDoc === 'gyn' ? 'Подготовиться к гинекологу' : 'Подготовиться к терапевту';
+  $$('#labScr .labRes .f').forEach((e, i) => { e.classList.remove('in'); setTimeout(() => e.classList.add('in'), 60 + i * 50); });
+  orb.poke();
+}
 function labRun() {
-  const box = $('#labScr'); box.classList.add('scanning'); const [x, y] = centerOf($('#shot')); lookAt(x, y); setMood('calm');
+  const box = $('#labScr'); box.classList.remove('photo'); box.classList.add('scanning'); const [x, y] = centerOf($('#shot')); lookAt(x, y); setMood('calm');
   clearTimeout(labRun.t); labRun.t = setTimeout(() => {
     if (cur !== 'lab') return;
-    box.classList.remove('scanning'); box.classList.add('done'); box.scrollTop = 0;
     const out = LAB.filter((r) => r.v < r.lo || r.v > r.hi);
-    $('#labSum').textContent = out.length ? `${out.length} показателя вне нормы` : 'Всё в пределах нормы';
-    $('#labSub').textContent = out.length ? 'С этими цифрами стоит сходить к терапевту.' : 'Можно сохранить бланк и показать врачу на ближайшем осмотре.';
-    $('#labList').innerHTML = LAB.map((r) => {
+    labRows = LAB.map((r) => ({ k: LABID[r.n], n: r.n, v: r.v, u: r.u })); labSrc = 'пример бланка'; labDate = null; labDoc = 'gp';
+    labShow('Пример разбора', out.length ? `${out.length} показателя вне нормы` : 'Всё в пределах нормы', out.length ? 'С этими цифрами стоит сходить к терапевту.' : 'Можно сохранить бланк и показать врачу на ближайшем осмотре.', LAB.map((r) => {
       const pos = (q) => Math.max(0, Math.min(100, (q - r.min) / (r.max - r.min) * 100)), bad = r.v < r.lo || r.v > r.hi;
       const word = r.v < r.lo ? '<b class="lo">ниже нормы</b>' : r.v > r.hi ? '<b class="hi">выше нормы</b>' : '<b class="in">в норме</b>';
       return `<div class="mk"><div class="top"><b>${r.n}</b><span class="val">${num(r.v)}<small>${r.u}</small></span></div>
         <div class="rng"><span class="ok" style="left:${pos(r.lo)}%;right:${100 - pos(r.hi)}%"></span><span class="dot${bad ? ' out' : ''}" style="left:${pos(r.v)}%"></span></div>
         <div class="cap">${word} · норма ${r.lo ? num(r.lo) + '–' : 'до '}${num(r.hi)}${bad && r.doc ? ' · к врачу: ' + r.doc : ''}</div></div>`;
-    }).join('');
-    $$('#labScr .labRes .f').forEach((e, i) => { e.classList.remove('in'); setTimeout(() => e.classList.add('in'), 60 + i * 50); });
-    orb.poke();
+    }).join(''), []);
   }, 2600);
 }
-$('#labShoot').addEventListener('click', () => { toast('В приложении здесь откроется камера. Пока покажу на примере'); labRun(); });
-$('#labDemo').addEventListener('click', labRun);
 const LABID = { 'Гемоглобин': 'hb', 'Ферритин': 'fer', 'Глюкоза': 'glu', 'Холестерин': 'chol', 'ТТГ': 'tsh' };
+// ─── настоящий разбор: фото уменьшаем на телефоне и отправляем на сервер KamaHealth ───
+const fileToJpeg = (file) => new Promise((res, rej) => {
+  const img = new Image(), url = URL.createObjectURL(file);
+  img.onload = () => {
+    let q = 0.84, side = 1700, out = '';
+    for (let i = 0; i < 5; i++) { const k = Math.min(1, side / Math.max(img.naturalWidth, img.naturalHeight)), c = document.createElement('canvas'); c.width = Math.round(img.naturalWidth * k); c.height = Math.round(img.naturalHeight * k); const g = c.getContext('2d'); g.fillStyle = '#fff'; g.fillRect(0, 0, c.width, c.height); g.drawImage(img, 0, 0, c.width, c.height); out = c.toDataURL('image/jpeg', q); if (out.length < 1300000) break; side *= 0.8; q -= 0.08; }
+    URL.revokeObjectURL(url); res(out);
+  };
+  img.onerror = () => { URL.revokeObjectURL(url); rej(new Error('image')); };
+  img.src = url;
+});
+function labMap(L) {
+  const val = (t) => { const v = toNum(t); return Number.isFinite(v) && v > 0 && v < 1000 ? v : null; };
+  const find = (re, not, unit) => L.items.find((it) => { const n = (it.original + ' ' + it.name_ru).toLowerCase(), u = it.unit.toLowerCase().replace(/\s/g, ''); return re.test(n) && !(not && not.test(n)) && unit.test(u) && val(it.value) !== null; });
+  const rows = [], add = (k, v) => { if (v !== null && v !== undefined) rows.push({ k, n: MET[k].n, v, u: MET[k].u }); };
+  const hb = find(/hemoglobin|гемоглобин|\bhgb\b/, /glyk|hba1c|a1c|глик|mch|střední|средн/, /^g\/l$|^г\/л$/);
+  const fer = find(/ferr?itin|ферритин/, null, /^(µg|μg|ug|мкг)\/l$|^ng\/ml$|^нг\/мл$|^мкг\/л$/);
+  const tsh = find(/\btsh\b|ттг|tyreotrop|тиреотроп/, null, /^m?i?u\/l$|^miu\/l$|^(µ|μ|u)iu\/ml$|^мед\/л$|^мме\/л$/);
+  add('chol', typeof L.key.totalChol === 'number' ? L.key.totalChol : null); add('glu', typeof L.key.glucose === 'number' ? L.key.glucose : null);
+  add('hb', hb ? val(hb.value) : null); add('fer', fer ? val(fer.value) : null); add('tsh', tsh ? val(tsh.value) : null);
+  return rows;
+}
+async function labFromFile(file) {
+  const box = $('#labScr'); $('#labErr').textContent = '';
+  let dataUrl; try { dataUrl = await fileToJpeg(file); } catch (err) { $('#labErr').textContent = 'Не получилось открыть это фото. Попробуйте другое.'; return; }
+  $('#labImg').src = dataUrl; box.classList.add('photo', 'scanning', 'busy'); lookAt(...centerOf($('#shot'))); setMood('calm');
+  try {
+    const ctl = new AbortController(), to = setTimeout(() => ctl.abort(), 90000);
+    const send = async (tok) => fetch(API + '/v1/ai/labs', { method: 'POST', signal: ctl.signal, headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + tok }, body: JSON.stringify({ images: [dataUrl.split(',')[1]], media_type: 'image/jpeg' }) });
+    let r = await send(await deviceToken());
+    if (r.status === 401) { try { localStorage.removeItem(KEY + ':dev'); } catch (err) { /* ок */ } r = await send(await deviceToken()); }
+    clearTimeout(to);
+    const d = await r.json().catch(() => ({}));
+    if (!r.ok) throw new Error(d.error || 'Не получилось разобрать бланк. Попробуйте ещё раз.');
+    if (cur !== 'lab') return;
+    const L = d.labs;
+    if (!L.readable || !L.items.length) { box.classList.remove('scanning', 'busy'); $('#labErr').textContent = L.summary || 'На фото не видно бланка анализов. Снимите его целиком, при хорошем свете.'; react('calm', 600); return; }
+    labRows = labMap(L); labSrc = 'бланк'; labDate = /^\d{4}-\d{2}-\d{2}$/.test(L.date) ? new Date(L.date + 'T12:00').toISOString() : null; labDoc = L.doctor_first === 'gyn' ? 'gyn' : 'gp';
+    const W = { low: '<b class="lo">ниже нормы</b>', high: '<b class="hi">выше нормы</b>', normal: '<b class="in">в норме</b>', unknown: '<b>нормы на бланке нет</b>' };
+    const out = L.items.filter((it) => it.flag === 'low' || it.flag === 'high').length;
+    const order = { high: 0, low: 0, unknown: 1, normal: 2 };
+    labShow((L.title || 'Ваш бланк') + (labDate ? ' · ' + dayMonth(new Date(labDate)) : ''), out ? `${out} ${plural(out, 'показатель', 'показателя', 'показателей')} вне нормы` : 'Всё в пределах нормы по бланку',
+      L.summary + (L.doctor_why ? ' ' + L.doctor_why : ''),
+      [...L.items].sort((a, b) => order[a.flag] - order[b.flag]).map((it) => `<div class="mk"><div class="top"><b>${esc(it.name_ru)}</b><span class="val">${esc(it.value.replace('.', ','))}<small>${esc(it.unit)}</small></span></div><div class="cap">${W[it.flag] || ''}${it.reference ? ' · норма по бланку: ' + esc(it.reference) : ''}</div></div>`).join(''), L.questions || []);
+    if (typeof d.left === 'number' && d.left <= 5) toast(`Сегодня можно разобрать ещё ${d.left}`);
+  } catch (err) {
+    box.classList.remove('scanning', 'busy'); $('#labErr').textContent = err.name === 'AbortError' ? 'Сервер долго не отвечает. Проверьте интернет и попробуйте ещё раз.' : (err.message && /[а-я]/i.test(err.message) ? err.message : 'Нет связи с сервером. Проверьте интернет и попробуйте ещё раз.');
+  }
+}
+$('#labShoot').addEventListener('click', () => $('#labFile').click());
+$('#labFile').addEventListener('change', (ev) => { const f = ev.target.files && ev.target.files[0]; if (f) labFromFile(f); });
+$('#labDemo').addEventListener('click', labRun);
+$('#labAgain').addEventListener('click', () => { labReset(); $('#labScr').scrollTop = 0; });
 $('#labSave').addEventListener('click', () => {
-  modal('Проверьте цифры', '<p class="cap" style="margin:-4px 2px 8px">Исправьте, если что-то распознано неверно</p>' + LAB.map((r) => `<label class="mRow"><span>${r.n}</span><input type="text" inputmode="decimal" maxlength="5" data-lk="${LABID[r.n]}" value="${num(r.v)}"><small>${r.u}</small></label>`).join(''), () => {
-    const I = $$('#mB [data-lk]'), d = new Date().toISOString(); let bad = false;
+  modal('Проверьте цифры', '<p class="cap" style="margin:-4px 2px 8px">Исправьте, если что-то распознано неверно</p>' + labRows.map((r) => `<label class="mRow"><span>${r.n}</span><input type="text" inputmode="decimal" maxlength="5" data-lk="${r.k}" value="${num(r.v)}"><small>${r.u}</small></label>`).join(''), () => {
+    const I = $$('#mB [data-lk]'), d = labDate || new Date().toISOString(); let bad = false;
     I.forEach((i) => { const v = toNum(i.value), no = !(v > 0 && v < 1000); i.style.boxShadow = no ? 'inset 0 0 0 1.5px #E58A55' : ''; if (no) bad = true; });
     if (bad) return false;
-    I.forEach((i) => { store.state[i.dataset.lk] = { v: toNum(i.value), d, src: 'пример бланка' }; });
+    I.forEach((i) => { store.state[i.dataset.lk] = { v: toNum(i.value), d, src: labSrc }; });
     save(); toast('Сохранено в «Моё состояние»'); react('joy', 1000); setTimeout(() => go('prof'), 400);
   }, 'Сохранить', false);
 });
-$('#labGo').addEventListener('click', () => { visitFor = 'gp'; push('visit'); });
+$('#labGo').addEventListener('click', () => { visitFor = labDoc; push('visit'); });
 document.addEventListener('click', (ev) => { const b = ev.target.closest('[data-soon2]'); if (!b) return; ev.stopPropagation(); toast(b.dataset.soon2); }, true);
+
+// ─── запись приёма у врача: голос в текст на iPhone, разбор на сервере, памятка по-русски ───
+const speechBridge = window.webkit && window.webkit.messageHandlers && window.webkit.messageHandlers.kamaSpeech;
+const RECLANG = [['cs-CZ', 'Чешский'], ['ru-RU', 'Русский'], ['en-US', 'Английский']];
+let recOn = false, recLang = 'cs-CZ', recFinal = '', recPart = '', recT0 = 0, recTick = null, recWait = null, recapId = null;
+const recTextNow = () => (recFinal + ' ' + recPart).replace(/\s+/g, ' ').trim();
+function drawRec() {
+  $('#recLang').innerHTML = RECLANG.map(([k, l]) => `<button class="chip${k === recLang ? ' on' : ''}" data-l="${k}">${l}</button>`).join('');
+  $('#recScr').classList.toggle('recOn', recOn);
+  $('#recBtn').textContent = recOn ? 'Закончить и разобрать' : 'Начать запись';
+  $('#recBtn').style.display = speechBridge ? '' : 'none';
+  $('#recState').textContent = recOn ? 'Идёт запись' : speechBridge ? 'Готова записывать' : 'Запись голоса работает в приложении на iPhone';
+  $('#recType').style.display = recOn ? 'none' : '';
+  const t = recTextNow(); $('#recText').innerHTML = t ? esc(recFinal) + ' <i>' + esc(recPart) + '</i>' : (recOn ? 'Слушаю…' : 'Здесь появится текст разговора.');
+  if (!recOn && !speechBridge) { $('#recTypeW').style.display = ''; $('#recType').style.display = 'none'; }
+}
+const recClock = () => { const sec = Math.floor((Date.now() - recT0) / 1000); $('#recTime').textContent = String(Math.floor(sec / 60)).padStart(2, '0') + ':' + String(sec % 60).padStart(2, '0'); };
+function recStart() { recFinal = ''; recPart = ''; $('#recErr').textContent = ''; $('#recTime').textContent = '00:00'; speechBridge.postMessage({ cmd: 'start', lang: recLang }); $('#recState').textContent = 'Запрашиваю микрофон…'; }
+function recStop(send) { recOn = false; clearInterval(recTick); try { speechBridge && speechBridge.postMessage({ cmd: 'stop' }); } catch (err) { /* уже остановлено */ } drawRec(); if (send) { $('#recState').textContent = 'Заканчиваю запись…'; clearTimeout(recWait); recWait = setTimeout(() => recAnalyze(recTextNow()), 2500); } }
+window.__kamaSpeech = (e) => {
+  if (e.type === 'started') { recOn = true; recT0 = Date.now(); clearInterval(recTick); recTick = setInterval(recClock, 500); drawRec(); react('happy', 700); }
+  else if (e.type === 'partial') { recPart = e.text; if (cur === 'rec') { drawRec(); const el = $('#recText'); el.scrollTop = el.scrollHeight; } }
+  else if (e.type === 'final') { recFinal = (recFinal + ' ' + e.text).trim(); recPart = ''; if (cur === 'rec') drawRec(); }
+  else if (e.type === 'segment_end') { recFinal = (recFinal + ' ' + recPart).trim(); recPart = ''; }
+  else if (e.type === 'end') { if (recWait) { clearTimeout(recWait); recWait = null; recAnalyze(recTextNow()); } }
+  else if (e.type === 'error') { recOn = false; clearInterval(recTick); drawRec(); $('#recErr').textContent = e.text === 'denied' ? 'Нет доступа к микрофону или распознаванию речи. Разрешите их в настройках iPhone: Настройки, KamaHealth.' : e.text === 'unsupported' ? 'Этот язык сейчас недоступен для распознавания. Проверьте интернет или опишите приём текстом.' : 'Не получилось начать запись. Опишите приём текстом.'; $('#recTypeW').style.display = ''; }
+};
+async function recAnalyze(text) {
+  recWait = null; const err = $('#recErr');
+  if (text.length < 40) { err.textContent = 'Записалось слишком мало, разобрать нечего. Попробуйте ещё раз или опишите приём текстом.'; drawRec(); return; }
+  $('#recState').textContent = 'Кама разбирает запись…'; $('#recBtn').classList.add('busy'); $('#recSend').classList.add('busy'); err.textContent = '';
+  try {
+    const ctl = new AbortController(), to = setTimeout(() => ctl.abort(), 90000);
+    const send = async (tok) => fetch(API + '/v1/ai/visit', { method: 'POST', signal: ctl.signal, headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + tok }, body: JSON.stringify({ transcript: text.slice(0, 20000) }) });
+    let r = await send(await deviceToken());
+    if (r.status === 401) { try { localStorage.removeItem(KEY + ':dev'); } catch (e2) { /* ок */ } r = await send(await deviceToken()); }
+    clearTimeout(to);
+    const d = await r.json().catch(() => ({}));
+    if (!r.ok) throw new Error(d.error || '');
+    const v = d.visit;
+    if (!v.readable || !v.summary) { err.textContent = 'Это не похоже на разговор с врачом, или запись слишком короткая. Попробуйте ещё раз.'; return; }
+    const item = { id: 'v' + Date.now(), d: new Date().toISOString(), doctor: v.doctor || '', summary: v.summary, diagnoses: v.diagnoses || [], meds: v.meds || [], tests: v.tests || [], next_visit: v.next_visit || '', advice: v.advice || [], unclear: v.unclear || [], doneT: {}, doneN: false };
+    store.visits.unshift(item); store.visits = store.visits.slice(0, 30); save();
+    recFinal = ''; recPart = ''; $('#recArea').value = ''; recapId = item.id;
+    stack = stack.filter((x) => x !== 'rec'); go('recap'); react('joy', 1200);
+  } catch (e2) {
+    err.textContent = e2.name === 'AbortError' ? 'Сервер долго не отвечает. Текст записи сохранён на экране, попробуйте ещё раз.' : (e2.message && /[а-я]/i.test(e2.message) ? e2.message : 'Нет связи с сервером. Проверьте интернет и попробуйте ещё раз.');
+    if (text && !$('#recArea').value) { $('#recArea').value = text; $('#recTypeW').style.display = ''; }
+  } finally { $('#recBtn').classList.remove('busy'); $('#recSend').classList.remove('busy'); if (cur === 'rec') drawRec(); }
+}
+$('#recLang').addEventListener('click', (ev) => { const c = ev.target.closest('.chip'); if (!c || recOn) return; recLang = c.dataset.l; drawRec(); });
+$('#recBtn').addEventListener('click', () => { if (recOn) recStop(true); else recStart(); });
+$('#recType').addEventListener('click', () => { $('#recTypeW').style.display = ''; $('#recType').style.display = 'none'; $('#recArea').focus(); });
+$('#recSend').addEventListener('click', () => { const t = $('#recArea').value.trim(); $('#recArea').blur(); recAnalyze(t); });
+$('#toRec').addEventListener('click', () => push('rec'));
+$('#vRec').addEventListener('click', () => push('rec'));
+
+const SPEC = { vpl: 'терапевт', gyn: 'гинеколог', mammo: 'маммография', gastro: 'гастроэнтеролог', uro: 'уролог', cardio: 'кардиолог', lab: 'лаборатория', other: '' };
+const PILL = '<path d="M10.5 20.5a4.95 4.95 0 0 1-7-7l9-9a4.95 4.95 0 0 1 7 7zM8.5 8.5l7 7"/>';
+const fmtTimes = (t) => (t && t.length ? 'в ' + (t.length === 2 ? t.join(' и ') : t.join(', ')) : '');
+const medLine = (m) => [m.dose, fmtTimes(m.times), m.days ? `${m.days} ${plural(m.days, 'день', 'дня', 'дней')}` : ''].filter(Boolean).map(esc).join(', ') + (m.note ? '. ' + esc(m.note) : '');
+function drawRecap() {
+  const v = store.visits.find((x) => x.id === recapId) || store.visits[0]; if (!v) { $('#recapBody').innerHTML = '<p class="t">Памяток пока нет.</p>'; return; }
+  recapId = v.id;
+  const sec = (t, inner) => (inner ? `<div class="sh">${t}</div>${inner}` : ''), dots = (a) => (a.length ? `<div class="card"><ul class="dots">${a.map((x) => `<li>${esc(x)}</li>`).join('')}</ul></div>` : '');
+  $('#recapBody').innerHTML = `<div class="vHead"><div class="cap" style="margin-bottom:6px">${dayMonth(new Date(v.d))}${v.doctor ? ' · ' + esc(v.doctor) : ''}</div><h2 class="h">Что сказал врач</h2><p class="pvHi" style="margin:10px 0 0">${esc(v.summary)}</p></div>`
+    + sec('Что с вами', dots(v.diagnoses))
+    + sec('Как принимать лекарства', v.meds.map((m) => `<div class="rec"><div class="rh"><span class="ic">${I20(PILL)}</span><b>${esc(m.name)}</b></div><p class="d"><span class="todo">${medLine(m)}</span></p></div>`).join(''))
+    + sec('Что нужно пройти', v.tests.length ? `<div class="card">${v.tests.map((t, i) => `<button class="row${v.doneT[i] ? ' off' : ''}" data-t="${i}"><span style="min-width:0"><b>${esc(t.name)}</b><span class="cap">${[t.when, SPEC[t.specialist]].filter(Boolean).map(esc).join(' · ')}</span></span><span class="end"><i class="ck${v.doneT[i] ? ' on' : ''}"></i></span></button>`).join('')}</div>` : '')
+    + sec('Когда прийти снова', v.next_visit ? `<div class="card"><button class="row${v.doneN ? ' off' : ''}" data-n><span><b>${esc(v.next_visit[0].toUpperCase() + v.next_visit.slice(1))}</b><span class="cap">повторный приём${v.doctor ? ': ' + esc(v.doctor) : ''}</span></span><span class="end"><i class="ck${v.doneN ? ' on' : ''}"></i></span></button></div>` : '')
+    + sec('Советы врача', dots(v.advice)) + sec('Что стоит уточнить у врача', dots(v.unclear))
+    + '<p class="note">Памятка составлена по записи разговора и может содержать ошибки. Сверяйте дозы и сроки с рецептом и выпиской врача.</p><button class="btn2" id="recapDel" style="margin-top:14px;color:#B4530F">Удалить памятку</button>';
+}
+$('#recapBody').addEventListener('click', (ev) => {
+  const v = store.visits.find((x) => x.id === recapId); if (!v) return;
+  const t = ev.target.closest('[data-t]'), n = ev.target.closest('[data-n]');
+  if (t) { v.doneT[t.dataset.t] = !v.doneT[t.dataset.t]; save(); drawRecap(); if (v.doneT[t.dataset.t]) react('joy', 800); }
+  else if (n) { v.doneN = !v.doneN; save(); drawRecap(); }
+  else if (ev.target.closest('#recapDel')) { if (!confirm('Удалить эту памятку?')) return; store.visits = store.visits.filter((x) => x.id !== v.id); save(); back(); }
+});
+// назначения врача в «Превенции», приёмы во «Врачах», лекарства в «Профиле»
+function drawRx() {
+  const rows = []; store.visits.forEach((v) => { const src = 'приём ' + shortDate(new Date(v.d)); v.tests.forEach((t, i) => { if (!v.doneT[i]) rows.push([v.id, t.name, [t.when, SPEC[t.specialist], src].filter(Boolean).join(' · ')]); }); if (v.next_visit && !v.doneN) rows.push([v.id, 'Повторный приём' + (v.doctor ? ': ' + v.doctor : ''), [v.next_visit, src].join(' · ')]); });
+  $('#pvRx').innerHTML = rows.length ? `<div class="sh">Назначил врач</div><div class="card">${rows.map(([id, n, c]) => `<button class="row" data-rx="${id}"><span class="ic">${I20('<path d="M7 3h7l5 5v12a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1z"/><path d="M14 3v5h5M9 13h6M9 17h4"/>')}</span><span style="min-width:0"><b>${esc(n)}</b><span class="cap">${esc(c)}</span></span><span class="end"><span class="st due">назначено</span></span></button>`).join('')}</div>` : '';
+}
+function drawVisits() {
+  $('#visitsW').innerHTML = store.visits.length ? `<div class="sh">Мои приёмы</div><div class="card">${store.visits.slice(0, 5).map((v) => `<button class="row" data-rx="${v.id}"><span style="min-width:0"><b>${dayMonth(new Date(v.d))}${v.doctor ? ' · ' + esc(v.doctor) : ''}</b><span class="cap" style="display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:270px">${esc(v.summary)}</span></span><span class="end"><span class="chev">›</span></span></button>`).join('')}</div>` : '';
+}
+function drawMeds() {
+  const now = Date.now(), L = []; store.visits.forEach((v) => v.meds.forEach((m) => { if (!m.days || new Date(v.d).getTime() + m.days * 864e5 > now) L.push([v.id, m]); }));
+  $('#medsW').innerHTML = L.length ? `<div class="sh">Мои лекарства</div><div class="card">${L.map(([id, m]) => `<button class="row" data-rx="${id}"><span class="ic">${I20(PILL)}</span><span style="min-width:0"><b>${esc(m.name)}</b><span class="cap">${medLine(m)}</span></span><span class="end"><span class="chev">›</span></span></button>`).join('')}</div>` : '';
+}
+document.addEventListener('click', (ev) => { const r = ev.target.closest('[data-rx]'); if (!r) return; recapId = r.dataset.rx; push('recap'); });
 
 // ─── искры праздника ───
 let sparks = [];
@@ -1436,6 +1641,6 @@ function tick(now) {
 const start = new URLSearchParams(location.search).get('go') || (store.onboarded ? 'prev' : 'welcome');
 place(195, 422, 300, true); go(start); if (new URLSearchParams(location.search).has('snap')) place(O.x.t, O.y.t, O.size.t, true); // на заставке маскот в центре экрана, отсюда он летит на своё место
 requestAnimationFrame(tick);
-window.__app = { go, setMood, orb, O, store, ans, exams, save, setBg };
+window.__app = { go, setMood, orb, O, store, ans, exams, save, setBg, labFromFile };
 </script>
 </html>
